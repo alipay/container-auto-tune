@@ -1,0 +1,236 @@
+#!/bin/bash
+
+#数据初始化赋值
+echo -e "==> Step.1: Updating kubectl context and validating cluster access"
+if ! [ -x "$(command -v aws)" ]; then
+  echo "Error: aws cli is not installed"
+  exit 1
+fi
+
+if ! [ -x "$(command -v jq)" ]; then
+  echo "Error: jq is not installed"
+  exit 1
+fi
+
+if ! [ -x "$(command -v kubectl)" ]; then
+  echo "Error: kubectl is not installed. (kubectl required to install tmaestro)"
+  exit 1
+fi
+
+REGION=[=region]
+CLUSTER_NAME=[=clusterName]
+CLUSTER=$(aws eks describe-cluster --name "$CLUSTER_NAME" --region "$REGION" --output json)
+CLUSTER_VPC=$(echo "$CLUSTER" | jq --raw-output '.cluster.resourcesVpcConfig.vpcId')
+aws eks update-kubeconfig --name "$CLUSTER_NAME" --region "$REGION" >>/dev/null
+
+if ! kubectl describe cm/aws-auth --namespace=kube-system >>/dev/null 2>&1; then
+  echo "Error: getting auth ConfigMap: Unauthorized"
+  exit 1
+fi
+TMAESTRO_SERVER_URL=[=tmaestro_server_url]
+check_cluster_register_tmaestro(){
+    res=$(curl -s  "${TMAESTRO_SERVER_URL}/api/accessToken/validate?accessToken=[=accessToken]&clusterName=[=clusterName]" | jq '.data')
+    if [ "${res}" = 'true'  ]; then
+        echo "The custer [=clusterName] has been registered on TMaestro, please go to TMaestro homepage([=TMAESTRO_HOME_PAGE_URL]) to experience."
+        exit 0
+    fi
+    return 0
+}
+check_cluster_register_tmaestro
+
+#初始化user
+echo -e "\n==> Step.2: Create cluster user"
+POSTFIX=`date "+%Y%m%d%H%m"`
+USER_NAME=eks-tmaestro-${CLUSTER_NAME}-${POSTFIX}
+ACCOUNT_NUMBER=$(aws sts get-caller-identity --output text --query 'Account')
+ARN="${REGION}:${ACCOUNT_NUMBER}"
+
+INLINE_POLICY_JSON="{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"RunInstancesTagRestriction\",\"Effect\":\"Allow\",\"Action\":\"ec2:RunInstances\",\"Resource\":\"arn:aws:ec2:${ARN}:instance/*\",\"Condition\":{\"StringEquals\":{\"aws:RequestTag/kubernetes.io/cluster/${CLUSTER_NAME}\":\"owned\"}}},{\"Sid\":\"RunInstancesVpcRestriction\",\"Effect\":\"Allow\",\"Action\":\"ec2:RunInstances\",\"Resource\":\"arn:aws:ec2:${ARN}:subnet/*\",\"Condition\":{\"StringEquals\":{\"ec2:Vpc\":\"arn:aws:ec2:${ARN}:vpc/${CLUSTER_VPC}\"}}},{\"Sid\":\"InstanceActionsTagRestriction\",\"Effect\":\"Allow\",\"Action\":[\"ec2:TerminateInstances\",\"ec2:StartInstances\",\"ec2:StopInstances\",\"ec2:CreateTags\"],\"Resource\":\"arn:aws:ec2:${ARN}:instance/*\",\"Condition\":{\"StringEquals\":{\"ec2:ResourceTag/kubernetes.io/cluster/${CLUSTER_NAME}\":[\"owned\",\"shared\"]}}},{\"Sid\":\"VpcRestrictedActions\",\"Effect\":\"Allow\",\"Action\":[\"ec2:RevokeSecurityGroupIngress\",\"ec2:RevokeSecurityGroupEgress\",\"ec2:AuthorizeSecurityGroupEgress\",\"ec2:AuthorizeSecurityGroupIngress\",\"ec2:DeleteSecurityGroup\"],\"Resource\":\"*\",\"Condition\":{\"StringEquals\":{\"ec2:Vpc\":\"arn:aws:ec2:${ARN}:vpc/${CLUSTER_VPC}\"}}},{\"Sid\":\"AutoscalingActionsTagRestriction\",\"Effect\":\"Allow\",\"Action\":[\"autoscaling:UpdateAutoScalingGroup\",\"autoscaling:DeleteAutoScalingGroup\",\"autoscaling:SuspendProcesses\",\"autoscaling:ResumeProcesses\",\"autoscaling:TerminateInstanceInAutoScalingGroup\"],\"Resource\":\"arn:aws:autoscaling:${ARN}:autoScalingGroup:*:autoScalingGroupName/*\",\"Condition\":{\"StringEquals\":{\"autoscaling:ResourceTag/kubernetes.io/cluster/${CLUSTER_NAME}\":[\"owned\",\"shared\"]}}},{\"Sid\":\"EKS\",\"Effect\":\"Allow\",\"Action\":[\"eks:Describe*\",\"eks:List*\",\"eks:DeleteNodegroup\",\"eks:UpdateNodegroupConfig\"],\"Resource\":[\"arn:aws:eks:${ARN}:cluster/${CLUSTER_NAME}\",\"arn:aws:eks:${ARN}:nodegroup/${CLUSTER_NAME}/*/*\"]}]}"
+POLICY_JSON="{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"PassRoleEC2\",\"Action\":\"iam:PassRole\",\"Effect\":\"Allow\",\"Resource\":\"arn:aws:iam::*:role/*\",\"Condition\":{\"StringEquals\":{\"iam:PassedToService\":\"ec2.amazonaws.com\"}}},{\"Sid\":\"PassRoleLambda\",\"Action\":\"iam:PassRole\",\"Effect\":\"Allow\",\"Resource\":\"arn:aws:iam::*:role/*\",\"Condition\":{\"StringEquals\":{\"iam:PassedToService\":\"lambda.amazonaws.com\"}}},{\"Sid\":\"NonResourcePermissions\",\"Effect\":\"Allow\",\"Action\":[\"iam:CreateInstanceProfile\",\"iam:DeleteInstanceProfile\",\"iam:CreateRole\",\"iam:DeleteRole\",\"iam:AttachRolePolicy\",\"iam:DetachRolePolicy\",\"iam:AddRoleToInstanceProfile\",\"iam:RemoveRoleFromInstanceProfile\",\"iam:CreateServiceLinkedRole\",\"iam:DeleteServiceLinkedRole\",\"ec2:CreateSecurityGroup\",\"ec2:CreateKeyPair\",\"ec2:DeleteKeyPair\",\"ec2:CreateTags\"],\"Resource\":\"*\"},{\"Sid\":\"TagOnLaunching\",\"Effect\":\"Allow\",\"Action\":\"ec2:CreateTags\",\"Resource\":\"arn:aws:ec2:*:${ACCOUNT_NUMBER}:instance/*\",\"Condition\":{\"StringEquals\":{\"ec2:CreateAction\":\"RunInstances\"}}},{\"Sid\":\"TagSecurityGroups\",\"Effect\":\"Allow\",\"Action\":\"ec2:CreateTags\",\"Resource\":\"arn:aws:ec2:*:${ACCOUNT_NUMBER}:security-group/*\",\"Condition\":{\"StringEquals\":{\"ec2:CreateAction\":\"CreateSecurityGroup\"}}},{\"Sid\":\"RunInstancesPermissions\",\"Effect\":\"Allow\",\"Action\":\"ec2:RunInstances\",\"Resource\":[\"arn:aws:ec2:*:${ACCOUNT_NUMBER}:network-interface/*\",\"arn:aws:ec2:*:${ACCOUNT_NUMBER}:security-group/*\",\"arn:aws:ec2:*:${ACCOUNT_NUMBER}:volume/*\",\"arn:aws:ec2:*:${ACCOUNT_NUMBER}:key-pair/*\",\"arn:aws:ec2:*::image/*\"]},{\"Sid\":\"CreateLambdaFunctionRestriction\",\"Effect\":\"Allow\",\"Action\":[\"lambda:CreateFunction\",\"lambda:UpdateFunctionCode\",\"lambda:AddPermission\",\"lambda:DeleteFunction\",\"events:PutRule\",\"events:PutTargets\",\"events:DeleteRule\",\"events:RemoveTargets\"],\"Resource\":\"*\"}]}"
+
+if aws iam get-user --user-name $USER_NAME >>/dev/null 2>&1; then
+  echo "User already exists: '$USER_NAME'"
+  USER_ARN=$(aws iam get-user --user-name $USER_NAME --output text --query 'User.Arn')
+else
+  echo "Creating new user: '$USER_NAME'"
+  USER_ARN=$(aws iam create-user --user-name $USER_NAME --output text --query 'User.Arn')
+fi
+
+echo -e "\n==> Step.3: Configure user on cluster"
+#给user赋予各种权限
+INSTANCE_PROFILE="tmaestro-${CLUSTER_NAME:0:40}-eks"
+if aws iam get-instance-profile --instance-profile-name $INSTANCE_PROFILE >>/dev/null 2>&1; then
+  echo "Instance profile already exists: '$INSTANCE_PROFILE'"
+  ROLE_ARN=$(aws iam get-role --role-name $INSTANCE_PROFILE --output text --query 'Role.Arn')
+  aws iam add-role-to-instance-profile --instance-profile-name $INSTANCE_PROFILE --role-name $INSTANCE_PROFILE >>/dev/null 2>&1 || true
+else
+  echo "Creating new instance profile: '$INSTANCE_PROFILE'"
+  ASSUME_ROLE_JSON="{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"ec2.amazonaws.com\"]},\"Action\":[\"sts:AssumeRole\"]}]}"
+  ROLE_ARN=$(aws iam create-role --role-name $INSTANCE_PROFILE --description 'EKS node instance role used by TMASTER AI' --assume-role-policy-document $ASSUME_ROLE_JSON --output text --query 'Role.Arn')
+
+  role_policies=(arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy)
+  for i in "${role_policies[@]}"; do
+    aws iam attach-role-policy --role-name $INSTANCE_PROFILE --policy-arn $i
+  done
+
+  aws iam create-instance-profile --instance-profile-name $INSTANCE_PROFILE >>/dev/null 2>&1
+  aws iam add-role-to-instance-profile --instance-profile-name $INSTANCE_PROFILE --role-name $INSTANCE_PROFILE
+fi
+
+POLICY_ARN="arn:aws:iam::${ACCOUNT_NUMBER}:policy/tmasterEKSPolicy"
+if aws iam get-policy --policy-arn $POLICY_ARN >>/dev/null 2>&1; then
+
+  VERSIONS=$(aws iam list-policy-versions --policy-arn $POLICY_ARN --output text --query 'length(Versions[*])')
+  if [ "$VERSIONS" -gt "4" ]; then
+    LAST_VERSION_ID=$(aws iam list-policy-versions --policy-arn $POLICY_ARN --output text --query 'Versions[-1].VersionId')
+    aws iam delete-policy-version --policy-arn $POLICY_ARN --version-id $LAST_VERSION_ID
+  fi
+
+  aws iam create-policy-version --policy-arn $POLICY_ARN --policy-document $POLICY_JSON --set-as-default >>/dev/null 2>&1
+else
+  POLICY_ARN=$(aws iam create-policy --policy-name tmasterEKSPolicy --policy-document $POLICY_JSON --description "Policy to manage EKS cluster used by TMaestro console" --output text --query 'Policy.Arn')
+fi
+
+policies=(arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess arn:aws:iam::aws:policy/AmazonEventBridgeReadOnlyAccess arn:aws:iam::aws:policy/IAMReadOnlyAccess arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess $POLICY_ARN)
+for i in "${policies[@]}"; do
+  aws iam attach-user-policy --user-name $USER_NAME --policy-arn $i
+done
+
+aws iam put-user-policy --user-name $USER_NAME --policy-name tmasterEKSRestrictedAccess --policy-document $INLINE_POLICY_JSON
+
+#加入kubectl身份组
+CAST_CLUSTER_USER="- groups:\n  - system:masters\n  userarn: ${USER_ARN}\n  username: ${USER_NAME}\n"
+AWS_CLUSTER_USERS=$(kubectl get -n=kube-system cm/aws-auth -o json | jq '.data.mapUsers | select(. != null and . != "" and . != "[]" and . != "[]\n")' | sed -e 's/^"//' -e 's/"$//')
+if [ -z "$AWS_CLUSTER_USERS" ]; then
+  kubectl patch -n=kube-system cm/aws-auth --patch "{\"data\":{\"mapUsers\": \"${CAST_CLUSTER_USER}\"}}"
+elif [[ "$AWS_CLUSTER_USERS" == *"$CAST_CLUSTER_USER"* ]]; then
+  echo "cast user already exists in configmap/aws-auth"
+else
+  kubectl patch -n=kube-system cm/aws-auth --patch "{\"data\":{\"mapUsers\": \"${AWS_CLUSTER_USERS}${CAST_CLUSTER_USER}\"}}"
+fi
+
+CAST_NODE_ROLE="- rolearn: ${ROLE_ARN}\n  username: system:node:{{EC2PrivateDNSName}}\n  groups:\n  - system:bootstrappers\n  - system:nodes\n"
+AWS_CLUSTER_ROLES=$(kubectl get -n=kube-system cm/aws-auth -o json | jq '.data.mapRoles | select(. != null and . != "" and . != "[]" and . != "[]\n")' | sed -e 's/^"//' -e 's/"$//')
+if [ -z "$AWS_CLUSTER_ROLES" ]; then
+  kubectl patch -n=kube-system cm/aws-auth --patch "{\"data\":{\"mapRoles\": \"${CAST_NODE_ROLE}\"}}"
+elif [[ "$AWS_CLUSTER_ROLES" == *"$CAST_NODE_ROLE"* ]]; then
+  echo "cast node role already exists in cm/aws-auth"
+else
+  kubectl patch -n=kube-system cm/aws-auth --patch "{\"data\":{\"mapRoles\": \"${AWS_CLUSTER_ROLES}${CAST_NODE_ROLE}\"}}"
+fi
+
+#基于user创建ak、sk
+CREDENTIALS=$(aws iam create-access-key --user-name $USER_NAME --output json 2>/dev/null)
+
+#打印所有关键信息
+CLUSTER=$(aws eks describe-cluster --name "$CLUSTER_NAME" --region "$REGION" --output json)
+endpoint=$(echo $CLUSTER|jq -r '.cluster.endpoint')
+CER=$(echo $CLUSTER|jq -r '.cluster.certificateAuthority.data')
+
+AccessKeyId=$(echo $CREDENTIALS|jq -r '.AccessKey.AccessKeyId')
+SecretAccessKey=$(echo $CREDENTIALS|jq -r '.AccessKey.SecretAccessKey')
+
+echo "ENDPOINT=${endpoint}"
+echo "ACCESS_KEY_ID=${AccessKeyId}"
+echo "SECRET_ACCESS_KEY=${SecretAccessKey}"
+echo "CLUSTER_NAME=${CLUSTER_NAME}"
+echo "REGION=[=region]"
+echo "ACCESS_TOKEN=[=accessToken]"
+
+if [ -z "${AccessKeyId}" ]; then
+    echo "Error: AccessKeyId is empty. pls wait two minute and retry it again."
+    exit 119
+fi
+
+if [ -z "${SecretAccessKey}" ]; then
+    echo "Error: SecretAccessKey is empty. pls wait two minute and retry it again."
+    exit 119
+fi
+
+generate_post_data()
+{
+  cat <<EOF
+{"accessToken":"[=accessToken]","accessKeyId":"${AccessKeyId}","secretAccessKey":"${SecretAccessKey}","clusterName":"${CLUSTER_NAME}","region":"${REGION}","endpoint":"${endpoint}","cer":"${CER}"}
+EOF
+}
+
+echo -e "\n==> Step.4: Register cluster information on Tmaestro"
+res_code=$(curl -s -X POST "${TMAESTRO_SERVER_URL}/api/accessToken/saveAccessToken" -H 'Content-Type: application/json' -d "$(generate_post_data)" | jq '.resultCode')
+if [ "${res_code}" != 200 ]; then
+      echo "save user cluster info failed. pls contact tmaestro expert."
+      exit 119;
+fi
+
+echo -e "\n==> Step.5: Install TWatch demonset"
+TWATCH_YAML_FILE=twatch.yaml
+TWATCH_POD_PREFIX=`echo "${TWATCH_YAML_FILE}" | awk -F'.' '{print $1}'`
+
+# download demonSet yaml
+curl -s -o "${TWATCH_YAML_FILE}"  "${TMAESTRO_SERVER_URL}/api/storage/download/${TWATCH_YAML_FILE}"
+ls -l "${TWATCH_YAML_FILE}" >/dev/null 2>&1
+if [ $? != 0 ]; then
+  echo "Download twatch.yaml file failed, pls contact the tmaestro experts to handle it.";
+  exit 119
+fi
+
+# delete existed twatch demonSet
+kubectl get pods | grep "${TWATCH_POD_PREFIX}" >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  echo "There are twatch demonset on this system. So will remove it and redeploy it"
+  kubectl delete ds "${TWATCH_POD_PREFIX}" --ignore-not-found=true >/dev/null 2>&1
+fi
+
+install_demonset(){
+    echo -ne '[ ========>                                                       (10%)]\r'
+    kubectl apply -f "${TWATCH_YAML_FILE}" >/dev/null 2>&1
+    echo -ne '[ ================================>                               (53%)]\r'
+    sleep 10
+    kubectl get pods | grep "${TWATCH_POD_PREFIX}"
+    kubectl get pods | grep "${TWATCH_POD_PREFIX}" | grep Running
+    if [ $? != 0 ]; then
+      echo "Install twatch demonSet failed, please contact tmaestro experts to handle it!"
+      exit 119
+    fi
+    echo -ne '[ ================================================================(100%)]\r'
+    echo -ne '\n'
+}
+
+print_tmaestro(){
+  echo '  ______    __  ___                         __                ';
+  echo ' /_  __/   /  |/  /  ____ _  ___    _____  / /_   _____  ____ ';
+  echo '  / /     / /|_/ /  / __ \`/ / _ \  / ___/ / __/  / ___/ / __ \';
+  echo ' / /     / /  / /  / /_/ / /  __/ (__  ) / /_   / /    / /_/ /';
+  echo '/_/     /_/  /_/   \__,_/  \___/ /____/  \__/  /_/     \____/ ';
+  echo '                                                               ';
+}
+
+CONGRATULATION_SIGN='Congratulations!!!'
+
+install_demonset
+print_tmaestro
+echo "${CONGRATULATION_SIGN} TWatch demonset is now installed successfully.\n"
+
+echo -e "\n==> Step.6: Install metric-server"
+install_metric_server(){
+    echo -ne '[ ========>                                                       (10%)]\r'
+    kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml >/dev/null 2>&1
+    echo -ne '[ ================================>                               (60%)]\r'
+    if [ $? != 0 ]; then
+      echo "install metric-server failed, please contact the tmaestro expert."
+      exit 119
+    fi
+    echo -ne '[ ================================================================(100%)]\r'
+    echo -ne '\n'
+    echo "${CONGRATULATION_SIGN} Install metric-server successfully.\n"
+}
+
+kubectl get pod -n kube-system | grep metrics-server | grep Running >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+   echo "The metric-server has been installed. so skip it."
+   echo "All steps have been done now, please go to TMaestro homepage([=TMAESTRO_HOME_PAGE_URL]) to experience."
+   exit 0
+fi
+install_metric_server
+
+echo "All steps have been done now, please go to TMaestro homepage([=TMAESTRO_HOME_PAGE_URL]) to experience."
+exit 0

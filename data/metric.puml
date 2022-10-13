@@ -1,0 +1,10 @@
+@startuml
+
+enum MeterType {
+    PROMETHEUS,
+    DATADOG,
+    ANTMONITOR
+}
+
+
+@enduml

@@ -1,0 +1,15 @@
+language: java
+sudo: false
+
+jdk:
+  - openjdk8
+
+install:
+  - mvn clean install -DskipTests -B -U
+  - mvn clean test
+
+script:
+  - sh ./check_format.sh
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

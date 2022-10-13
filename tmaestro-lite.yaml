@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tmaestro
+  name: tmaestro
+spec:
+  selector:
+    matchLabels:
+      app: tmaestro
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tmaestro
+    spec:
+      containers:
+        - image: registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:ats_autotune_202209202140
+          imagePullPolicy: Always
+          name: tmaestro-server
+          ports:
+            - containerPort: 9001
+            - containerPort: 9000
+          env:
+            - name: TMAESTRO_SERVER_IP
+              value: "localhost"
+            - name: TMAESTRO_SERVER_DOMAIN
+              value: "localhost:30081"
+            - name: TMAESTRO_WEB_HOME
+              value: "localhost:30083"
+            ## <MongoDB config>  ##
+            - name: MONGO_DOMAIN
+              value: "xx"
+            - name: MONGO_USERNAME
+              value: "xx"
+            - name: MONGO_PASSWORD
+              value: "xx"
+            - name: MONGO_DATABASE
+              value: "xx"
+            ## <GRPC config>  ##
+            - name: GRPC_SERVER_IP
+              value: "localhost"
+            - name: GRPC_SERVER_PORT
+              value: "9000"
+            ## <Redis config>  ##
+            - name: REDIS_HOST
+              value: "xx"
+            - name: REDIS_PASSWORD
+              value: "xx"
+            ## <MYSQL config>  ##
+            - name: MYSQL_URL
+              value: "xx"
+            - name: MYSQL_USERNAME
+              value: "xx"
+            - name: MYSQL_PASSWORD
+              value: "xx"
+            - name: MYSQL_DBNAME
+              value: "xx"
+            ## <ALGO config>  ##
+            - name: ALGO_PARAM_TUNING_URL
+              value: "xx"
+        - image: registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:ats_autotune_202209202140
+          imagePullPolicy: Always
+          name: tmaestro-server
+          ports:
+            - containerPort: 9001
+            - containerPort: 9000
+        - name: tmaestro-front
+          imagePullPolicy: Always
+          image:  registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:ats_tmaster_front_202208171540
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+#  namespace: tmaster
+  name: tmaestro
+spec:
+  ports:
+#    nodePort(集群外访问的端口) -> port(service) -> targetPort(POD的容器端口)
+    - port: 9001       # Service的容器端口
+      name: http
+      targetPort: 9001  # POD的容器端口
+      nodePort: 30081   # 集群外访问的端口
+      protocol: TCP
+    - port: 9000
+      name: grpc
+      protocol: TCP
+      targetPort: 9000
+      nodePort: 30082
+    - port: 8080
+      name: front-http
+      targetPort: 80
+      nodePort: 30083
+      protocol: TCP
+    - port: 5000
+      name: alog-tune-domain-url
+      targetPort: 5000
+      nodePort: 30084
+    - port: 9091
+      name: alog-intelligent-url
+      targetPort: 9091
+      nodePort: 30085
+  type: NodePort
+  selector:
+    app: tmaestro

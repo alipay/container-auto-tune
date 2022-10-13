@@ -1,0 +1,98 @@
+#!/bin/sh
+
+LOG_FILE=/tmp/config_java_opts.log
+AGENT_HEALTH_CHECK_FILE=/tmp/AGENT_HEALTH_CHECK
+TUNE_MASTER_SERVER_URL="[=tmaestro_server_url]"
+TUNE_AGENT_NAME=autoTuneAgent.jar
+ERROR_CODE=119
+recommended_java_opts=''
+BUILD_NEW_START_CMD=''
+FIRST_N_ARGS=''
+LAST_ARGS=''
+
+get_firstn_and_last_args(){
+  count=0
+  for arg in $@
+  do
+    count=$((count + 1))
+    if [ $count -eq $# ]; then
+      echo "last = $arg"
+      LAST_ARGS=$arg
+      return
+    fi
+    FIRST_N_ARGS="${FIRST_N_ARGS} $arg "
+  done
+}
+
+get_java_opts(){
+  echo "input all args: $@"
+  get_firstn_and_last_args $@
+
+  echo "===== step1: start to get pod Name ====="
+  POD_NAME=`echo "${HOSTNAME}"`
+  NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
+  if [ -z "${POD_NAME}" ];then
+    echo "Get pod name failed."
+    return ${ERROR_CODE}
+  fi
+  echo "Get podName=${POD_NAME}"
+
+  echo "===== step2: start to check whether autoTuneAgent.jar installed ====="
+  if [ ! -f ${TUNE_AGENT_NAME} ]; then
+    echo "file ${TUNE_AGENT_NAME} not exists."
+    return ${ERROR_CODE}
+  fi
+  echo -n "IS_TUNE_AGENT_INSTALL=true" | base64 >> ${AGENT_HEALTH_CHECK_FILE}
+  echo "Check download ${TUNE_AGENT_NAME} successfully."
+
+  echo "===== step3: start to get default java_opts ====="
+  JAVA_DEFAULT=`echo ${FIRST_N_ARGS} | grep -o "java -jar .*" | awk -F 'java -jar' '{print $2}'`;
+  BASE64_ENCODE_JAVA_DEFAULT=`echo "${JAVA_DEFAULT}" | base64 -w 0`
+  if [ $? -ne 0 ]; then
+    BASE64_ENCODE_JAVA_DEFAULT=`echo "${JAVA_DEFAULT}" | base64 -b 0`
+  fi
+  echo "Get app default jvm configurations=${JAVA_DEFAULT}"
+
+  echo "===== step4: start to get recommended java_opts ====="
+  recommended_java_opts=$(wget -qO - "${TUNE_MASTER_SERVER_URL}/api/tmaster/v1/jvm-opts-configs/fetch/[=accessToken]/${POD_NAME}?namespace=${NAMESPACE}&javaOptsDefault=${BASE64_ENCODE_JAVA_DEFAULT}")
+  echo "Get recommended_java_opts is : ${recommended_java_opts}"
+  echo ${recommended_java_opts} > /tmp/recommended_java_opts.txt
+  return 0
+}
+
+build_new_start_cmd(){
+  RECOMMEND_JVM=$1
+  if [ -z "${RECOMMEND_JVM}" ]; then
+    BUILD_NEW_START_CMD="${FIRST_N_ARGS} -Dtmasteraccess_token=[=accessToken] -javaagent:autoTuneAgent.jar ${LAST_ARGS}"
+  else
+    BUILD_NEW_START_CMD="java -jar -Dtmasteraccess_token=[=accessToken] ${RECOMMEND_JVM} -javaagent:autoTuneAgent.jar ${LAST_ARGS}"
+  fi
+  $BUILD_NEW_START_CMD
+  if [ $? -ne 0 ]; then
+    echo "run build_new_start_cmd failed." >> ${LOG_FILE}
+    return ${ERROR_CODE}
+  fi
+  return 0
+}
+
+run_default_with_agent_start_cmd(){
+  DEFAULT_START_CMD="${FIRST_N_ARGS} -Dtmasteraccess_token=[=accessToken] -javaagent:autoTuneAgent.jar ${LAST_ARGS}"
+  $DEFAULT_START_CMD
+}
+
+echo "-------------------- start to get java opts-------------------" > ${LOG_FILE}
+get_java_opts $@ 2>&1 > ${LOG_FILE}
+if [ $? -eq 0 ]; then
+  echo "use recommend=${recommended_java_opts} tuned jvm opts to start." >> ${LOG_FILE}
+  build_new_start_cmd "${recommended_java_opts}"
+  if [ $? -ne 0 ]; then
+    echo -n "USE_RECOMMEND_JVM_START_SUCCESS=false" | base64 >> ${AGENT_HEALTH_CHECK_FILE}
+    echo "use recommend tuned jvm opts to start failed, So will use default to start." >> ${LOG_FILE}
+    $@
+  fi
+else
+  echo "use default jvm configs to start." >> ${LOG_FILE}
+  run_default_with_agent_start_cmd
+fi
+
+echo "-------------------- end to get java opts-------------------" > ${LOG_FILE}

@@ -1,0 +1,8 @@
+
+RUN apk update \
+      && apk add busybox-extras
+ARG tuneMaster=xxxx
+
+RUN wget -qO autoTuneAgent.jar ${tuneMaster}/api/storage/autoTuneAgent.jar?accessToken=[=accessToken] \
+  && wget -qO config_java_opts.sh ${tuneMaster}/api/storage/api/storage/storage/config_java_opts.sh?accessToken[=accessToken]  \
+  && chmod +x config_java_opts.sh

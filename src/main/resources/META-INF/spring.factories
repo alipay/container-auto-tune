@@ -1,0 +1,7 @@
+# AutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisConfig
+
+org.springframework.boot.autoconfigure.AutoConfigurationImportFilter=\
+com.alipay.autotuneservice.infrastructure.saas.common.util.MongoExclusionImportFilter
+

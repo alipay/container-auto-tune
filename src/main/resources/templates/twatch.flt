@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: twatch
+  labels:
+    app: twatch
+spec:
+  selector:
+    matchLabels:
+      app: twatch
+  template:
+    metadata:
+      labels:
+        app: twatch
+    spec:
+      containers:
+        - name: twatch
+          image: [=imageId]
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 300m
+            limits:
+              memory: 1024Mi
+              cpu: 4000m
+          volumeMounts:
+            - name: hostfs
+              mountPath: /hostfs
+              readOnly: true
+            - name: sysfs
+              mountPath: /host/sys
+              readOnly: true
+            - name: passwd
+              mountPath: /etc/passwd
+              readOnly: true
+            - name: group
+              mountPath: /etc/group
+              readOnly: true
+            - name: debugfs
+              mountPath: /sys/kernel/debug
+            - name: run
+              mountPath: /var/run/
+            - name: dev
+              mountPath: /hostfs/dev
+              readOnly: true
+          securityContext:
+            privileged: true
+          ports:
+            - name: http
+              containerPort: 9001
+              protocol: TCP
+      volumes:
+        - name: hostfs
+          hostPath:
+            path: /
+        - name: sysfs
+          hostPath:
+            path: /sys
+        - name: passwd
+          hostPath:
+            path: /etc/passwd
+        - name: group
+          hostPath:
+            path: /etc/group
+        - name: debugfs
+          hostPath:
+            path: /sys/kernel/debug
+        - name: run
+          hostPath:
+            path: /var/run/
+        - name: dev
+          hostPath:
+            path: /dev

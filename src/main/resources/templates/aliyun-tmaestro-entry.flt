@@ -1,0 +1,210 @@
+#!/bin/bash
+
+echo -e "==> Step.1: Updating kubectl context and validating cluster access"
+if ! [ -x "$(command -v aliyun)" ]; then
+  echo "Error: aliyun cli is not installed"
+  exit 1
+fi
+
+if ! [ -x "$(command -v jq)" ]; then
+  echo "Error: jq is not installed"
+  exit 1
+fi
+
+if ! [ -x "$(command -v kubectl)" ]; then
+  echo "Error: kubectl is not installed. (kubectl required to install tmaestro)"
+  exit 1
+fi
+
+REGION=[=region]
+CLUSTER_NAME=[=clusterName]
+CLUSTER=$(aliyun cs DescribeClusters --name "$CLUSTER_NAME")
+CLUSTER_VPC=$(aliyun cs DescribeClusters --name "$CLUSTER_NAME" | jq --raw-output '.[0].vpc_id')
+CLUSTER_ID=$(aliyun cs DescribeClusters --name "$CLUSTER_NAME"  | jq --raw-output '.[0].cluster_id')
+aliyun cs DescribeClusterUserKubeconfig --ClusterId $CLUSTER_ID | jq --raw-output '.config' > ~/.kube/config
+
+TMAESTRO_SERVER_URL=[=tmaestro_server_url]
+check_cluster_register_tmaestro(){
+    res=$(curl -s  "${TMAESTRO_SERVER_URL}/api/accessToken/validate?accessToken=[=accessToken]&clusterName=[=clusterName]" | jq '.data')
+    if [ "${res}" = 'true'  ]; then
+        echo "The cluster eee has been registered on TMaestro, please go to TMaestro homepage to experience."
+        exit 0
+    fi
+    return 0
+}
+check_cluster_register_tmaestro
+
+echo -e "\n==> Step.2: Create cluster user"
+# POSTFIX=`date "+%Y%m%d%H%M"`
+POSTFIX=`date "+%Y%m"`
+USER_NAME=eks-tmaestro-${CLUSTER_NAME}-${POSTFIX}
+# USER_NAME=eks-tmaestro-saas-test
+ACCOUNT_NUMBER=$(aliyun sts GetCallerIdentity | jq --raw-output '.AccountId')
+# ARN="${REGION}:${ACCOUNT_NUMBER}"
+
+if aliyun ram GetUser --UserName $USER_NAME >>/dev/null 2>&1; then
+  echo "User already exists: '$USER_NAME'"
+  USER_ARN=$(aliyun ram GetUser --UserName $USER_NAME | jq --raw-output '.User.UserId')
+else
+  echo "Creating new user: '$USER_NAME'"
+  USER_ARN=$(aliyun ram CreateUser --UserName $USER_NAME | jq --raw-output '.User.UserId')
+fi
+
+echo -e "\n==> Step.3: Configure user on cluster"
+INSTANCE_PROFILE="tmaestro-${CLUSTER_NAME:0:40}-eks"
+if aliyun ram GetRole --RoleName $INSTANCE_PROFILE >>/dev/null 2>&1; then
+  echo "role already exists: '$INSTANCE_PROFILE'"
+  ROLE_ARN=$(aliyun ram GetRole --RoleName $INSTANCE_PROFILE | jq --raw-output '.Role.Arn')
+else
+  echo "Creating new role: '$INSTANCE_PROFILE'"
+  ASSUME_ROLE_JSON="{ \"Statement\": [ { \"Action\": \"sts:AssumeRole\", \"Effect\": \"Allow\", \"Principal\": { \"Service\": [ \"ecs.aliyuncs.com\" ] } } ], \"Version\": \"1\" }";
+  ROLE_ARN=$(aliyun ram CreateRole --RoleName $INSTANCE_PROFILE --Description 'EKS node instance role used by TMAESTRO AI' --AssumeRolePolicyDocument "$ASSUME_ROLE_JSON" | jq --raw-output '.Role.Arn')
+fi
+
+POLICY_NAME="tmasterEKSPolicy"
+POLICY_JSON="{ \"Version\": \"1\", \"Statement\": [ { \"Effect\": \"Allow\", \"Action\": \"cs:DescribeClusterUserKubeconfig\", \"Resource\": \"*\" } ] }"
+if aliyun ram GetPolicy --PolicyName $POLICY_NAME --PolicyType Custom >>/dev/null 2>&1; then
+  VERSIONS=$(aliyun ram ListPolicyVersions --PolicyName $POLICY_NAME --PolicyType Custom | jq '.PolicyVersions.PolicyVersion | length')
+  if [ "$VERSIONS" -gt "4" ]; then
+    LAST_VERSION_ID=$(aliyun ram ListPolicyVersions --PolicyName $POLICY_NAME --PolicyType Custom | jq --raw-output '.PolicyVersions.PolicyVersion[0].VersionId')
+    aliyun ram DeletePolicyVersion --PolicyName $POLICY_NAME --VersionId $LAST_VERSION_ID
+  fi
+
+  aliyun ram CreatePolicyVersion --PolicyName $POLICY_NAME --SetAsDefault true --PolicyDocument $POLICY_JSON >>/dev/null 2>&1
+else
+  aliyun ram CreatePolicy --PolicyName $POLICY_NAME --Description "Policy to manage EKS cluster used by TMaestro console" --PolicyDocument "$POLICY_JSON"
+fi
+
+if [ "false" = "$(aliyun ram ListPoliciesForUser --UserName $USER_NAME | jq -r '[.Policies.Policy[].PolicyName] | contains(["tmasterEKSPolicy"])')" ]; then
+  echo "AttachPolicy $POLICY_NAME toUser '$USER_NAME'"
+  aliyun ram AttachPolicyToUser --PolicyName $POLICY_NAME --PolicyType Custom --UserName $USER_NAME
+fi
+
+# joint the group of kubectl
+ACK_GRANT_FILE_NAME=ack-grant-once
+curl -s -o ${ACK_GRANT_FILE_NAME} "${TMAESTRO_SERVER_URL}/api/storage/download/ack-grant-once"
+if [ ! -f ${ACK_GRANT_FILE_NAME} ]; then
+    echo "download ack-grant-once file failed."
+    exit 119
+fi
+chmod 755 ack-grant-once
+./ack-grant-once $USER_NAME cs:admin
+rm -f ack-grant-once
+
+# create ak, sk based on user
+CREDENTIALS=$(aliyun ims CreateAccessKey --UserPrincipalName $USER_NAME@$ACCOUNT_NUMBER.onaliyun.com 2>/dev/null)
+
+endpoint="cs.[=region].aliyuncs.com"
+CER=$(cat  ~/.kube/config |grep certificate-authority-data | awk -F ' ' '{print $2}')
+
+AccessKeyId=$(echo $CREDENTIALS|jq -r '.AccessKey.AccessKeyId')
+SecretAccessKey=$(echo $CREDENTIALS|jq -r '.AccessKey.AccessKeySecret')
+
+echo "ENDPOINT=${endpoint}"
+echo "ACCESS_KEY_ID=${AccessKeyId}"
+echo "SECRET_ACCESS_KEY=${SecretAccessKey}"
+echo "CLUSTER_NAME=${CLUSTER_NAME}"
+echo "CLUSTER_ID=${CLUSTER_ID}"
+echo "REGION=[=region]"
+echo "ACCESS_TOKEN=[=accessToken]"
+
+
+if [ -z "${AccessKeyId}" ]; then
+    echo "Error: AccessKeyId is empty. pls wait two minute and retry it again."
+    exit 119
+fi
+
+if [ -z "${SecretAccessKey}" ]; then
+    echo "Error: SecretAccessKey is empty. pls wait two minute and retry it again."
+    exit 119
+fi
+
+generate_post_data()
+{
+  cat <<EOF
+{"accessToken":"[=accessToken]","accessKeyId":"${AccessKeyId}","secretAccessKey":"${SecretAccessKey}","clusterId":"${CLUSTER_ID}","clusterName":"${CLUSTER_NAME}","region":"${REGION}","endpoint":"${endpoint}","cer":"${CER}"}
+EOF
+}
+
+
+echo -e "\n==> Step.4: Register cluster information on Tmaestro"
+res_code=$(curl -s -X POST "${TMAESTRO_SERVER_URL}/api/accessToken/saveAccessToken" -H 'Content-Type: application/json' -d "$(generate_post_data)" | jq '.resultCode')
+if [ "${res_code}" != 200 ]; then
+      echo "save user cluster info failed. pls contact tmaestro expert."
+      exit 119;
+fi
+
+echo -e "\n==> Step.5: Install TWatch demonset"
+TWATCH_YAML_FILE=twatch.yaml
+TWATCH_POD_PREFIX=`echo "${TWATCH_YAML_FILE}" | awk -F'.' '{print $1}'`
+
+# download demonSet yaml
+curl -s -o "${TWATCH_YAML_FILE}"  "${TMAESTRO_SERVER_URL}/api/storage/download/${TWATCH_YAML_FILE}"
+ls -l "${TWATCH_YAML_FILE}" >/dev/null 2>&1
+if [ $? != 0 ]; then
+  echo "Download twatch.yaml file failed, pls contact the tmaestro experts to handle it.";
+  exit 119
+fi
+
+# delete existed twatch demonSet
+kubectl get pods | grep "${TWATCH_POD_PREFIX}" >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  echo "There are twatch demonset on this system. So will remove it and redeploy it"
+  kubectl delete ds "${TWATCH_POD_PREFIX}" --ignore-not-found=true >/dev/null 2>&1
+fi
+
+install_demonset(){
+    echo -ne '[ ========>                                                       (10%)]\r'
+    kubectl apply -f "${TWATCH_YAML_FILE}" >/dev/null 2>&1
+    echo -ne '[ ================================>                               (53%)]\r'
+    sleep 10
+    kubectl get pods | grep "${TWATCH_POD_PREFIX}"
+    kubectl get pods | grep "${TWATCH_POD_PREFIX}" | grep Running
+    if [ $? != 0 ]; then
+      echo "Install twatch demonSet failed, please contact tmaestro experts to handle it!"
+      exit 119
+    fi
+    echo -ne '[ ================================================================(100%)]\r'
+    echo -ne '\n'
+}
+
+print_tmaestro(){
+  echo '  ______    __  ___                         __                ';
+  echo ' /_  __/   /  |/  /  ____ _  ___    _____  / /_   _____  ____ ';
+  echo '  / /     / /|_/ /  / __ \`/ / _ \  / ___/ / __/  / ___/ / __ \';
+  echo ' / /     / /  / /  / /_/ / /  __/ (__  ) / /_   / /    / /_/ /';
+  echo '/_/     /_/  /_/   \__,_/  \___/ /____/  \__/  /_/     \____/ ';
+  echo '                                                               ';
+}
+
+CONGRATULATION_SIGN='Congratulations!!!'
+
+install_demonset
+print_tmaestro
+echo "${CONGRATULATION_SIGN} TWatch demonset is now installed successfully.\n"
+
+echo -e "\n==> Step.6: Install metric-server"
+install_metric_server(){
+    echo -ne '[ ========>                                                       (10%)]\r'
+    kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml >/dev/null 2>&1
+    echo -ne '[ ================================>                               (60%)]\r'
+    if [ $? != 0 ]; then
+      echo "install metric-server failed, please contact the tmaestro expert."
+      exit 119
+    fi
+    echo -ne '[ ================================================================(100%)]\r'
+    echo -ne '\n'
+    echo "${CONGRATULATION_SIGN} Install metric-server successfully.\n"
+}
+
+TMAESTRO_HOME_PAGE_URL=[=TMAESTRO_HOME_PAGE_URL]
+kubectl get pod -n kube-system | grep metrics-server | grep Running >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+   echo "The metric-server has been installed. so skip it."
+   echo "All steps have been done now, please go to TMaestro homepage(${TMAESTRO_HOME_PAGE_URL}) to experience."
+   exit 0
+fi
+install_metric_server
+
+echo "All steps have been done now, please go to TMaestro homepage(${TMAESTRO_HOME_PAGE_URL}) to experience."
+exit 0

@@ -1,0 +1,53 @@
+server:
+  port: 9001
+  error:
+    path: /api/tmaster/v1/error
+grpc:
+  server:
+    port: 9000
+spring:
+  profiles:
+    active: lite,aliyun-test
+  redis:
+    host: ${REDIS_HOST}
+    password: ${REDIS_PASSWORD}
+    port: 6379
+    ssl: false
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+logging:
+  level:
+    root: info
+aliyun:
+  accessKeyId: ""
+  secretAccessKey: ""
+  mongo:
+    url: ${MONGO_DOMAIN}
+    username: ${MONGO_USERNAME}
+    password: ${MONGO_PASSWORD}
+    database: ${MONGO_DATABASE}
+
+mockCloudType: K8S
+mockDataSwitch: true
+mockPageSwitch: false
+
+
+application:
+  productCode: "xxxxx"
+tmaster:
+  configure:
+    productCode: ""
+    appId: ""
+    secret: ""
+    saasTenantUrl: ""
+    domainUrl: ${TMAESTRO_SERVER_DOMAIN}
+    webHomeUrl: ${TMAESTRO_WEB_HOME}
+    saasUrl: ""
+    domainApiUrl: ${TMAESTRO_SERVER_DOMAIN}
+    grpcHost: ${GRPC_SERVER_IP}
+    grpcPort: ${GRPC_SERVER_PORT}
+    algorithmUrl: ${ALGO_PARAM_TUNING_URL}

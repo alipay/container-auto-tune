@@ -1,0 +1,40 @@
+#!/bin/bash
+
+<#if attachId??>
+cd /tmp
+</#if>
+
+echo "==> Step1: start to check input java process pid."
+if [ -z $1 ]; then
+  echo "input process is empty. pls check it."
+  exit 1;
+fi
+java_processId=$1
+echo "input java process pid=${java_processId}"
+
+TUNE_AGENT_FILE_PATH="autoTuneAgent.jar"
+echo "==> Step2: start to download autoTuneAgent.jar."
+wget -O autoTuneAgent.jar [=tmaestro_url]/api/storage/download/autoTuneAgent.jar
+if [ $? != 0 ]; then
+  echo "download autoTuneAgent.jar file failed."
+  exit 1
+fi
+
+<#if accessToken??>
+wget -O tmaster.yml [=tmaestro_url]/api/storage/tmaster.yml?accessToken=[=accessToken]
+if [ $? != 0 ]; then
+  echo "download tmaster.yml file failed."
+  exit 1
+fi
+</#if>
+echo "==> Step3: start to attach autoTuneAgent.jar for pid ${java_processId}."
+java -jar ${TUNE_AGENT_FILE_PATH} ${java_processId}
+if [ $? != 0 ]; then
+  echo "attach autoTuneAgent.jar failed, pls retry it again."
+  exit 1
+fi
+
+<#if attachId??>
+wget [=tmaestro_url]/api/pod/agent/attach-hook?id=[=attachId]
+</#if>
+echo "Congratulations!!! attach successfully."
