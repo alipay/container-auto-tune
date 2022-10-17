@@ -2,7 +2,7 @@
 
 ![license](https://img.shields.io/badge/license-Apache--2.0-green.svg)
 
-Container Auto Tune is an intelligent parameter tuning product that helps developers, operators automatically adjust the application, analyzes JVM reasonable configuration parameters through intelligent algorithms.Please visit the [official site](https://www.opentrs.com/tmaestro/home) for the quick start guide and documentation.
+[Container Auto Tune](https://www.opentrs.com/tmaestro/home) is an intelligent parameter tuning product that helps developers, operators automatically adjust the application, analyzes JVM reasonable configuration parameters through intelligent algorithms.Please visit the [official site](https://www.opentrs.com/tmaestro/home) for the quick start guide and documentation.
 
 We are now collecting user info to help us to improve further. Kindly support us by providing your usage information to tmaestro@antgroup.com, thanks :)
 
@@ -20,7 +20,7 @@ We are now collecting user info to help us to improve further. Kindly support us
 ## Quick Start
 
 ```bash
-git clone https://github.com/XXXX.git
+git clone https://github.com/alipay/container-auto-tune.git
 cd tmaestro-lite
 ```
 
@@ -30,14 +30,16 @@ Execute command
 make
 ```
 
+## Prerequisites
 
-### run locally
+please confirm the below components installed before you run on your local environment.
+* Redis
+* MongoDB
+* Mysql
+* kubectl
 
-* K8s deploy Container Auto Tune
-  * configure 
+please set configurations of mongoDB, redis, mysql in tmaestro-properties-configmap.yaml file for below item value.
   ```text
-  please set configurations of mongoDB, redis, mysql in tmaestro-lite.yaml file for below item value.
-  
   MONGO_DOMAIN,
   MONGO_USERNAME,
   MONGO_PASSWORD,
@@ -50,35 +52,28 @@ make
   MYSQL_USERNAME
   ```
 
-  * install Container Auto Tune
-  ```shell
-  kubectl apply -f tmaestro-lite.yaml
-  ```
-
-  * deploy twatch(not necessary)
-  ```shell
-  kubectl apply -f twatch.yaml
-  ```
-
-### install redis(not necessary)
-```shell
-kubectl apply -f deploy/storage/redis.yaml
+### import tables of Mysql
+* import scripts the following mysql scripts to create database and tables which service stores
+```text
+  deploy/mysql/tmaestro-lite-database-create.sql
+  deploy/mysql/tmaestro-lite-tables-create.sql
 ```
 
-### install mongodb(not necessary)
-```shell
-kubectl apply -f deploy/storage/mongodb.yaml
+## run locally
+```text
+bash start.sh
 ```
 
-
-## Contact
+## Contact us
 
 * Mailing list:
-  * dev list: for dev/user discussion. [us](mailto:tmaestro@antgroup.com)
+    * dev list: for dev/user discussion. [us](mailto:tmaestro@antgroup.com)
 
-* Bugs: 
-* Gitter: 
-* Twitter: 
+* Bugs:
+* Gitter:
+* Twitter:
+* DingTalk   
+  ![img.png](img.png)
 
 ## Contributing
 
