@@ -17,23 +17,17 @@
 package com.alipay.autotuneservice.controller;
 
 import com.alipay.autotuneservice.configuration.NoLogin;
-import com.alipay.autotuneservice.dao.AppLogRepository;
 import com.alipay.autotuneservice.dao.StorageRepository;
 import com.alipay.autotuneservice.model.ServiceBaseResult;
-import com.alipay.autotuneservice.model.common.AppLog;
-import com.alipay.autotuneservice.model.common.AppLogType;
 import com.alipay.autotuneservice.model.common.CloudType;
 import com.alipay.autotuneservice.model.common.FileContent;
 import com.alipay.autotuneservice.model.common.StorageInfo;
 import com.alipay.autotuneservice.service.StorageInfoService;
 import com.alipay.autotuneservice.util.UserUtil;
 import com.amazonaws.services.s3.model.S3Object;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,8 +58,6 @@ public class StorageController {
     private StorageRepository  storageRepository;
     @Autowired
     private StorageInfoService storageInfoService;
-    @Autowired
-    private AppLogRepository   appLogRepository;
 
     @NoLogin
     @PostMapping("/upload")
@@ -102,8 +94,9 @@ public class StorageController {
                 return storageInfoService.downloadFileFromAliS3(storageInfo.getS3Key());
             case AWS:
                 S3Object s3Object = storageInfoService.downloadFileFromS3(storageInfo.getS3Key());
-                if (s3Object != null)
+                if (s3Object != null) {
                     return s3Object.getObjectContent();
+                }
                 return null;
         }
         throw new UnsupportedOperationException(String.format(
@@ -192,44 +185,6 @@ public class StorageController {
         return ResponseEntity.ok(this.createResponseStream(response,
             fileContent.getAsInputStream(), fileContent.getLength(), fileContent.getFileName()));
     }
-
-    /**
-     * 下载javaAgent.jar
-     */
-    //@GetMapping(path = "/autoTuneAgent.jar")
-    //public ResponseEntity<StreamingResponseBody> downloadAutoTuneAgent(HttpServletResponse response,
-    //                                                                   @RequestParam(value = "accessToken") String accessToken) {
-    //    String inputAccessToken = StringUtils.isBlank(accessToken) ? UserUtil.getAccessToken() : accessToken;
-    //    // TODO 验证inputAccessToken是否合法
-    //    StorageInfo storageInfo = storageRepository.findByFileName("autoTuneAgent.jar");
-    //    S3Object s3Object = storageInfoService.downloadFileFromS3(storageInfo.getS3Key());
-    //    return ResponseEntity.ok(
-    //            this.createResponseStream(response, s3Object.getObjectContent(),
-    //                    (int) s3Object.getObjectMetadata().getContentLength(), storageInfo.getFileName()));
-    //}
-
-    /**
-     * 下载应用最新的日志文件
-     */
-    //@GetMapping(path = "/downloadLogFile")
-    //public ResponseEntity<StreamingResponseBody> downloadLogFile(HttpServletResponse response,
-    //                                                             @RequestParam Integer appId,
-    //                                                             @RequestParam AppLogType appLogType) {
-    //    try {
-    //        AppLog appLog = appLogRepository.findLastAppLog(appId, appLogType);
-    //        Preconditions.checkNotNull(appLog, "appLog is null");
-    //        S3Object s3Object = storageInfoService.downloadFileFromS3(appLog.getS3Key());
-    //        return ResponseEntity.ok(
-    //                this.createResponseStream(response,
-    //                        s3Object.getObjectContent(),
-    //                        (int) s3Object.getObjectMetadata().getContentLength(),
-    //                        appLog.getFileName())
-    //        );
-    //    } catch (Exception e) {
-    //        log.error("downloadLogFile error", e);
-    //        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    //    }
-    //}
 
     private StreamingResponseBody createResponseStream(HttpServletResponse response, InputStream inputStream, int fileLength,
                                                        String filename) {

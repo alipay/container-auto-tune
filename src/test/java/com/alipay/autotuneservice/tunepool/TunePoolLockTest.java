@@ -18,7 +18,6 @@ package com.alipay.autotuneservice.tunepool;
 
 import com.alipay.autotuneservice.AutotuneServiceApplication;
 import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
-import com.alipay.autotuneservice.schedule.MonitorContainerSchedule;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

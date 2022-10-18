@@ -68,8 +68,6 @@ public interface StorageInfoService {
      */
     FileContent generateAutoTuneYaml(String accessToken);
 
-    //void saveAppLogFile(GrpcCommon grpcCommon, Path filePath, String fileName, AppLogType appLogType) throws FileNotFoundException;
-    //
     String uploadFileToS3(InputStream inputStream, String fileName);
 
     /**
