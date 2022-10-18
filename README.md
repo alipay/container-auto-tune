@@ -21,7 +21,7 @@ We are now collecting user info to help us to improve further. Kindly support us
 
 ```bash
 git clone https://github.com/alipay/container-auto-tune.git
-cd tmaestro-lite
+cd container-auto-tune
 ```
 
 ### Compile locally
