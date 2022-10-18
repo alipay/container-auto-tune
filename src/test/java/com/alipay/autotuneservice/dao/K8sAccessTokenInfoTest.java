@@ -30,11 +30,9 @@ import java.util.List;
  */
 @SpringBootTest
 public class K8sAccessTokenInfoTest {
-    @Autowired
-    private K8sAccessTokenInfo      k8sAccessTokenInfo;
 
     @Autowired
-    private FillMetaDataMonitorTask fillDynamodbTask;
+    private K8sAccessTokenInfo      k8sAccessTokenInfo;
 
     @Test
     void select() {
@@ -42,11 +40,6 @@ public class K8sAccessTokenInfoTest {
         k8sAccessTokenInfoRecordList.forEach(item->{
             System.out.println(item.getAccessToken());
         });
-    }
-
-    @Test
-    void task() {
-        fillDynamodbTask.doTask();
     }
 
     @Test

@@ -40,8 +40,6 @@ public class TunePoolLockTest {
 
     @Autowired
     private RedisClient              redisClient;
-    @Autowired
-    private MonitorContainerSchedule monitorContainerSchedule;
 
     static {
         System.setProperty("xx", "xx");
@@ -70,11 +68,6 @@ public class TunePoolLockTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    public void test() {
-        monitorContainerSchedule.monitorProcessTask();
     }
 
     @Test

@@ -68,11 +68,6 @@
             <version>1.42.1</version>
         </dependency>
         <dependency>
-            <groupId>com.alipay</groupId>
-            <artifactId>autotune-client</artifactId>
-            <version>1.0.15</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
@@ -133,22 +128,6 @@
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>
         </dependency>
-
-
-        <!--saas中间件封装-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.alipay.saascloud</groupId>-->
-        <!--            <artifactId>saas-cloud-sdk</artifactId>-->
-        <!--            <version>1.0.0.2022080303</version>-->
-        <!--        </dependency>-->
-
-
-        <dependency>
-            <groupId>com.alipay.saascloud</groupId>
-            <artifactId>saas-cloud-support</artifactId>
-            <version>1.0.0.2022080301</version>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-common</artifactId>
@@ -172,12 +151,6 @@
             <version>1.29</version>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.mat</groupId>
-            <artifactId>mat-on-hand</artifactId>
-            <version>1.3</version>
-        </dependency>
-        <!--        付费 GClog 依赖-->
-        <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>3.2.6</version>
@@ -197,13 +170,6 @@
             <artifactId>vertx-service-proxy</artifactId>
             <version>3.9.10</version>
         </dependency>
-        <!--        付费 GClog 依赖-->
-        <!--                <dependency>-->
-        <!--                    <groupId>p2.osgi.bundle</groupId>-->
-        <!--                    <artifactId>org.eclipse.mat.api</artifactId>-->
-        <!--                    <version>1.8.0.201806041349</version>-->
-        <!--                </dependency>-->
-        <!-- https://mvnrepository.com/artifact/com.github.cormoran-io.pepper/pepper-mat -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jooq</artifactId>
@@ -317,6 +283,32 @@
             <version>1.4.9</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.19.4</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty</artifactId>
+            <version>1.42.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>1.42.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>1.42.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.19.4</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/fluent-hc -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -343,6 +335,13 @@
     </dependencies>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.6.2</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -383,6 +382,24 @@
                         </generate>
                     </generator>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <protocArtifact>com.google.protobuf:protoc:3.19.1:exe:${os.detected.classifier}</protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.42.1:exe:${os.detected.classifier}</pluginArtifact>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
