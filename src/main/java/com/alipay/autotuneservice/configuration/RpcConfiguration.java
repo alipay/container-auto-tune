@@ -16,12 +16,6 @@
  */
 package com.alipay.autotuneservice.configuration;
 
-import com.alipay.autotuneservice.infrastructure.rpc.SaasFactoryClient;
-import feign.Feign;
-import feign.Logger.Level;
-import feign.form.FormEncoder;
-import feign.gson.GsonDecoder;
-import feign.gson.GsonEncoder;
 import io.grpc.netty.NettyServerBuilder;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.serverfactory.GrpcServerConfigurer;
@@ -44,15 +38,6 @@ public class RpcConfiguration {
     private Executor            grpcExecutor;
     @Autowired
     private ConstantsProperties constantProperties;
-
-    //@Bean
-    //public SaasFactoryClient accountAuthClient() {
-    //    return Feign.builder()
-    //            .logLevel(Level.FULL)
-    //            .encoder(new FormEncoder(new GsonEncoder()))
-    //            .decoder(new GsonDecoder())
-    //            .target(SaasFactoryClient.class, constantProperties.getSaasUrl());
-    //}
 
     @Bean
     public GrpcServerConfigurer keepAliveServerConfigurer() {

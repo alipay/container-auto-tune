@@ -18,7 +18,6 @@ package com.alipay.autotuneservice.dao;
 
 import com.alipay.autotuneservice.dao.jooq.tables.records.K8sAccessTokenInfoRecord;
 import com.alipay.autotuneservice.dynamodb.bean.AppMonitorInfo;
-import com.alipay.autotuneservice.schedule.FillMetaDataMonitorTask;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,11 +30,9 @@ import java.util.List;
  */
 @SpringBootTest
 public class K8sAccessTokenInfoTest {
-    @Autowired
-    private K8sAccessTokenInfo      k8sAccessTokenInfo;
 
     @Autowired
-    private FillMetaDataMonitorTask fillDynamodbTask;
+    private K8sAccessTokenInfo      k8sAccessTokenInfo;
 
     @Test
     void select() {
@@ -43,11 +40,6 @@ public class K8sAccessTokenInfoTest {
         k8sAccessTokenInfoRecordList.forEach(item->{
             System.out.println(item.getAccessToken());
         });
-    }
-
-    @Test
-    void task() {
-        fillDynamodbTask.doTask();
     }
 
     @Test

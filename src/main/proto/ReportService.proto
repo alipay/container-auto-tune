@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.auto.tune.client";
+option java_outer_classname = "ReportServiceProto";
+option objc_class_prefix = "RTG";
+
+package com.alipay.autotune.client;
+
+enum ReportType {
+    REPORT_TYPE_OK = 0;
+    REPORT_TYPE_EXEC_COMMAND = 1;
+}
+
+message ExecuteStep {
+    string step_class = 1;
+    map<string, string> args = 2;
+}
+
+message CommandResponse {
+    bool success = 1;
+    string message = 2;
+    ReportType type = 3;
+    repeated ExecuteStep execute_steps = 4;
+}
+
+message CommonResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message SystemMetricsGrpc {
+    int32 system_cpu_count = 1;
+    double system_cpu_load = 2;
+    double process_cpu_load = 3;
+}
+
+message MemoryMetricsGrpc {
+    int64 used = 1;
+    int64 capacity = 2;
+    int64 max = 3;
+    double util = 4;
+}
+
+message GcMetricsGrpc {
+    int64 gc_count = 1;
+    int64 gc_time = 2;
+}
+
+message JfrEventGrpc {
+    string event_type = 1;
+    int64 timestamp = 2;
+    map<string, string> tags = 3;
+}
+
+message JfrGaugeMetricGrpc {
+    string name = 1;
+    double value = 2;
+    int64 timestamp = 3;
+    map<string, string> tags = 4;
+}
+
+message JfrSummaryMetricGrpc {
+    string name = 1;
+    int32 count = 2;
+    double sum = 3;
+    double min = 4;
+    double max = 5;
+    int64 start_time = 6;
+    int64 end_time = 7;
+    map<string, string> tags = 8;
+}
+
+message SystemCommonGrpc {
+    string app_name = 1;
+    string access_token = 2;
+    int64 timestamp = 3;
+    string hostname = 4;
+    string namespace = 5;
+    string pod_ip = 6;
+    string java_version = 7;
+    repeated string collectors = 8;
+}
+
+message MetricsGrpcRequest {
+    SystemCommonGrpc system_common = 1;
+    SystemMetricsGrpc system_metrics = 2;
+    MemoryMetricsGrpc eden_memory_metric = 3;
+    MemoryMetricsGrpc old_memory_metric = 4;
+    MemoryMetricsGrpc meta_memory_metric = 5;
+    GcMetricsGrpc young_gc_metric = 6;
+    GcMetricsGrpc full_gc_metric = 7;
+    repeated JfrEventGrpc jfr_event_metric = 8;
+    repeated JfrGaugeMetricGrpc jfr_gauge_metric = 9;
+    repeated JfrSummaryMetricGrpc jfr_summary_metric = 10;
+}
+
+message FileRequest {
+    string name = 1;
+    bytes data = 2;
+    int64 offset = 3;
+    SystemCommonGrpc system_common = 4;
+}
+
+message FileResponse {
+    int32 status = 1;
+    string message = 2;
+}
+
+service ReportService {
+    rpc Report (MetricsGrpcRequest) returns (CommonResponse) {}
+    rpc Upload (stream FileRequest) returns (stream FileResponse) {}
+    rpc HeartBeat (SystemCommonGrpc) returns (CommandResponse) {}
+}
