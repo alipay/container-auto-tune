@@ -72,8 +72,6 @@ bash start.sh
 * Bugs:
 * Gitter:
 * Twitter:
-* WeChat:
-  ![img.png](https://tmaestro-oss.oss-cn-hongkong.aliyuncs.com/wechat.png)
 * DingTalk   
   ![img.png](img.png)
 
