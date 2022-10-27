@@ -1,6 +1,6 @@
 name: Feature Request
 labels: ["enhancement"]
-description: Suggest an idea to CeresDB
+description: Suggest an idea to container-auto-tune
 body:
   - type: markdown
     attributes:
@@ -9,8 +9,8 @@ body:
   - type: textarea
     id: feat-description
     attributes:
-      label: Describe This Problem
-      description: A clear and concise description of what the problem is. 
+      label: Describe This Feature
+      description: A clear and concise description of what the Feature is. 
       placeholder: Ex. I'm always frustrated when [...]
     validations:
       required: true
