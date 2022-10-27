@@ -8,7 +8,7 @@ We are now collecting user info to help us to improve further. Kindly support us
 
 ## Architecture
 
-![Architecture](https://tmaestro-oss.oss-cn-hongkong.aliyuncs.com/AB8BFAD9-49C4-4690-9983-A20EF9A7962E.png)
+![Architecture](docs/logo/architecture.png)
 
 ## Features
 
@@ -25,7 +25,7 @@ cd container-auto-tune
 ```
 
 ### Compile locally
-Execute command
+Execute below command in project root path.
 ```shell
 make
 ```
@@ -73,7 +73,7 @@ bash start.sh
 * Gitter:
 * Twitter:
 * DingTalk   
-  ![img.png](img.png)
+  ![DingTalk](docs/logo/DingTalk-QR-code.png)
 
 ## Contributing
 
