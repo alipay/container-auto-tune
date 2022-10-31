@@ -8,10 +8,13 @@ import com.alipay.autotuneservice.dao.jooq.tables.AppInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.AppLog;
 import com.alipay.autotuneservice.dao.jooq.tables.BaseLine;
 import com.alipay.autotuneservice.dao.jooq.tables.ConfigInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.ContainerProcessInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.ContainerStatistics;
 import com.alipay.autotuneservice.dao.jooq.tables.ExpertKnowledge;
 import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.HelpInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMarketInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmOptsConfig;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.K8sAccessTokenInfo;
@@ -64,6 +67,16 @@ public class Tables {
     public static final ConfigInfo CONFIG_INFO = ConfigInfo.CONFIG_INFO;
 
     /**
+     * The table <code>TMAESTRO-LITE.CONTAINER_PROCESS_INFO</code>.
+     */
+    public static final ContainerProcessInfo CONTAINER_PROCESS_INFO = ContainerProcessInfo.CONTAINER_PROCESS_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.CONTAINER_STATISTICS</code>.
+     */
+    public static final ContainerStatistics CONTAINER_STATISTICS = ContainerStatistics.CONTAINER_STATISTICS;
+
+    /**
      * The table <code>TMAESTRO-LITE.EXPERT_KNOWLEDGE</code>.
      */
     public static final ExpertKnowledge EXPERT_KNOWLEDGE = ExpertKnowledge.EXPERT_KNOWLEDGE;
@@ -82,6 +95,11 @@ public class Tables {
      * The table <code>TMAESTRO-LITE.JVM_MARKET_INFO</code>.
      */
     public static final JvmMarketInfo JVM_MARKET_INFO = JvmMarketInfo.JVM_MARKET_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.JVM_MONITOR_METRIC_DATA</code>.
+     */
+    public static final JvmMonitorMetricData JVM_MONITOR_METRIC_DATA = JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA;
 
     /**
      * The table <code>TMAESTRO-LITE.JVM_OPTS_CONFIG</code>.

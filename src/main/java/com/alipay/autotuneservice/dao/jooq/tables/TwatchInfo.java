@@ -132,7 +132,7 @@ public class TwatchInfo extends TableImpl<TwatchInfoRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.TWATCH_INFO_CONTAINERID_INDEX, Indexes.TWATCH_INFO_CONTAINERNAME_INDEX);
+        return Arrays.<Index>asList(Indexes.TWATCH_INFO_AGENT_NAME_INDEX, Indexes.TWATCH_INFO_CONTAINERID_INDEX, Indexes.TWATCH_INFO_CONTAINERNAME_INDEX);
     }
 
     @Override

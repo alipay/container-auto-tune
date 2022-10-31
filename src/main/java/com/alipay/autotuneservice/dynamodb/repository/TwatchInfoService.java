@@ -21,11 +21,9 @@ import com.alipay.autotuneservice.dao.TwatchInfoRepository;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
 import com.alipay.autotuneservice.multiCloudAdapter.NosqlService;
-import com.alipay.autotuneservice.util.ConvertUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +89,7 @@ public class TwatchInfoService {
     }
 
     public List<TwatchInfoDo> findInfoByPod(String podName) {
-        return getInfos("podName-index", "podName", podName);
+        return twatchInfoRepository.findInfoByPod(podName);
     }
 
     public TwatchInfoDo findOneByPod(String podName) {
@@ -103,13 +101,14 @@ public class TwatchInfoService {
     }
 
     public List<TwatchInfoDo> findInfoByAgent(String agentName) {
-        return getInfos("agentName-index", "agentName", agentName);
+        return twatchInfoRepository.findInfoByAgent(agentName);
     }
 
     public List<TwatchInfoDo> findInfoByContainerId(String containerId) {
-        return getInfos("containerId-index", "containerId", containerId);
+        return twatchInfoRepository.findByContainerId(containerId);
     }
 
+    @Deprecated
     private List<TwatchInfoDo> getInfos(String indexName, String key, String value) {
         List<TwatchInfoDo> twatchInfoDos = nosqlService.queryByPkIndex(TWATCH_TABLE, indexName, key, value, TwatchInfoDo.class);
         twatchInfoDos.sort(comparing(TwatchInfoDo::getDtPeriod));

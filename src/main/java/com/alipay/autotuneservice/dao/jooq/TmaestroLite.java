@@ -8,10 +8,13 @@ import com.alipay.autotuneservice.dao.jooq.tables.AppInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.AppLog;
 import com.alipay.autotuneservice.dao.jooq.tables.BaseLine;
 import com.alipay.autotuneservice.dao.jooq.tables.ConfigInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.ContainerProcessInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.ContainerStatistics;
 import com.alipay.autotuneservice.dao.jooq.tables.ExpertKnowledge;
 import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.HelpInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMarketInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmOptsConfig;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.K8sAccessTokenInfo;
@@ -33,6 +36,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskData;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskDataDev;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTrialData;
+import com.alipay.autotuneservice.dao.jooq.tables.TwatchInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.UserInfo;
 
 import java.util.Arrays;
@@ -77,6 +81,16 @@ public class TmaestroLite extends SchemaImpl {
     public final ConfigInfo CONFIG_INFO = ConfigInfo.CONFIG_INFO;
 
     /**
+     * The table <code>TMAESTRO-LITE.CONTAINER_PROCESS_INFO</code>.
+     */
+    public final ContainerProcessInfo CONTAINER_PROCESS_INFO = ContainerProcessInfo.CONTAINER_PROCESS_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.CONTAINER_STATISTICS</code>.
+     */
+    public final ContainerStatistics CONTAINER_STATISTICS = ContainerStatistics.CONTAINER_STATISTICS;
+
+    /**
      * The table <code>TMAESTRO-LITE.EXPERT_KNOWLEDGE</code>.
      */
     public final ExpertKnowledge EXPERT_KNOWLEDGE = ExpertKnowledge.EXPERT_KNOWLEDGE;
@@ -95,6 +109,11 @@ public class TmaestroLite extends SchemaImpl {
      * The table <code>TMAESTRO-LITE.JVM_MARKET_INFO</code>.
      */
     public final JvmMarketInfo JVM_MARKET_INFO = JvmMarketInfo.JVM_MARKET_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.JVM_MONITOR_METRIC_DATA</code>.
+     */
+    public final JvmMonitorMetricData JVM_MONITOR_METRIC_DATA = JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA;
 
     /**
      * The table <code>TMAESTRO-LITE.JVM_OPTS_CONFIG</code>.
@@ -202,6 +221,11 @@ public class TmaestroLite extends SchemaImpl {
     public final TuningParamTrialData TUNING_PARAM_TRIAL_DATA = TuningParamTrialData.TUNING_PARAM_TRIAL_DATA;
 
     /**
+     * The table <code>TMAESTRO-LITE.TWATCH_INFO</code>.
+     */
+    public final TwatchInfo TWATCH_INFO = TwatchInfo.TWATCH_INFO;
+
+    /**
      * The table <code>TMAESTRO-LITE.USER_INFO</code>.
      */
     public final UserInfo USER_INFO = UserInfo.USER_INFO;
@@ -226,10 +250,13 @@ public class TmaestroLite extends SchemaImpl {
             AppLog.APP_LOG,
             BaseLine.BASE_LINE,
             ConfigInfo.CONFIG_INFO,
+            ContainerProcessInfo.CONTAINER_PROCESS_INFO,
+            ContainerStatistics.CONTAINER_STATISTICS,
             ExpertKnowledge.EXPERT_KNOWLEDGE,
             HealthCheckInfo.HEALTH_CHECK_INFO,
             HelpInfo.HELP_INFO,
             JvmMarketInfo.JVM_MARKET_INFO,
+            JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA,
             JvmOptsConfig.JVM_OPTS_CONFIG,
             JvmTuningRiskCenter.JVM_TUNING_RISK_CENTER,
             K8sAccessTokenInfo.K8S_ACCESS_TOKEN_INFO,
@@ -251,6 +278,7 @@ public class TmaestroLite extends SchemaImpl {
             TuningParamTaskDataDev.TUNING_PARAM_TASK_DATA_DEV,
             TuningParamTaskInfo.TUNING_PARAM_TASK_INFO,
             TuningParamTrialData.TUNING_PARAM_TRIAL_DATA,
+            TwatchInfo.TWATCH_INFO,
             UserInfo.USER_INFO);
     }
 }
