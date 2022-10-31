@@ -33,6 +33,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskData;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskDataDev;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTrialData;
+import com.alipay.autotuneservice.dao.jooq.tables.TwatchInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.UserInfo;
 
 
@@ -186,6 +187,11 @@ public class Tables {
      * The table <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA</code>.
      */
     public static final TuningParamTrialData TUNING_PARAM_TRIAL_DATA = TuningParamTrialData.TUNING_PARAM_TRIAL_DATA;
+
+    /**
+     * The table <code>TMAESTRO-LITE.TWATCH_INFO</code>.
+     */
+    public static final TwatchInfo TWATCH_INFO = TwatchInfo.TWATCH_INFO;
 
     /**
      * The table <code>TMAESTRO-LITE.USER_INFO</code>.
