@@ -43,14 +43,14 @@ public class JvmOptsConfig implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_opts_config.id</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.ID</code>.
      */
     public Long getId() {
         return this.id;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_opts_config.id</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.ID</code>.
      */
     public JvmOptsConfig setId(Long id) {
         this.id = id;
@@ -58,14 +58,14 @@ public class JvmOptsConfig implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_opts_config.jvm_opt</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.JVM_OPT</code>.
      */
     public String getJvmOpt() {
         return this.jvmOpt;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_opts_config.jvm_opt</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.JVM_OPT</code>.
      */
     public JvmOptsConfig setJvmOpt(String jvmOpt) {
         this.jvmOpt = jvmOpt;
@@ -73,14 +73,14 @@ public class JvmOptsConfig implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_opts_config.create_time</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.CREATE_TIME</code>.
      */
     public LocalDateTime getCreateTime() {
         return this.createTime;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_opts_config.create_time</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.CREATE_TIME</code>.
      */
     public JvmOptsConfig setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
@@ -88,14 +88,14 @@ public class JvmOptsConfig implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_opts_config.update_time</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.UPDATE_TIME</code>.
      */
     public LocalDateTime getUpdateTime() {
         return this.updateTime;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_opts_config.update_time</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.UPDATE_TIME</code>.
      */
     public JvmOptsConfig setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;

@@ -71,14 +71,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.id</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.ID</code>.
      */
     public Long getId() {
         return this.id;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.id</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.ID</code>.
      */
     public JvmTuningRiskCenter setId(Long id) {
         this.id = id;
@@ -86,14 +86,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.appId</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.APPID</code>.
      */
     public Integer getAppid() {
         return this.appid;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.appId</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.APPID</code>.
      */
     public JvmTuningRiskCenter setAppid(Integer appid) {
         this.appid = appid;
@@ -101,14 +101,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.app</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.APP</code>.
      */
     public String getApp() {
         return this.app;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.app</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.APP</code>.
      */
     public JvmTuningRiskCenter setApp(String app) {
         this.app = app;
@@ -116,14 +116,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.metric</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.METRIC</code>.
      */
     public String getMetric() {
         return this.metric;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.metric</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.METRIC</code>.
      */
     public JvmTuningRiskCenter setMetric(String metric) {
         this.metric = metric;
@@ -131,14 +131,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.model</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.MODEL</code>.
      */
     public String getModel() {
         return this.model;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.model</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.MODEL</code>.
      */
     public JvmTuningRiskCenter setModel(String model) {
         this.model = model;
@@ -146,14 +146,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.dt</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.DT</code>.
      */
     public String getDt() {
         return this.dt;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.dt</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.DT</code>.
      */
     public JvmTuningRiskCenter setDt(String dt) {
         this.dt = dt;
@@ -161,14 +161,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.sucess</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.SUCESS</code>.
      */
     public String getSucess() {
         return this.sucess;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.sucess</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.SUCESS</code>.
      */
     public JvmTuningRiskCenter setSucess(String sucess) {
         this.sucess = sucess;
@@ -176,14 +176,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.info</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.INFO</code>.
      */
     public String getInfo() {
         return this.info;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.info</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.INFO</code>.
      */
     public JvmTuningRiskCenter setInfo(String info) {
         this.info = info;
@@ -191,14 +191,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.lowline</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.LOWLINE</code>.
      */
     public Double getLowline() {
         return this.lowline;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.lowline</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.LOWLINE</code>.
      */
     public JvmTuningRiskCenter setLowline(Double lowline) {
         this.lowline = lowline;
@@ -206,14 +206,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.upline</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.UPLINE</code>.
      */
     public Double getUpline() {
         return this.upline;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.upline</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.UPLINE</code>.
      */
     public JvmTuningRiskCenter setUpline(Double upline) {
         this.upline = upline;
@@ -221,14 +221,14 @@ public class JvmTuningRiskCenter implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.timestamp</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.TIMESTAMP</code>.
      */
     public LocalDateTime getTimestamp() {
         return this.timestamp;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.timestamp</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.TIMESTAMP</code>.
      */
     public JvmTuningRiskCenter setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;

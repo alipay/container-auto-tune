@@ -37,7 +37,7 @@ public class TuningParamTrialData extends TableImpl<TuningParamTrialDataRecord> 
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>tmaestro-lite.tuning_param_trial_data</code>
+     * The reference instance of <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA</code>
      */
     public static final TuningParamTrialData TUNING_PARAM_TRIAL_DATA = new TuningParamTrialData();
 
@@ -50,89 +50,89 @@ public class TuningParamTrialData extends TableImpl<TuningParamTrialDataRecord> 
     }
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.id</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.ID</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
+    public final TableField<TuningParamTrialDataRecord, Long> ID = createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.pipeline_id</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.PIPELINE_ID</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, Integer> PIPELINE_ID = createField(DSL.name("pipeline_id"), SQLDataType.INTEGER, this, "");
+    public final TableField<TuningParamTrialDataRecord, Integer> PIPELINE_ID = createField(DSL.name("PIPELINE_ID"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.trial_id</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_ID</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, Integer> TRIAL_ID = createField(DSL.name("trial_id"), SQLDataType.INTEGER, this, "");
+    public final TableField<TuningParamTrialDataRecord, Integer> TRIAL_ID = createField(DSL.name("TRIAL_ID"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.app</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.APP</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> APP = createField(DSL.name("app"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> APP = createField(DSL.name("APP"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.app_id</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.APP_ID</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> APP_ID = createField(DSL.name("app_id"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> APP_ID = createField(DSL.name("APP_ID"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.trial_status</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_STATUS</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> TRIAL_STATUS = createField(DSL.name("trial_status"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> TRIAL_STATUS = createField(DSL.name("TRIAL_STATUS"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.trial_status_info</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_STATUS_INFO</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> TRIAL_STATUS_INFO = createField(DSL.name("trial_status_info"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> TRIAL_STATUS_INFO = createField(DSL.name("TRIAL_STATUS_INFO"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.task_status</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TASK_STATUS</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> TASK_STATUS = createField(DSL.name("task_status"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> TASK_STATUS = createField(DSL.name("TASK_STATUS"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.refer_params</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_PARAMS</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> REFER_PARAMS = createField(DSL.name("refer_params"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> REFER_PARAMS = createField(DSL.name("REFER_PARAMS"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.trial_params</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_PARAMS</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> TRIAL_PARAMS = createField(DSL.name("trial_params"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> TRIAL_PARAMS = createField(DSL.name("TRIAL_PARAMS"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.alg_rec_type</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.ALG_REC_TYPE</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> ALG_REC_TYPE = createField(DSL.name("alg_rec_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> ALG_REC_TYPE = createField(DSL.name("ALG_REC_TYPE"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.refer_pods</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_PODS</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> REFER_PODS = createField(DSL.name("refer_pods"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> REFER_PODS = createField(DSL.name("REFER_PODS"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.trial_pods</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_PODS</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> TRIAL_PODS = createField(DSL.name("trial_pods"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> TRIAL_PODS = createField(DSL.name("TRIAL_PODS"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.refer_metric_value</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_METRIC_VALUE</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> REFER_METRIC_VALUE = createField(DSL.name("refer_metric_value"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> REFER_METRIC_VALUE = createField(DSL.name("REFER_METRIC_VALUE"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.trial_metric_value</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_METRIC_VALUE</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, String> TRIAL_METRIC_VALUE = createField(DSL.name("trial_metric_value"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<TuningParamTrialDataRecord, String> TRIAL_METRIC_VALUE = createField(DSL.name("TRIAL_METRIC_VALUE"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.start_time</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.START_TIME</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, LocalDateTime> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<TuningParamTrialDataRecord, LocalDateTime> START_TIME = createField(DSL.name("START_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_trial_data.stop_time</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.STOP_TIME</code>.
      */
-    public final TableField<TuningParamTrialDataRecord, LocalDateTime> STOP_TIME = createField(DSL.name("stop_time"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<TuningParamTrialDataRecord, LocalDateTime> STOP_TIME = createField(DSL.name("STOP_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
 
     private TuningParamTrialData(Name alias, Table<TuningParamTrialDataRecord> aliased) {
         this(alias, aliased, null);
@@ -143,24 +143,24 @@ public class TuningParamTrialData extends TableImpl<TuningParamTrialDataRecord> 
     }
 
     /**
-     * Create an aliased <code>tmaestro-lite.tuning_param_trial_data</code> table reference
+     * Create an aliased <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA</code> table reference
      */
     public TuningParamTrialData(String alias) {
         this(DSL.name(alias), TUNING_PARAM_TRIAL_DATA);
     }
 
     /**
-     * Create an aliased <code>tmaestro-lite.tuning_param_trial_data</code> table reference
+     * Create an aliased <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA</code> table reference
      */
     public TuningParamTrialData(Name alias) {
         this(alias, TUNING_PARAM_TRIAL_DATA);
     }
 
     /**
-     * Create a <code>tmaestro-lite.tuning_param_trial_data</code> table reference
+     * Create a <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA</code> table reference
      */
     public TuningParamTrialData() {
-        this(DSL.name("tuning_param_trial_data"), null);
+        this(DSL.name("TUNING_PARAM_TRIAL_DATA"), null);
     }
 
     public <O extends Record> TuningParamTrialData(Table<O> child, ForeignKey<O, TuningParamTrialDataRecord> key) {
@@ -179,12 +179,12 @@ public class TuningParamTrialData extends TableImpl<TuningParamTrialDataRecord> 
 
     @Override
     public UniqueKey<TuningParamTrialDataRecord> getPrimaryKey() {
-        return Keys.KEY_TUNING_PARAM_TRIAL_DATA_PRIMARY;
+        return Keys.CONSTRAINT_67;
     }
 
     @Override
     public List<UniqueKey<TuningParamTrialDataRecord>> getKeys() {
-        return Arrays.<UniqueKey<TuningParamTrialDataRecord>>asList(Keys.KEY_TUNING_PARAM_TRIAL_DATA_PRIMARY);
+        return Arrays.<UniqueKey<TuningParamTrialDataRecord>>asList(Keys.CONSTRAINT_67);
     }
 
     @Override

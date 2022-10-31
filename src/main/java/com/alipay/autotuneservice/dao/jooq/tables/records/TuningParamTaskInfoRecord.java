@@ -24,7 +24,7 @@ public class TuningParamTaskInfoRecord extends UpdatableRecordImpl<TuningParamTa
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_info.info_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.INFO_ID</code>.
      */
     public TuningParamTaskInfoRecord setInfoId(Long value) {
         set(0, value);
@@ -32,14 +32,14 @@ public class TuningParamTaskInfoRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_info.info_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.INFO_ID</code>.
      */
     public Long getInfoId() {
         return (Long) get(0);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_info.app_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.APP_ID</code>.
      */
     public TuningParamTaskInfoRecord setAppId(Integer value) {
         set(1, value);
@@ -47,14 +47,14 @@ public class TuningParamTaskInfoRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_info.app_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.APP_ID</code>.
      */
     public Integer getAppId() {
         return (Integer) get(1);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_info.app</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.APP</code>.
      */
     public TuningParamTaskInfoRecord setApp(String value) {
         set(2, value);
@@ -62,14 +62,14 @@ public class TuningParamTaskInfoRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_info.app</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.APP</code>.
      */
     public String getApp() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_info.optimization_type</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.OPTIMIZATION_TYPE</code>.
      */
     public TuningParamTaskInfoRecord setOptimizationType(String value) {
         set(3, value);
@@ -77,14 +77,14 @@ public class TuningParamTaskInfoRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_info.optimization_type</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.OPTIMIZATION_TYPE</code>.
      */
     public String getOptimizationType() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_info.problem_type</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.PROBLEM_TYPE</code>.
      */
     public TuningParamTaskInfoRecord setProblemType(String value) {
         set(4, value);
@@ -92,14 +92,14 @@ public class TuningParamTaskInfoRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_info.problem_type</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.PROBLEM_TYPE</code>.
      */
     public String getProblemType() {
         return (String) get(4);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_info.param_distribution</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.PARAM_DISTRIBUTION</code>.
      */
     public TuningParamTaskInfoRecord setParamDistribution(String value) {
         set(5, value);
@@ -107,14 +107,14 @@ public class TuningParamTaskInfoRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_info.param_distribution</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.PARAM_DISTRIBUTION</code>.
      */
     public String getParamDistribution() {
         return (String) get(5);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_info.problem_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.PROBLEM_ID</code>.
      */
     public TuningParamTaskInfoRecord setProblemId(String value) {
         set(6, value);
@@ -122,14 +122,14 @@ public class TuningParamTaskInfoRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_info.problem_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.PROBLEM_ID</code>.
      */
     public String getProblemId() {
         return (String) get(6);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_info.dt</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.DT</code>.
      */
     public TuningParamTaskInfoRecord setDt(String value) {
         set(7, value);
@@ -137,14 +137,14 @@ public class TuningParamTaskInfoRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_info.dt</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.DT</code>.
      */
     public String getDt() {
         return (String) get(7);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_info.write_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.WRITE_TIME</code>.
      */
     public TuningParamTaskInfoRecord setWriteTime(LocalDateTime value) {
         set(8, value);
@@ -152,7 +152,7 @@ public class TuningParamTaskInfoRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_info.write_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.WRITE_TIME</code>.
      */
     public LocalDateTime getWriteTime() {
         return (LocalDateTime) get(8);

@@ -37,7 +37,7 @@ public class JvmTuningRiskCenter extends TableImpl<JvmTuningRiskCenterRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>tmaestro-lite.jvm_tuning_risk_center</code>
+     * The reference instance of <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER</code>
      */
     public static final JvmTuningRiskCenter JVM_TUNING_RISK_CENTER = new JvmTuningRiskCenter();
 
@@ -50,59 +50,59 @@ public class JvmTuningRiskCenter extends TableImpl<JvmTuningRiskCenterRecord> {
     }
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.id</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.ID</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
+    public final TableField<JvmTuningRiskCenterRecord, Long> ID = createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.appId</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.APPID</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, Integer> APPID = createField(DSL.name("appId"), SQLDataType.INTEGER, this, "");
+    public final TableField<JvmTuningRiskCenterRecord, Integer> APPID = createField(DSL.name("APPID"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.app</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.APP</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, String> APP = createField(DSL.name("app"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<JvmTuningRiskCenterRecord, String> APP = createField(DSL.name("APP"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.metric</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.METRIC</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, String> METRIC = createField(DSL.name("metric"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<JvmTuningRiskCenterRecord, String> METRIC = createField(DSL.name("METRIC"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.model</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.MODEL</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, String> MODEL = createField(DSL.name("model"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<JvmTuningRiskCenterRecord, String> MODEL = createField(DSL.name("MODEL"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.dt</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.DT</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, String> DT = createField(DSL.name("dt"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<JvmTuningRiskCenterRecord, String> DT = createField(DSL.name("DT"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.sucess</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.SUCESS</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, String> SUCESS = createField(DSL.name("sucess"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<JvmTuningRiskCenterRecord, String> SUCESS = createField(DSL.name("SUCESS"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.info</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.INFO</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, String> INFO = createField(DSL.name("info"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<JvmTuningRiskCenterRecord, String> INFO = createField(DSL.name("INFO"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.lowline</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.LOWLINE</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, Double> LOWLINE = createField(DSL.name("lowline"), SQLDataType.DOUBLE, this, "");
+    public final TableField<JvmTuningRiskCenterRecord, Double> LOWLINE = createField(DSL.name("LOWLINE"), SQLDataType.DOUBLE, this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.upline</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.UPLINE</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, Double> UPLINE = createField(DSL.name("upline"), SQLDataType.DOUBLE, this, "");
+    public final TableField<JvmTuningRiskCenterRecord, Double> UPLINE = createField(DSL.name("UPLINE"), SQLDataType.DOUBLE, this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_tuning_risk_center.timestamp</code>.
+     * The column <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.TIMESTAMP</code>.
      */
-    public final TableField<JvmTuningRiskCenterRecord, LocalDateTime> TIMESTAMP = createField(DSL.name("timestamp"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<JvmTuningRiskCenterRecord, LocalDateTime> TIMESTAMP = createField(DSL.name("TIMESTAMP"), SQLDataType.LOCALDATETIME(6), this, "");
 
     private JvmTuningRiskCenter(Name alias, Table<JvmTuningRiskCenterRecord> aliased) {
         this(alias, aliased, null);
@@ -113,24 +113,24 @@ public class JvmTuningRiskCenter extends TableImpl<JvmTuningRiskCenterRecord> {
     }
 
     /**
-     * Create an aliased <code>tmaestro-lite.jvm_tuning_risk_center</code> table reference
+     * Create an aliased <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER</code> table reference
      */
     public JvmTuningRiskCenter(String alias) {
         this(DSL.name(alias), JVM_TUNING_RISK_CENTER);
     }
 
     /**
-     * Create an aliased <code>tmaestro-lite.jvm_tuning_risk_center</code> table reference
+     * Create an aliased <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER</code> table reference
      */
     public JvmTuningRiskCenter(Name alias) {
         this(alias, JVM_TUNING_RISK_CENTER);
     }
 
     /**
-     * Create a <code>tmaestro-lite.jvm_tuning_risk_center</code> table reference
+     * Create a <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER</code> table reference
      */
     public JvmTuningRiskCenter() {
-        this(DSL.name("jvm_tuning_risk_center"), null);
+        this(DSL.name("JVM_TUNING_RISK_CENTER"), null);
     }
 
     public <O extends Record> JvmTuningRiskCenter(Table<O> child, ForeignKey<O, JvmTuningRiskCenterRecord> key) {
@@ -149,12 +149,12 @@ public class JvmTuningRiskCenter extends TableImpl<JvmTuningRiskCenterRecord> {
 
     @Override
     public UniqueKey<JvmTuningRiskCenterRecord> getPrimaryKey() {
-        return Keys.KEY_JVM_TUNING_RISK_CENTER_PRIMARY;
+        return Keys.CONSTRAINT_84;
     }
 
     @Override
     public List<UniqueKey<JvmTuningRiskCenterRecord>> getKeys() {
-        return Arrays.<UniqueKey<JvmTuningRiskCenterRecord>>asList(Keys.KEY_JVM_TUNING_RISK_CENTER_PRIMARY, Keys.KEY_JVM_TUNING_RISK_CENTER_JVM_TUNING_RISK_CENTER_APPID_METRIC_DT_UINDEX);
+        return Arrays.<UniqueKey<JvmTuningRiskCenterRecord>>asList(Keys.CONSTRAINT_84, Keys.JVM_TUNING_RISK_CENTER_APPID_METRIC_DT_UINDEX);
     }
 
     @Override

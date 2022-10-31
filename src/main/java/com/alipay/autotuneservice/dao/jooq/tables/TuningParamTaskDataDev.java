@@ -36,7 +36,7 @@ public class TuningParamTaskDataDev extends TableImpl<TuningParamTaskDataDevReco
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>tmaestro-lite.tuning_param_task_data_dev</code>
+     * The reference instance of <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV</code>
      */
     public static final TuningParamTaskDataDev TUNING_PARAM_TASK_DATA_DEV = new TuningParamTaskDataDev();
 
@@ -49,109 +49,109 @@ public class TuningParamTaskDataDev extends TableImpl<TuningParamTaskDataDevReco
     }
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.pipeline_id</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.PIPELINE_ID</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, Integer> PIPELINE_ID = createField(DSL.name("pipeline_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, Integer> PIPELINE_ID = createField(DSL.name("PIPELINE_ID"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.app_id</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.APP_ID</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, Integer> APP_ID = createField(DSL.name("app_id"), SQLDataType.INTEGER, this, "");
+    public final TableField<TuningParamTaskDataDevRecord, Integer> APP_ID = createField(DSL.name("APP_ID"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.app_name</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.APP_NAME</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, String> APP_NAME = createField(DSL.name("app_name"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, String> APP_NAME = createField(DSL.name("APP_NAME"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.pods</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.PODS</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, String> PODS = createField(DSL.name("pods"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, String> PODS = createField(DSL.name("PODS"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.optimization_type</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.OPTIMIZATION_TYPE</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, String> OPTIMIZATION_TYPE = createField(DSL.name("optimization_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, String> OPTIMIZATION_TYPE = createField(DSL.name("OPTIMIZATION_TYPE"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.problem_describe</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.PROBLEM_DESCRIBE</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, String> PROBLEM_DESCRIBE = createField(DSL.name("problem_describe"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, String> PROBLEM_DESCRIBE = createField(DSL.name("PROBLEM_DESCRIBE"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.problem_type</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.PROBLEM_TYPE</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, String> PROBLEM_TYPE = createField(DSL.name("problem_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, String> PROBLEM_TYPE = createField(DSL.name("PROBLEM_TYPE"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.direction</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.DIRECTION</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, String> DIRECTION = createField(DSL.name("direction"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, String> DIRECTION = createField(DSL.name("DIRECTION"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.trial_nums</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.TRIAL_NUMS</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, Integer> TRIAL_NUMS = createField(DSL.name("trial_nums"), SQLDataType.INTEGER, this, "");
+    public final TableField<TuningParamTaskDataDevRecord, Integer> TRIAL_NUMS = createField(DSL.name("TRIAL_NUMS"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.trial_params</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.TRIAL_PARAMS</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, String> TRIAL_PARAMS = createField(DSL.name("trial_params"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, String> TRIAL_PARAMS = createField(DSL.name("TRIAL_PARAMS"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.max_iter</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.MAX_ITER</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, Integer> MAX_ITER = createField(DSL.name("max_iter"), SQLDataType.INTEGER, this, "");
+    public final TableField<TuningParamTaskDataDevRecord, Integer> MAX_ITER = createField(DSL.name("MAX_ITER"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.trial_time_min</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.TRIAL_TIME_MIN</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, Integer> TRIAL_TIME_MIN = createField(DSL.name("trial_time_min"), SQLDataType.INTEGER, this, "");
+    public final TableField<TuningParamTaskDataDevRecord, Integer> TRIAL_TIME_MIN = createField(DSL.name("TRIAL_TIME_MIN"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.trial_time_max</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.TRIAL_TIME_MAX</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, Integer> TRIAL_TIME_MAX = createField(DSL.name("trial_time_max"), SQLDataType.INTEGER, this, "");
+    public final TableField<TuningParamTaskDataDevRecord, Integer> TRIAL_TIME_MAX = createField(DSL.name("TRIAL_TIME_MAX"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.trial_start_time</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.TRIAL_START_TIME</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, LocalDateTime> TRIAL_START_TIME = createField(DSL.name("trial_start_time"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, LocalDateTime> TRIAL_START_TIME = createField(DSL.name("TRIAL_START_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.trial_stop_time</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.TRIAL_STOP_TIME</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, LocalDateTime> TRIAL_STOP_TIME = createField(DSL.name("trial_stop_time"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, LocalDateTime> TRIAL_STOP_TIME = createField(DSL.name("TRIAL_STOP_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.start_time</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.START_TIME</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, LocalDateTime> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, LocalDateTime> START_TIME = createField(DSL.name("START_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.end_time</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.END_TIME</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, LocalDateTime> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, LocalDateTime> END_TIME = createField(DSL.name("END_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.task_status</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.TASK_STATUS</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, String> TASK_STATUS = createField(DSL.name("task_status"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, String> TASK_STATUS = createField(DSL.name("TASK_STATUS"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.before_params</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.BEFORE_PARAMS</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, String> BEFORE_PARAMS = createField(DSL.name("before_params"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, String> BEFORE_PARAMS = createField(DSL.name("BEFORE_PARAMS"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.modify_time</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.MODIFY_TIME</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, LocalDateTime> MODIFY_TIME = createField(DSL.name("modify_time"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, LocalDateTime> MODIFY_TIME = createField(DSL.name("MODIFY_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
-     * The column <code>tmaestro-lite.tuning_param_task_data_dev.compare_pods</code>.
+     * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV.COMPARE_PODS</code>.
      */
-    public final TableField<TuningParamTaskDataDevRecord, String> COMPARE_PODS = createField(DSL.name("compare_pods"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<TuningParamTaskDataDevRecord, String> COMPARE_PODS = createField(DSL.name("COMPARE_PODS"), SQLDataType.VARCHAR(1000), this, "");
 
     private TuningParamTaskDataDev(Name alias, Table<TuningParamTaskDataDevRecord> aliased) {
         this(alias, aliased, null);
@@ -162,24 +162,24 @@ public class TuningParamTaskDataDev extends TableImpl<TuningParamTaskDataDevReco
     }
 
     /**
-     * Create an aliased <code>tmaestro-lite.tuning_param_task_data_dev</code> table reference
+     * Create an aliased <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV</code> table reference
      */
     public TuningParamTaskDataDev(String alias) {
         this(DSL.name(alias), TUNING_PARAM_TASK_DATA_DEV);
     }
 
     /**
-     * Create an aliased <code>tmaestro-lite.tuning_param_task_data_dev</code> table reference
+     * Create an aliased <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV</code> table reference
      */
     public TuningParamTaskDataDev(Name alias) {
         this(alias, TUNING_PARAM_TASK_DATA_DEV);
     }
 
     /**
-     * Create a <code>tmaestro-lite.tuning_param_task_data_dev</code> table reference
+     * Create a <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV</code> table reference
      */
     public TuningParamTaskDataDev() {
-        this(DSL.name("tuning_param_task_data_dev"), null);
+        this(DSL.name("TUNING_PARAM_TASK_DATA_DEV"), null);
     }
 
     public <O extends Record> TuningParamTaskDataDev(Table<O> child, ForeignKey<O, TuningParamTaskDataDevRecord> key) {
@@ -193,12 +193,12 @@ public class TuningParamTaskDataDev extends TableImpl<TuningParamTaskDataDevReco
 
     @Override
     public UniqueKey<TuningParamTaskDataDevRecord> getPrimaryKey() {
-        return Keys.KEY_TUNING_PARAM_TASK_DATA_DEV_PRIMARY;
+        return Keys.CONSTRAINT_B0;
     }
 
     @Override
     public List<UniqueKey<TuningParamTaskDataDevRecord>> getKeys() {
-        return Arrays.<UniqueKey<TuningParamTaskDataDevRecord>>asList(Keys.KEY_TUNING_PARAM_TASK_DATA_DEV_PRIMARY);
+        return Arrays.<UniqueKey<TuningParamTaskDataDevRecord>>asList(Keys.CONSTRAINT_B0);
     }
 
     @Override

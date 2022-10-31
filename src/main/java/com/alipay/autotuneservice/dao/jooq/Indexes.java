@@ -17,7 +17,7 @@ import org.jooq.impl.Internal;
 
 
 /**
- * A class modelling indexes of tables in tmaestro-lite.
+ * A class modelling indexes of tables in TMAESTRO-LITE.
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Indexes {
@@ -26,14 +26,14 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
-    public static final Index APP_INFO_APP_INFO__INDEX_CLUSTER = Internal.createIndex(DSL.name("app_info__index_cluster"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.CLUSTER_NAME }, false);
-    public static final Index APP_INFO_APP_INFO_ACCESS_TOKEN_CLUSTER_NAME_STATUS_INDEX = Internal.createIndex(DSL.name("app_info_ACCESS_TOKEN_CLUSTER_NAME_STATUS_index"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.ACCESS_TOKEN, AppInfo.APP_INFO.CLUSTER_NAME, AppInfo.APP_INFO.STATUS }, false);
-    public static final Index APP_INFO_APP_INFO_APP_NAME_ACCESS_TOKEN_STATUS_INDEX = Internal.createIndex(DSL.name("app_info_APP_NAME_ACCESS_TOKEN_STATUS_index"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.APP_NAME, AppInfo.APP_INFO.ACCESS_TOKEN, AppInfo.APP_INFO.STATUS }, false);
-    public static final Index APP_INFO_APP_INFO_ID_STATUS_INDEX = Internal.createIndex(DSL.name("app_info_ID_STATUS_index"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.ID, AppInfo.APP_INFO.STATUS }, false);
-    public static final Index POD_INFO_POD_INFO_APP_ID_AGENT_INSTALL_INDEX = Internal.createIndex(DSL.name("pod_info_APP_ID_AGENT_INSTALL_index"), PodInfo.POD_INFO, new OrderField[] { PodInfo.POD_INFO.APP_ID, PodInfo.POD_INFO.AGENT_INSTALL }, false);
-    public static final Index POD_INFO_POD_INFO_APP_ID_POD_STATUS_INDEX = Internal.createIndex(DSL.name("pod_info_APP_ID_POD_STATUS_index"), PodInfo.POD_INFO, new OrderField[] { PodInfo.POD_INFO.APP_ID, PodInfo.POD_INFO.POD_STATUS }, false);
-    public static final Index RISK_CHECK_CONTROL_RISK_CHECK_CONTROLLER_TRACE_ID_IDX = Internal.createIndex(DSL.name("risk_check_controller_TRACE_ID_IDX"), RiskCheckControl.RISK_CHECK_CONTROL, new OrderField[] { RiskCheckControl.RISK_CHECK_CONTROL.TRACE_ID }, false);
-    public static final Index RISK_CHECK_TASK_RISK_CHECK_TASK_JOB_ID_IDX = Internal.createIndex(DSL.name("risk_check_task_JOB_ID_IDX"), RiskCheckTask.RISK_CHECK_TASK, new OrderField[] { RiskCheckTask.RISK_CHECK_TASK.JOB_ID }, false);
-    public static final Index RISK_CHECK_TASK_RISK_CHECK_TASK_TASK_TRACE_ID_IDX = Internal.createIndex(DSL.name("risk_check_task_TASK_TRACE_ID_IDX"), RiskCheckTask.RISK_CHECK_TASK, new OrderField[] { RiskCheckTask.RISK_CHECK_TASK.TASK_TRACE_ID }, false);
-    public static final Index TUNE_PLAN_TUNE_PLAN_APP_ID_INDEX = Internal.createIndex(DSL.name("tune_plan_APP_ID_index"), TunePlan.TUNE_PLAN, new OrderField[] { TunePlan.TUNE_PLAN.APP_ID }, false);
+    public static final Index APP_INFO__INDEX_CLUSTER = Internal.createIndex(DSL.name("APP_INFO__INDEX_CLUSTER"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.CLUSTER_NAME }, false);
+    public static final Index APP_INFO_ACCESS_TOKEN_CLUSTER_NAME_STATUS_INDEX = Internal.createIndex(DSL.name("APP_INFO_ACCESS_TOKEN_CLUSTER_NAME_STATUS_INDEX"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.ACCESS_TOKEN, AppInfo.APP_INFO.CLUSTER_NAME, AppInfo.APP_INFO.STATUS }, false);
+    public static final Index APP_INFO_APP_NAME_ACCESS_TOKEN_STATUS_INDEX = Internal.createIndex(DSL.name("APP_INFO_APP_NAME_ACCESS_TOKEN_STATUS_INDEX"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.APP_NAME, AppInfo.APP_INFO.ACCESS_TOKEN, AppInfo.APP_INFO.STATUS }, false);
+    public static final Index APP_INFO_ID_STATUS_INDEX = Internal.createIndex(DSL.name("APP_INFO_ID_STATUS_INDEX"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.ID, AppInfo.APP_INFO.STATUS }, false);
+    public static final Index POD_INFO_APP_ID_AGENT_INSTALL_INDEX = Internal.createIndex(DSL.name("POD_INFO_APP_ID_AGENT_INSTALL_INDEX"), PodInfo.POD_INFO, new OrderField[] { PodInfo.POD_INFO.APP_ID, PodInfo.POD_INFO.AGENT_INSTALL }, false);
+    public static final Index POD_INFO_APP_ID_POD_STATUS_INDEX = Internal.createIndex(DSL.name("POD_INFO_APP_ID_POD_STATUS_INDEX"), PodInfo.POD_INFO, new OrderField[] { PodInfo.POD_INFO.APP_ID, PodInfo.POD_INFO.POD_STATUS }, false);
+    public static final Index RISK_CHECK_CONTROLLER_TRACE_ID_IDX = Internal.createIndex(DSL.name("RISK_CHECK_CONTROLLER_TRACE_ID_IDX"), RiskCheckControl.RISK_CHECK_CONTROL, new OrderField[] { RiskCheckControl.RISK_CHECK_CONTROL.TRACE_ID }, false);
+    public static final Index RISK_CHECK_TASK_JOB_ID_IDX = Internal.createIndex(DSL.name("RISK_CHECK_TASK_JOB_ID_IDX"), RiskCheckTask.RISK_CHECK_TASK, new OrderField[] { RiskCheckTask.RISK_CHECK_TASK.JOB_ID }, false);
+    public static final Index RISK_CHECK_TASK_TASK_TRACE_ID_IDX = Internal.createIndex(DSL.name("RISK_CHECK_TASK_TASK_TRACE_ID_IDX"), RiskCheckTask.RISK_CHECK_TASK, new OrderField[] { RiskCheckTask.RISK_CHECK_TASK.TASK_TRACE_ID }, false);
+    public static final Index TUNE_PLAN_APP_ID_INDEX = Internal.createIndex(DSL.name("TUNE_PLAN_APP_ID_INDEX"), TunePlan.TUNE_PLAN, new OrderField[] { TunePlan.TUNE_PLAN.APP_ID }, false);
 }

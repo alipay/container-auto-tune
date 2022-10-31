@@ -25,7 +25,7 @@ public class DefaultCatalog extends CatalogImpl {
     public static final DefaultCatalog DEFAULT_CATALOG = new DefaultCatalog();
 
     /**
-     * The schema <code>tmaestro-lite</code>.
+     * The schema <code>TMAESTRO-LITE</code>.
      */
     public final TmaestroLite TMAESTRO_LITE = TmaestroLite.TMAESTRO_LITE;
 

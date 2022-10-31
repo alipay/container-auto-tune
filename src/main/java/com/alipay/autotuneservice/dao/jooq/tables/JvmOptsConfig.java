@@ -37,7 +37,7 @@ public class JvmOptsConfig extends TableImpl<JvmOptsConfigRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>tmaestro-lite.jvm_opts_config</code>
+     * The reference instance of <code>TMAESTRO-LITE.JVM_OPTS_CONFIG</code>
      */
     public static final JvmOptsConfig JVM_OPTS_CONFIG = new JvmOptsConfig();
 
@@ -50,24 +50,24 @@ public class JvmOptsConfig extends TableImpl<JvmOptsConfigRecord> {
     }
 
     /**
-     * The column <code>tmaestro-lite.jvm_opts_config.id</code>.
+     * The column <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.ID</code>.
      */
-    public final TableField<JvmOptsConfigRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
+    public final TableField<JvmOptsConfigRecord, Long> ID = createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_opts_config.jvm_opt</code>.
+     * The column <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.JVM_OPT</code>.
      */
-    public final TableField<JvmOptsConfigRecord, String> JVM_OPT = createField(DSL.name("jvm_opt"), SQLDataType.VARCHAR(512), this, "");
+    public final TableField<JvmOptsConfigRecord, String> JVM_OPT = createField(DSL.name("JVM_OPT"), SQLDataType.VARCHAR(512), this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_opts_config.create_time</code>.
+     * The column <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.CREATE_TIME</code>.
      */
-    public final TableField<JvmOptsConfigRecord, LocalDateTime> CREATE_TIME = createField(DSL.name("create_time"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<JvmOptsConfigRecord, LocalDateTime> CREATE_TIME = createField(DSL.name("CREATE_TIME"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
 
     /**
-     * The column <code>tmaestro-lite.jvm_opts_config.update_time</code>.
+     * The column <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.UPDATE_TIME</code>.
      */
-    public final TableField<JvmOptsConfigRecord, LocalDateTime> UPDATE_TIME = createField(DSL.name("update_time"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
+    public final TableField<JvmOptsConfigRecord, LocalDateTime> UPDATE_TIME = createField(DSL.name("UPDATE_TIME"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
 
     private JvmOptsConfig(Name alias, Table<JvmOptsConfigRecord> aliased) {
         this(alias, aliased, null);
@@ -78,24 +78,24 @@ public class JvmOptsConfig extends TableImpl<JvmOptsConfigRecord> {
     }
 
     /**
-     * Create an aliased <code>tmaestro-lite.jvm_opts_config</code> table reference
+     * Create an aliased <code>TMAESTRO-LITE.JVM_OPTS_CONFIG</code> table reference
      */
     public JvmOptsConfig(String alias) {
         this(DSL.name(alias), JVM_OPTS_CONFIG);
     }
 
     /**
-     * Create an aliased <code>tmaestro-lite.jvm_opts_config</code> table reference
+     * Create an aliased <code>TMAESTRO-LITE.JVM_OPTS_CONFIG</code> table reference
      */
     public JvmOptsConfig(Name alias) {
         this(alias, JVM_OPTS_CONFIG);
     }
 
     /**
-     * Create a <code>tmaestro-lite.jvm_opts_config</code> table reference
+     * Create a <code>TMAESTRO-LITE.JVM_OPTS_CONFIG</code> table reference
      */
     public JvmOptsConfig() {
-        this(DSL.name("jvm_opts_config"), null);
+        this(DSL.name("JVM_OPTS_CONFIG"), null);
     }
 
     public <O extends Record> JvmOptsConfig(Table<O> child, ForeignKey<O, JvmOptsConfigRecord> key) {
@@ -114,12 +114,12 @@ public class JvmOptsConfig extends TableImpl<JvmOptsConfigRecord> {
 
     @Override
     public UniqueKey<JvmOptsConfigRecord> getPrimaryKey() {
-        return Keys.KEY_JVM_OPTS_CONFIG_PRIMARY;
+        return Keys.CONSTRAINT_2;
     }
 
     @Override
     public List<UniqueKey<JvmOptsConfigRecord>> getKeys() {
-        return Arrays.<UniqueKey<JvmOptsConfigRecord>>asList(Keys.KEY_JVM_OPTS_CONFIG_PRIMARY);
+        return Arrays.<UniqueKey<JvmOptsConfigRecord>>asList(Keys.CONSTRAINT_2);
     }
 
     @Override

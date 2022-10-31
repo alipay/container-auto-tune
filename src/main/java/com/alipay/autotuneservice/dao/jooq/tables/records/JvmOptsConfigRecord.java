@@ -24,7 +24,7 @@ public class JvmOptsConfigRecord extends UpdatableRecordImpl<JvmOptsConfigRecord
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_opts_config.id</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.ID</code>.
      */
     public JvmOptsConfigRecord setId(Long value) {
         set(0, value);
@@ -32,14 +32,14 @@ public class JvmOptsConfigRecord extends UpdatableRecordImpl<JvmOptsConfigRecord
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_opts_config.id</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.ID</code>.
      */
     public Long getId() {
         return (Long) get(0);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_opts_config.jvm_opt</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.JVM_OPT</code>.
      */
     public JvmOptsConfigRecord setJvmOpt(String value) {
         set(1, value);
@@ -47,14 +47,14 @@ public class JvmOptsConfigRecord extends UpdatableRecordImpl<JvmOptsConfigRecord
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_opts_config.jvm_opt</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.JVM_OPT</code>.
      */
     public String getJvmOpt() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_opts_config.create_time</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.CREATE_TIME</code>.
      */
     public JvmOptsConfigRecord setCreateTime(LocalDateTime value) {
         set(2, value);
@@ -62,14 +62,14 @@ public class JvmOptsConfigRecord extends UpdatableRecordImpl<JvmOptsConfigRecord
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_opts_config.create_time</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.CREATE_TIME</code>.
      */
     public LocalDateTime getCreateTime() {
         return (LocalDateTime) get(2);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_opts_config.update_time</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.UPDATE_TIME</code>.
      */
     public JvmOptsConfigRecord setUpdateTime(LocalDateTime value) {
         set(3, value);
@@ -77,7 +77,7 @@ public class JvmOptsConfigRecord extends UpdatableRecordImpl<JvmOptsConfigRecord
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_opts_config.update_time</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_OPTS_CONFIG.UPDATE_TIME</code>.
      */
     public LocalDateTime getUpdateTime() {
         return (LocalDateTime) get(3);

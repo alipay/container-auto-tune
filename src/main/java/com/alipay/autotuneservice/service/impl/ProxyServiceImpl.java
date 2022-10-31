@@ -23,7 +23,7 @@ import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
 import com.alipay.autotuneservice.dynamodb.repository.ContainerStatisticsRepository;
 import com.alipay.autotuneservice.dynamodb.repository.HealthCheckDataRepository;
 import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataRepository;
-import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoRepository;
+import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
 import com.alipay.autotuneservice.service.ProxyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,12 +38,12 @@ import java.util.List;
 @Service
 public class ProxyServiceImpl implements ProxyService {
 
-    private final TwatchInfoRepository           twatchInfoRepository;
-    private final ContainerStatisticsRepository  statisticsRepository;
+    private final TwatchInfoService             twatchInfoRepository;
+    private final ContainerStatisticsRepository statisticsRepository;
     private final JvmMonitorMetricDataRepository jvmMetricRepository;
     private final HealthCheckDataRepository      healthCheckDataRepository;
 
-    public ProxyServiceImpl(TwatchInfoRepository twatchInfoRepository,
+    public ProxyServiceImpl(TwatchInfoService twatchInfoRepository,
                             ContainerStatisticsRepository statisticsRepository,
                             JvmMonitorMetricDataRepository jvmMetricRepository,
                             HealthCheckDataRepository healthCheckDataRepository) {

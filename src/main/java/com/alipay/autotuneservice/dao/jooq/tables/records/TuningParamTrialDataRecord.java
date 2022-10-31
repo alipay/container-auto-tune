@@ -24,7 +24,7 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.ID</code>.
      */
     public TuningParamTrialDataRecord setId(Long value) {
         set(0, value);
@@ -32,14 +32,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.ID</code>.
      */
     public Long getId() {
         return (Long) get(0);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.pipeline_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.PIPELINE_ID</code>.
      */
     public TuningParamTrialDataRecord setPipelineId(Integer value) {
         set(1, value);
@@ -47,14 +47,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.pipeline_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.PIPELINE_ID</code>.
      */
     public Integer getPipelineId() {
         return (Integer) get(1);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_ID</code>.
      */
     public TuningParamTrialDataRecord setTrialId(Integer value) {
         set(2, value);
@@ -62,14 +62,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_ID</code>.
      */
     public Integer getTrialId() {
         return (Integer) get(2);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.app</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.APP</code>.
      */
     public TuningParamTrialDataRecord setApp(String value) {
         set(3, value);
@@ -77,14 +77,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.app</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.APP</code>.
      */
     public String getApp() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.app_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.APP_ID</code>.
      */
     public TuningParamTrialDataRecord setAppId(String value) {
         set(4, value);
@@ -92,14 +92,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.app_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.APP_ID</code>.
      */
     public String getAppId() {
         return (String) get(4);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_status</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_STATUS</code>.
      */
     public TuningParamTrialDataRecord setTrialStatus(String value) {
         set(5, value);
@@ -107,14 +107,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_status</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_STATUS</code>.
      */
     public String getTrialStatus() {
         return (String) get(5);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_status_info</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_STATUS_INFO</code>.
      */
     public TuningParamTrialDataRecord setTrialStatusInfo(String value) {
         set(6, value);
@@ -122,14 +122,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_status_info</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_STATUS_INFO</code>.
      */
     public String getTrialStatusInfo() {
         return (String) get(6);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.task_status</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TASK_STATUS</code>.
      */
     public TuningParamTrialDataRecord setTaskStatus(String value) {
         set(7, value);
@@ -137,14 +137,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.task_status</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TASK_STATUS</code>.
      */
     public String getTaskStatus() {
         return (String) get(7);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.refer_params</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_PARAMS</code>.
      */
     public TuningParamTrialDataRecord setReferParams(String value) {
         set(8, value);
@@ -152,14 +152,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.refer_params</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_PARAMS</code>.
      */
     public String getReferParams() {
         return (String) get(8);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_params</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_PARAMS</code>.
      */
     public TuningParamTrialDataRecord setTrialParams(String value) {
         set(9, value);
@@ -167,14 +167,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_params</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_PARAMS</code>.
      */
     public String getTrialParams() {
         return (String) get(9);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.alg_rec_type</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.ALG_REC_TYPE</code>.
      */
     public TuningParamTrialDataRecord setAlgRecType(String value) {
         set(10, value);
@@ -182,14 +182,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.alg_rec_type</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.ALG_REC_TYPE</code>.
      */
     public String getAlgRecType() {
         return (String) get(10);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.refer_pods</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_PODS</code>.
      */
     public TuningParamTrialDataRecord setReferPods(String value) {
         set(11, value);
@@ -197,14 +197,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.refer_pods</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_PODS</code>.
      */
     public String getReferPods() {
         return (String) get(11);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_pods</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_PODS</code>.
      */
     public TuningParamTrialDataRecord setTrialPods(String value) {
         set(12, value);
@@ -212,14 +212,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_pods</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_PODS</code>.
      */
     public String getTrialPods() {
         return (String) get(12);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.refer_metric_value</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_METRIC_VALUE</code>.
      */
     public TuningParamTrialDataRecord setReferMetricValue(String value) {
         set(13, value);
@@ -227,14 +227,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.refer_metric_value</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_METRIC_VALUE</code>.
      */
     public String getReferMetricValue() {
         return (String) get(13);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_metric_value</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_METRIC_VALUE</code>.
      */
     public TuningParamTrialDataRecord setTrialMetricValue(String value) {
         set(14, value);
@@ -242,14 +242,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_metric_value</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_METRIC_VALUE</code>.
      */
     public String getTrialMetricValue() {
         return (String) get(14);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.start_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.START_TIME</code>.
      */
     public TuningParamTrialDataRecord setStartTime(LocalDateTime value) {
         set(15, value);
@@ -257,14 +257,14 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.start_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.START_TIME</code>.
      */
     public LocalDateTime getStartTime() {
         return (LocalDateTime) get(15);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.stop_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.STOP_TIME</code>.
      */
     public TuningParamTrialDataRecord setStopTime(LocalDateTime value) {
         set(16, value);
@@ -272,7 +272,7 @@ public class TuningParamTrialDataRecord extends UpdatableRecordImpl<TuningParamT
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.stop_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.STOP_TIME</code>.
      */
     public LocalDateTime getStopTime() {
         return (LocalDateTime) get(16);

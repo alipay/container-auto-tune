@@ -95,14 +95,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.ID</code>.
      */
     public Long getId() {
         return this.id;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.ID</code>.
      */
     public TuningParamTrialData setId(Long id) {
         this.id = id;
@@ -110,14 +110,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.pipeline_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.PIPELINE_ID</code>.
      */
     public Integer getPipelineId() {
         return this.pipelineId;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.pipeline_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.PIPELINE_ID</code>.
      */
     public TuningParamTrialData setPipelineId(Integer pipelineId) {
         this.pipelineId = pipelineId;
@@ -125,14 +125,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_ID</code>.
      */
     public Integer getTrialId() {
         return this.trialId;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_ID</code>.
      */
     public TuningParamTrialData setTrialId(Integer trialId) {
         this.trialId = trialId;
@@ -140,14 +140,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.app</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.APP</code>.
      */
     public String getApp() {
         return this.app;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.app</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.APP</code>.
      */
     public TuningParamTrialData setApp(String app) {
         this.app = app;
@@ -155,14 +155,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.app_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.APP_ID</code>.
      */
     public String getAppId() {
         return this.appId;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.app_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.APP_ID</code>.
      */
     public TuningParamTrialData setAppId(String appId) {
         this.appId = appId;
@@ -170,14 +170,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_status</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_STATUS</code>.
      */
     public String getTrialStatus() {
         return this.trialStatus;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_status</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_STATUS</code>.
      */
     public TuningParamTrialData setTrialStatus(String trialStatus) {
         this.trialStatus = trialStatus;
@@ -185,14 +185,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_status_info</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_STATUS_INFO</code>.
      */
     public String getTrialStatusInfo() {
         return this.trialStatusInfo;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_status_info</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_STATUS_INFO</code>.
      */
     public TuningParamTrialData setTrialStatusInfo(String trialStatusInfo) {
         this.trialStatusInfo = trialStatusInfo;
@@ -200,14 +200,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.task_status</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TASK_STATUS</code>.
      */
     public String getTaskStatus() {
         return this.taskStatus;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.task_status</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TASK_STATUS</code>.
      */
     public TuningParamTrialData setTaskStatus(String taskStatus) {
         this.taskStatus = taskStatus;
@@ -215,14 +215,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.refer_params</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_PARAMS</code>.
      */
     public String getReferParams() {
         return this.referParams;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.refer_params</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_PARAMS</code>.
      */
     public TuningParamTrialData setReferParams(String referParams) {
         this.referParams = referParams;
@@ -230,14 +230,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_params</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_PARAMS</code>.
      */
     public String getTrialParams() {
         return this.trialParams;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_params</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_PARAMS</code>.
      */
     public TuningParamTrialData setTrialParams(String trialParams) {
         this.trialParams = trialParams;
@@ -245,14 +245,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.alg_rec_type</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.ALG_REC_TYPE</code>.
      */
     public String getAlgRecType() {
         return this.algRecType;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.alg_rec_type</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.ALG_REC_TYPE</code>.
      */
     public TuningParamTrialData setAlgRecType(String algRecType) {
         this.algRecType = algRecType;
@@ -260,14 +260,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.refer_pods</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_PODS</code>.
      */
     public String getReferPods() {
         return this.referPods;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.refer_pods</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_PODS</code>.
      */
     public TuningParamTrialData setReferPods(String referPods) {
         this.referPods = referPods;
@@ -275,14 +275,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_pods</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_PODS</code>.
      */
     public String getTrialPods() {
         return this.trialPods;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_pods</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_PODS</code>.
      */
     public TuningParamTrialData setTrialPods(String trialPods) {
         this.trialPods = trialPods;
@@ -290,14 +290,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.refer_metric_value</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_METRIC_VALUE</code>.
      */
     public String getReferMetricValue() {
         return this.referMetricValue;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.refer_metric_value</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.REFER_METRIC_VALUE</code>.
      */
     public TuningParamTrialData setReferMetricValue(String referMetricValue) {
         this.referMetricValue = referMetricValue;
@@ -305,14 +305,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.trial_metric_value</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_METRIC_VALUE</code>.
      */
     public String getTrialMetricValue() {
         return this.trialMetricValue;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.trial_metric_value</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.TRIAL_METRIC_VALUE</code>.
      */
     public TuningParamTrialData setTrialMetricValue(String trialMetricValue) {
         this.trialMetricValue = trialMetricValue;
@@ -320,14 +320,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.start_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.START_TIME</code>.
      */
     public LocalDateTime getStartTime() {
         return this.startTime;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.start_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.START_TIME</code>.
      */
     public TuningParamTrialData setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
@@ -335,14 +335,14 @@ public class TuningParamTrialData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_trial_data.stop_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.STOP_TIME</code>.
      */
     public LocalDateTime getStopTime() {
         return this.stopTime;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_trial_data.stop_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA.STOP_TIME</code>.
      */
     public TuningParamTrialData setStopTime(LocalDateTime stopTime) {
         this.stopTime = stopTime;
