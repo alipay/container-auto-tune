@@ -20,6 +20,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.K8sAccessTokenInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetaInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.MeterMetricInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.NodeInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.PodAttach;
 import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
@@ -127,6 +128,11 @@ public class Tables {
      * The table <code>TMAESTRO-LITE.METER_META_INFO</code>.
      */
     public static final MeterMetaInfo METER_META_INFO = MeterMetaInfo.METER_META_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.METER_METRIC_INFO</code>.
+     */
+    public static final MeterMetricInfo METER_METRIC_INFO = MeterMetricInfo.METER_METRIC_INFO;
 
     /**
      * The table <code>TMAESTRO-LITE.NODE_INFO</code>.

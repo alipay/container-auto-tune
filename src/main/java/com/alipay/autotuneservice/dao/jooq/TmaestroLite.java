@@ -20,6 +20,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.K8sAccessTokenInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetaInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.MeterMetricInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.NodeInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.PodAttach;
 import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
@@ -141,6 +142,11 @@ public class TmaestroLite extends SchemaImpl {
      * The table <code>TMAESTRO-LITE.METER_META_INFO</code>.
      */
     public final MeterMetaInfo METER_META_INFO = MeterMetaInfo.METER_META_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.METER_METRIC_INFO</code>.
+     */
+    public final MeterMetricInfo METER_METRIC_INFO = MeterMetricInfo.METER_METRIC_INFO;
 
     /**
      * The table <code>TMAESTRO-LITE.NODE_INFO</code>.
@@ -274,6 +280,7 @@ public class TmaestroLite extends SchemaImpl {
             JvmTuningRiskCenter.JVM_TUNING_RISK_CENTER,
             K8sAccessTokenInfo.K8S_ACCESS_TOKEN_INFO,
             MeterMetaInfo.METER_META_INFO,
+            MeterMetricInfo.METER_METRIC_INFO,
             NodeInfo.NODE_INFO,
             PodAttach.POD_ATTACH,
             PodInfo.POD_INFO,

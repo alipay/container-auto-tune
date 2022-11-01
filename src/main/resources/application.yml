@@ -7,13 +7,7 @@ grpc:
     port: 9000
 spring:
   profiles:
-    active: lite,aliyun-test
-  redis:
-    host: ${REDIS_HOST}
-    password: ${REDIS_PASSWORD}
-    port: 6379
-    ssl: false
-
+    active: h2,aliyun-test
   servlet:
     multipart:
       max-file-size: 100MB
@@ -22,22 +16,6 @@ spring:
 logging:
   level:
     root: info
-aliyun:
-  accessKeyId: ""
-  secretAccessKey: ""
-  mongo:
-    url: ${MONGO_DOMAIN}
-    username: ${MONGO_USERNAME}
-    password: ${MONGO_PASSWORD}
-    database: ${MONGO_DATABASE}
-
-mockCloudType: K8S
-mockDataSwitch: true
-mockPageSwitch: false
-
-
-application:
-  productCode: "xxxxx"
 tmaster:
   configure:
     productCode: ""

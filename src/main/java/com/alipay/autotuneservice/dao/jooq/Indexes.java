@@ -9,6 +9,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.ContainerProcessInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ContainerStatistics;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
+import com.alipay.autotuneservice.dao.jooq.tables.MeterMetricInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckControl;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
@@ -48,6 +49,7 @@ public class Indexes {
     public static final Index JVM_MONITOR_METRIC_DATA_GMTMODIFIED_INDEX = Internal.createIndex(DSL.name("JVM_MONITOR_METRIC_DATA_GMTMODIFIED_INDEX"), JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA, new OrderField[] { JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA.GMT_MODIFIED }, false);
     public static final Index JVM_MONITOR_METRIC_DATA_PODNAME_INDEX = Internal.createIndex(DSL.name("JVM_MONITOR_METRIC_DATA_PODNAME_INDEX"), JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA, new OrderField[] { JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA.POD_NAME }, false);
     public static final Index JVM_RISK_STATISTIC_PROBLEM_APPID_TIMESTAMP_INDEX = Internal.createIndex(DSL.name("JVM_RISK_STATISTIC_PROBLEM_APPID_TIMESTAMP_INDEX"), JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM, new OrderField[] { JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM.APP_ID, JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM.DT }, false);
+    public static final Index METER_METRIC_INFO_APPID_METRICNAME_DT_INDEX = Internal.createIndex(DSL.name("METER_METRIC_INFO_APPID_METRICNAME_DT_INDEX"), MeterMetricInfo.METER_METRIC_INFO, new OrderField[] { MeterMetricInfo.METER_METRIC_INFO.APP_ID, MeterMetricInfo.METER_METRIC_INFO.METRIC_NAME, MeterMetricInfo.METER_METRIC_INFO.DT }, false);
     public static final Index POD_INFO_APP_ID_AGENT_INSTALL_INDEX = Internal.createIndex(DSL.name("POD_INFO_APP_ID_AGENT_INSTALL_INDEX"), PodInfo.POD_INFO, new OrderField[] { PodInfo.POD_INFO.APP_ID, PodInfo.POD_INFO.AGENT_INSTALL }, false);
     public static final Index POD_INFO_APP_ID_POD_STATUS_INDEX = Internal.createIndex(DSL.name("POD_INFO_APP_ID_POD_STATUS_INDEX"), PodInfo.POD_INFO, new OrderField[] { PodInfo.POD_INFO.APP_ID, PodInfo.POD_INFO.POD_STATUS }, false);
     public static final Index RISK_CHECK_CONTROLLER_TRACE_ID_IDX = Internal.createIndex(DSL.name("RISK_CHECK_CONTROLLER_TRACE_ID_IDX"), RiskCheckControl.RISK_CHECK_CONTROL, new OrderField[] { RiskCheckControl.RISK_CHECK_CONTROL.TRACE_ID }, false);

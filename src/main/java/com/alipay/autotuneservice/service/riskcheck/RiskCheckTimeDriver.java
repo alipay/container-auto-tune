@@ -68,12 +68,15 @@ public class RiskCheckTimeDriver {
         if (envHandler.isDev()) {
             return;
         }
-        redisClient.doExec(LOCK_TASK_LEY, () -> {
+        executeTask();
 
-            executeTask();
-
-            handleJobStatus();
-        });
+        handleJobStatus();
+        //redisClient.doExec(LOCK_TASK_LEY, () -> {
+        //
+        //    executeTask();
+        //
+        //    handleJobStatus();
+        //});
     }
 
     @Scheduled(cron = "0 0 22 * * ?")
