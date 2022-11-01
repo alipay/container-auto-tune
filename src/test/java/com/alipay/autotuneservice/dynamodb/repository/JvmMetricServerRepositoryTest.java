@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class JvmMetricServerRepositoryTest {
 
-    private JvmMonitorMetricDataRepository repository = new JvmMonitorMetricDataRepository();
+    private JvmMonitorMetricDataService repository = new JvmMonitorMetricDataService();
 
     @Test
     public void getJvmMetric1() {

@@ -16,6 +16,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.HelpInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMarketInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmOptsConfig;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.K8sAccessTokenInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetaInfo;
@@ -24,6 +25,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.PodAttach;
 import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckControl;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
+import com.alipay.autotuneservice.dao.jooq.tables.RiskStatisticPreData;
 import com.alipay.autotuneservice.dao.jooq.tables.StorageInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TaskPipelineInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuneLogInfo;
@@ -107,6 +109,11 @@ public class Tables {
     public static final JvmOptsConfig JVM_OPTS_CONFIG = JvmOptsConfig.JVM_OPTS_CONFIG;
 
     /**
+     * The table <code>TMAESTRO-LITE.JVM_RISK_STATISTIC_PROBLEM</code>.
+     */
+    public static final JvmRiskStatisticProblem JVM_RISK_STATISTIC_PROBLEM = JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM;
+
+    /**
      * The table <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER</code>.
      */
     public static final JvmTuningRiskCenter JVM_TUNING_RISK_CENTER = JvmTuningRiskCenter.JVM_TUNING_RISK_CENTER;
@@ -145,6 +152,11 @@ public class Tables {
      * The table <code>TMAESTRO-LITE.RISK_CHECK_TASK</code>.
      */
     public static final RiskCheckTask RISK_CHECK_TASK = RiskCheckTask.RISK_CHECK_TASK;
+
+    /**
+     * The table <code>TMAESTRO-LITE.RISK_STATISTIC_PRE_DATA</code>.
+     */
+    public static final RiskStatisticPreData RISK_STATISTIC_PRE_DATA = RiskStatisticPreData.RISK_STATISTIC_PRE_DATA;
 
     /**
      * The table <code>TMAESTRO-LITE.STORAGE_INFO</code>.

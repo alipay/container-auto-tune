@@ -17,7 +17,6 @@
 package com.alipay.autotuneservice.dao;
 
 import com.alipay.autotuneservice.dao.jooq.tables.records.K8sAccessTokenInfoRecord;
-import com.alipay.autotuneservice.dynamodb.bean.AppMonitorInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,13 +40,4 @@ public class K8sAccessTokenInfoTest {
             System.out.println(item.getAccessToken());
         });
     }
-
-    @Test
-    void testInsert() {
-        AppMonitorInfo appMonitorInfo = new AppMonitorInfo();
-        appMonitorInfo.setAppName("xx");
-        appMonitorInfo.setGmtCreated(System.currentTimeMillis());
-        appMonitorInfo.setNameSpace("xx");
-    }
-
 }

@@ -60,7 +60,7 @@ public class JvmMonitorMetricData extends TableImpl<JvmMonitorMetricDataRecord> 
     /**
      * The column <code>TMAESTRO-LITE.JVM_MONITOR_METRIC_DATA.APP_NAME</code>. app name
      */
-    public final TableField<JvmMonitorMetricDataRecord, Long> APP_NAME = createField(DSL.name("APP_NAME"), SQLDataType.BIGINT.nullable(false), this, "app name");
+    public final TableField<JvmMonitorMetricDataRecord, String> APP_NAME = createField(DSL.name("APP_NAME"), SQLDataType.VARCHAR(32).nullable(false), this, "app name");
 
     /**
      * The column <code>TMAESTRO-LITE.JVM_MONITOR_METRIC_DATA.DATA</code>.
@@ -141,7 +141,7 @@ public class JvmMonitorMetricData extends TableImpl<JvmMonitorMetricDataRecord> 
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<String, Long, Long, String> fieldsRow() {
+    public Row4<String, Long, String, String> fieldsRow() {
         return (Row4) super.fieldsRow();
     }
 }

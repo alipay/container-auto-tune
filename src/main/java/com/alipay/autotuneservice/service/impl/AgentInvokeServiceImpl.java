@@ -27,7 +27,7 @@ import com.alipay.autotuneservice.agent.twatch.core.CallMethodType.POD;
 import com.alipay.autotuneservice.agent.twatch.model.ExecCmdResult;
 import com.alipay.autotuneservice.agent.twatch.model.PodHealthIndexEnum;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
-import com.alipay.autotuneservice.dynamodb.repository.ContainerProcessInfoRepository;
+import com.alipay.autotuneservice.dynamodb.repository.ContainerProcessInfoService;
 import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
 import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.statistics.StatisticsResponse;
@@ -68,11 +68,11 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
     @Autowired
     private RedisClient                    redisClient;
     @Autowired
-    private DoInvokeRunner                 doInvokeRunner;
+    private DoInvokeRunner              doInvokeRunner;
     @Autowired
-    private ContainerProcessInfoRepository processInfoRepository;
+    private ContainerProcessInfoService processInfoRepository;
     @Autowired
-    private TwatchInfoService              twatchInfoRepository;
+    private TwatchInfoService           twatchInfoRepository;
 
     private String getSyncActionResult(String sessionId) {
         try {

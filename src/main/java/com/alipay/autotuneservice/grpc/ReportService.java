@@ -16,7 +16,7 @@
  */
 package com.alipay.autotuneservice.grpc;
 
-import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataRepository;
+import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataService;
 import com.alipay.autotuneservice.grpc.handler.ActionParam;
 import com.alipay.autotuneservice.grpc.handler.RuleHandlerComponent;
 import com.alipay.autotuneservice.model.common.AppTag;
@@ -49,11 +49,11 @@ import java.util.List;
 public class ReportService extends ReportServiceGrpc.ReportServiceImplBase {
 
     @Autowired
-    private RuleHandlerComponent           ruleHandlerComponent;
+    private RuleHandlerComponent        ruleHandlerComponent;
     @Autowired
-    private JvmMonitorMetricDataRepository jvmMetriRepository;
+    private JvmMonitorMetricDataService jvmMetriRepository;
     @Autowired
-    private StorageInfoService             storageInfoService;
+    private StorageInfoService          storageInfoService;
     @Autowired
     private AppInfoService                 appInfoService;
 

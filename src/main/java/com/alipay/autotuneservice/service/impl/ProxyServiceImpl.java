@@ -20,9 +20,9 @@ import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
 import com.alipay.autotuneservice.dynamodb.bean.HealthCheckData;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
-import com.alipay.autotuneservice.dynamodb.repository.ContainerStatisticsRepository;
+import com.alipay.autotuneservice.dynamodb.repository.ContainerStatisticsService;
 import com.alipay.autotuneservice.dynamodb.repository.HealthCheckDataRepository;
-import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataRepository;
+import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataService;
 import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
 import com.alipay.autotuneservice.service.ProxyService;
 import lombok.extern.slf4j.Slf4j;
@@ -38,14 +38,14 @@ import java.util.List;
 @Service
 public class ProxyServiceImpl implements ProxyService {
 
-    private final TwatchInfoService             twatchInfoRepository;
-    private final ContainerStatisticsRepository statisticsRepository;
-    private final JvmMonitorMetricDataRepository jvmMetricRepository;
-    private final HealthCheckDataRepository      healthCheckDataRepository;
+    private final TwatchInfoService           twatchInfoRepository;
+    private final ContainerStatisticsService  statisticsRepository;
+    private final JvmMonitorMetricDataService jvmMetricRepository;
+    private final HealthCheckDataRepository     healthCheckDataRepository;
 
     public ProxyServiceImpl(TwatchInfoService twatchInfoRepository,
-                            ContainerStatisticsRepository statisticsRepository,
-                            JvmMonitorMetricDataRepository jvmMetricRepository,
+                            ContainerStatisticsService statisticsRepository,
+                            JvmMonitorMetricDataService jvmMetricRepository,
                             HealthCheckDataRepository healthCheckDataRepository) {
         this.twatchInfoRepository = twatchInfoRepository;
         this.statisticsRepository = statisticsRepository;

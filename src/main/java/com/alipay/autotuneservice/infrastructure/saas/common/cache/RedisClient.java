@@ -16,6 +16,7 @@
  */
 package com.alipay.autotuneservice.infrastructure.saas.common.cache;
 
+import com.alipay.autotuneservice.fake.FakeRedissonClient;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RTopic;
@@ -34,11 +35,11 @@ import java.util.function.Consumer;
 @Slf4j
 @Component
 public class RedisClient {
-    private final RedissonClient redissonClient;
+    private final RedissonClient redissonClient = new FakeRedissonClient();
 
-    public RedisClient(RedissonClient redissonClient) {
-        this.redissonClient = redissonClient;
-    }
+    //public RedisClient(RedissonClient redissonClient) {
+    //    this.redissonClient = redissonClient;
+    //}
 
     public RedissonClient getRedissonClient() {
         return redissonClient;

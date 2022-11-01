@@ -206,7 +206,7 @@ public class ConvertUtils {
     public static JvmMonitorMetricData convert2JvmMonitorMetricData(MetricsGrpcRequest request, AppInfoService appInfoService) {
         Preconditions.checkArgument(request != null, "MetricsGrpcRequest can not be null.");
         Preconditions.checkArgument(StringUtils.isNotBlank(request.getSystemCommon().getAccessToken()), "AccessToken can not be empty.");
-        JvmMonitorMetricData gcMetaData = new JvmMonitorMetricData();
+        JvmMonitorMetricData gcMetaData = JvmMonitorMetricData.builder().build();
         // system common
         SystemCommonGrpc systemCommon = request.getSystemCommon();
         gcMetaData.setPeriod(DateUtils.truncate2Minute(systemCommon.getTimestamp()));

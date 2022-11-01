@@ -17,7 +17,7 @@ public class JvmMonitorMetricData implements Serializable {
 
     private String podName;
     private Long   gmtModified;
-    private Long   appName;
+    private String appName;
     private String data;
 
     public JvmMonitorMetricData() {}
@@ -32,7 +32,7 @@ public class JvmMonitorMetricData implements Serializable {
     public JvmMonitorMetricData(
         String podName,
         Long   gmtModified,
-        Long   appName,
+        String appName,
         String data
     ) {
         this.podName = podName;
@@ -74,14 +74,14 @@ public class JvmMonitorMetricData implements Serializable {
     /**
      * Getter for <code>TMAESTRO-LITE.JVM_MONITOR_METRIC_DATA.APP_NAME</code>. app name
      */
-    public Long getAppName() {
+    public String getAppName() {
         return this.appName;
     }
 
     /**
      * Setter for <code>TMAESTRO-LITE.JVM_MONITOR_METRIC_DATA.APP_NAME</code>. app name
      */
-    public JvmMonitorMetricData setAppName(Long appName) {
+    public JvmMonitorMetricData setAppName(String appName) {
         this.appName = appName;
         return this;
     }

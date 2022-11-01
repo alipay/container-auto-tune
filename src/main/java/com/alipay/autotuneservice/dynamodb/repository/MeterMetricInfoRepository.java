@@ -28,16 +28,6 @@ public class MeterMetricInfoRepository {
     @Autowired
     private NosqlService nosqlService;
 
-    public List<MeterMetricInfo> findByAppNameAndGmt(String appName, long start, long end) {
-        try {
-            return nosqlService.queryRange(METER_METRIC_INFO_TABLE, "appName", appName, "gmtCreated", start, end, MeterMetricInfo.class);
-        } catch (Exception e) {
-            log.error("findByAppId for appName={} occurs an error", appName, e);
-            return Lists.newArrayList();
-        }
-    }
-
-
     public void insert(MeterMetricInfo meterMetricInfo) {
         try {
             nosqlService.insert(Objects.requireNonNull(meterMetricInfo, "meterMetricInfo Can not be null."), METER_METRIC_INFO_TABLE);

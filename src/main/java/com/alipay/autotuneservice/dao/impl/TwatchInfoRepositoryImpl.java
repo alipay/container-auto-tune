@@ -8,12 +8,12 @@ import com.alipay.autotuneservice.dao.BaseDao;
 import com.alipay.autotuneservice.dao.TwatchInfoRepository;
 import com.alipay.autotuneservice.dao.converter.TwatchInfoConverter;
 import com.alipay.autotuneservice.dao.jooq.Tables;
+import com.alipay.autotuneservice.dao.jooq.tables.TwatchInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TwatchInfoRecord;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,27 +26,29 @@ import java.util.stream.Collectors;
 public class TwatchInfoRepositoryImpl extends BaseDao implements TwatchInfoRepository {
 
     private final TwatchInfoConverter converter = new TwatchInfoConverter();
+    private final TwatchInfo          TABLE     = Tables.TWATCH_INFO;
 
     @Override
     public void insert(TwatchInfoDo twatchInfoDo) {
-        mDSLContext.insertInto(Tables.TWATCH_INFO)
-                .set(Tables.TWATCH_INFO.CONTAINER_ID, twatchInfoDo.getContainerId())
-                .set(Tables.TWATCH_INFO.CONTAINER_NAME, twatchInfoDo.getContainerName())
-                .set(Tables.TWATCH_INFO.POD_NAME, twatchInfoDo.getPodName())
-                .set(Tables.TWATCH_INFO.AGENT_NAME, twatchInfoDo.getAgentName())
-                .set(Tables.TWATCH_INFO.NODE_NAME, twatchInfoDo.getNodeName())
-                .set(Tables.TWATCH_INFO.NODE_IP, twatchInfoDo.getNodeIp())
-                .set(Tables.TWATCH_INFO.NAMESPACE, twatchInfoDo.getNameSpace())
-                .set(Tables.TWATCH_INFO.GMT_MODIFIED, twatchInfoDo.getGmtModified())
-                .set(Tables.TWATCH_INFO.DT_PERIOD, twatchInfoDo.getDtPeriod())
+
+        mDSLContext.insertInto(TABLE)
+                .set(TABLE.CONTAINER_ID, twatchInfoDo.getContainerId())
+                .set(TABLE.CONTAINER_NAME, twatchInfoDo.getContainerName())
+                .set(TABLE.POD_NAME, twatchInfoDo.getPodName())
+                .set(TABLE.AGENT_NAME, twatchInfoDo.getAgentName())
+                .set(TABLE.NODE_NAME, twatchInfoDo.getNodeName())
+                .set(TABLE.NODE_IP, twatchInfoDo.getNodeIp())
+                .set(TABLE.NAMESPACE, twatchInfoDo.getNameSpace())
+                .set(TABLE.GMT_MODIFIED, twatchInfoDo.getGmtModified())
+                .set(TABLE.DT_PERIOD, twatchInfoDo.getDtPeriod())
                 .execute();
     }
 
     @Override
     public List<TwatchInfoDo> findByContainerId(String containerId) {
         List<TwatchInfoRecord> result = mDSLContext.select()
-                .from(Tables.TWATCH_INFO)
-                .where(Tables.TWATCH_INFO.CONTAINER_ID.eq(containerId))
+                .from(TABLE)
+                .where(TABLE.CONTAINER_ID.eq(containerId))
                 .fetchInto(TwatchInfoRecord.class);
         return Optional.of(result).orElse(Lists.newArrayList()).stream()
                 .map(converter::serialize).collect(Collectors.toList());
@@ -55,8 +57,8 @@ public class TwatchInfoRepositoryImpl extends BaseDao implements TwatchInfoRepos
     @Override
     public List<TwatchInfoDo> findInfoByPod(String podName) {
         List<TwatchInfoRecord> result = mDSLContext.select()
-                .from(Tables.TWATCH_INFO)
-                .where(Tables.TWATCH_INFO.POD_NAME.eq(podName))
+                .from(TABLE)
+                .where(TABLE.POD_NAME.eq(podName))
                 .fetchInto(TwatchInfoRecord.class);
         return Optional.of(result).orElse(Lists.newArrayList()).stream()
                 .map(converter::serialize).collect(Collectors.toList());
@@ -65,8 +67,8 @@ public class TwatchInfoRepositoryImpl extends BaseDao implements TwatchInfoRepos
     @Override
     public List<TwatchInfoDo> findInfoByAgent(String agentName) {
         List<TwatchInfoRecord> result = mDSLContext.select()
-                .from(Tables.TWATCH_INFO)
-                .where(Tables.TWATCH_INFO.AGENT_NAME.eq(agentName))
+                .from(TABLE)
+                .where(TABLE.AGENT_NAME.eq(agentName))
                 .fetchInto(TwatchInfoRecord.class);
         return Optional.of(result).orElse(Lists.newArrayList()).stream()
                 .map(converter::serialize).collect(Collectors.toList());

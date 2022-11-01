@@ -19,7 +19,6 @@ package com.alipay.autotuneservice.dynamodb.repository;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
-import com.alipay.autotuneservice.dynamodb.bean.HealthCheckData;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
 import com.alipay.autotuneservice.util.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,19 +26,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @SpringBootTest
-public class ContainerStatisticsRepositoryTest {
+public class ContainerStatisticsServiceTest {
 
     @Autowired
-    private ContainerStatisticsRepository  repository;
+    private ContainerStatisticsService  repository;
     @Autowired
-    private JvmMonitorMetricDataRepository dynamoDbService;
+    private JvmMonitorMetricDataService dynamoDbService;
 
     @Test
     public void insert() {

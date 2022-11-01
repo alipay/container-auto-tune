@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,7 @@
 package com.alipay.autotuneservice.dynamodb.repository;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.autotuneservice.dao.ContainerProcessInfoRepository;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerProcessInfo;
 import com.alipay.autotuneservice.multiCloudAdapter.NosqlService;
 import com.alipay.autotuneservice.util.ConvertUtils;
@@ -33,18 +34,20 @@ import java.util.Optional;
 
 /**
  * @author huangkaifei
- * @version : ContainerProcessInfoRepository.java, v 0.1 2022年04月18日 3:07 PM huangkaifei Exp $
+ * @version : ContainerProcessInfoService.java, v 0.1 2022年04月18日 3:07 PM huangkaifei Exp $
  */
 @Slf4j
 @Service
-public class ContainerProcessInfoRepository {
+public class ContainerProcessInfoService {
 
     private static final String TABLE_NAME        = "ContainerProcessInfo";
     private static final String CONTAINERID_INDEX = "containerId-index";
     private static final String PARTITION_KEY     = "containerId";
 
     @Autowired
-    private NosqlService        nosqlService;
+    private NosqlService                   nosqlService;
+    @Autowired
+    private ContainerProcessInfoRepository containerProcessInfoRepository;
 
     /**
      * Batch insert ContainerProcessInfo object
@@ -71,7 +74,8 @@ public class ContainerProcessInfoRepository {
             return;
         }
         try {
-            nosqlService.insert(item, TABLE_NAME);
+            containerProcessInfoRepository.insert(item);
+            //nosqlService.insert(item, TABLE_NAME);
         } catch (Exception e) {
             log.error("insertProcessInfo for item={} occurs an error.", JSON.toJSONString(item), e);
         }
@@ -84,8 +88,9 @@ public class ContainerProcessInfoRepository {
      * @return
      */
     public List<ContainerProcessInfo> queryProcessInfos(String containerId) {
-        return nosqlService.queryByPkIndex(TABLE_NAME, CONTAINERID_INDEX, "containerId",
-            containerId, ContainerProcessInfo.class);
+        return containerProcessInfoRepository.queryProcessInfos(containerId);
+        //return nosqlService.queryByPkIndex(TABLE_NAME, CONTAINERID_INDEX, "containerId",
+        //    containerId, ContainerProcessInfo.class);
     }
 
     /**
@@ -106,20 +111,6 @@ public class ContainerProcessInfoRepository {
     }
 
     /**
-     * query container processes by id, gmtCreated time
-     *
-     * @param containerId
-     * @param start
-     * @param end
-     * @return
-     */
-    public List<ContainerProcessInfo> queryContainerProcessInfos(String containerId, long start,
-                                                                 long end) {
-        return nosqlService.queryRange(TABLE_NAME, "containerId", containerId, "gmtCreated", start,
-            end, ContainerProcessInfo.class);
-    }
-
-    /**
      * save processes info for container
      *
      * @param appId
@@ -129,7 +120,7 @@ public class ContainerProcessInfoRepository {
                                  String syncActionResult) {
         try {
             List<ContainerProcessInfo> list = ConvertUtils.convert2ContainerProcessInfos(appId,
-                podName, containerId, syncActionResult);
+                    podName, containerId, syncActionResult);
             if (CollectionUtils.isEmpty(list)) {
                 return;
             }

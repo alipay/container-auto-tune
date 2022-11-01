@@ -68,7 +68,7 @@ public class MonitorMeterMetricTask {
         collect.stream().parallel().forEach(item -> {
             MeterMetricInfo build = MeterMetricInfo.builder()
                     .metricName(item.getMetricName())
-                    .metricVal(item.getMetricResult())
+                    .data(item.getMetricResult())
                     .gmtCreated(DateUtils.nowTimestamp())
                     .dt(DateUtils.getNowDt())
                     .appId(appId)

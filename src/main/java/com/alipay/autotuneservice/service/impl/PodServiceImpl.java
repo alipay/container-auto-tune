@@ -16,7 +16,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.records.JvmMarketInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.K8sAccessTokenInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
-import com.alipay.autotuneservice.dynamodb.repository.ContainerProcessInfoRepository;
+import com.alipay.autotuneservice.dynamodb.repository.ContainerProcessInfoService;
 import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
 import com.alipay.autotuneservice.infrastructure.saas.cloudsvc.k8s.K8sClient;
 import com.alipay.autotuneservice.infrastructure.saas.cloudsvc.k8s.K8sClient.Builder;
@@ -68,11 +68,11 @@ public class PodServiceImpl implements PodService {
     @Autowired
     private PodInfo                        podInfo;
     @Autowired
-    private JvmMarketInfo                  jvmMarketInfo;
+    private JvmMarketInfo               jvmMarketInfo;
     @Autowired
-    private ContainerProcessInfoRepository cProcessInfoRepository;
+    private ContainerProcessInfoService cProcessInfoRepository;
     @Autowired
-    private TwatchInfoService              twatchInfoRepository;
+    private TwatchInfoService           twatchInfoRepository;
     @Autowired
     private Cache<String, Object>          k8sCache;
 

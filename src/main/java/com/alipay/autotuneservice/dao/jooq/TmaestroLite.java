@@ -16,6 +16,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.HelpInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMarketInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmOptsConfig;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.K8sAccessTokenInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetaInfo;
@@ -24,6 +25,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.PodAttach;
 import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckControl;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
+import com.alipay.autotuneservice.dao.jooq.tables.RiskStatisticPreData;
 import com.alipay.autotuneservice.dao.jooq.tables.StorageInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TaskPipelineInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuneLogInfo;
@@ -121,6 +123,11 @@ public class TmaestroLite extends SchemaImpl {
     public final JvmOptsConfig JVM_OPTS_CONFIG = JvmOptsConfig.JVM_OPTS_CONFIG;
 
     /**
+     * The table <code>TMAESTRO-LITE.JVM_RISK_STATISTIC_PROBLEM</code>.
+     */
+    public final JvmRiskStatisticProblem JVM_RISK_STATISTIC_PROBLEM = JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM;
+
+    /**
      * The table <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER</code>.
      */
     public final JvmTuningRiskCenter JVM_TUNING_RISK_CENTER = JvmTuningRiskCenter.JVM_TUNING_RISK_CENTER;
@@ -159,6 +166,11 @@ public class TmaestroLite extends SchemaImpl {
      * The table <code>TMAESTRO-LITE.RISK_CHECK_TASK</code>.
      */
     public final RiskCheckTask RISK_CHECK_TASK = RiskCheckTask.RISK_CHECK_TASK;
+
+    /**
+     * The table <code>TMAESTRO-LITE.RISK_STATISTIC_PRE_DATA</code>.
+     */
+    public final RiskStatisticPreData RISK_STATISTIC_PRE_DATA = RiskStatisticPreData.RISK_STATISTIC_PRE_DATA;
 
     /**
      * The table <code>TMAESTRO-LITE.STORAGE_INFO</code>.
@@ -258,6 +270,7 @@ public class TmaestroLite extends SchemaImpl {
             JvmMarketInfo.JVM_MARKET_INFO,
             JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA,
             JvmOptsConfig.JVM_OPTS_CONFIG,
+            JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM,
             JvmTuningRiskCenter.JVM_TUNING_RISK_CENTER,
             K8sAccessTokenInfo.K8S_ACCESS_TOKEN_INFO,
             MeterMetaInfo.METER_META_INFO,
@@ -266,6 +279,7 @@ public class TmaestroLite extends SchemaImpl {
             PodInfo.POD_INFO,
             RiskCheckControl.RISK_CHECK_CONTROL,
             RiskCheckTask.RISK_CHECK_TASK,
+            RiskStatisticPreData.RISK_STATISTIC_PRE_DATA,
             StorageInfo.STORAGE_INFO,
             TaskPipelineInfo.TASK_PIPELINE_INFO,
             TuneLogInfo.TUNE_LOG_INFO,

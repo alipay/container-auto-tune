@@ -16,7 +16,7 @@ import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dynamodb.bean.PodFeaturePreData;
 import com.alipay.autotuneservice.dynamodb.bean.RiskStatisticPreData;
 import com.alipay.autotuneservice.dynamodb.repository.HealthCheckDataRepository;
-import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataRepository;
+import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataService;
 import com.alipay.autotuneservice.dynamodb.repository.RiskStatisticPreDataRepository;
 import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.common.AppTag;
@@ -53,15 +53,15 @@ public class RiskStatisticPreTask {
     private final RedisClient redisClient;
     private final EnvHandler  envHandler;
     private final RiskStatisticPreDataRepository riskCheckPreDataRepository;
-    private final JvmMonitorMetricDataRepository jvmMonitorMetricDataRepository;
-    private final AppInfoRepository appInfoRepository;
+    private final JvmMonitorMetricDataService    jvmMonitorMetricDataRepository;
+    private final AppInfoRepository              appInfoRepository;
     private final PodInfo podInfo;
     private final HealthCheckDataRepository healthCheckDataRepository;
     private final HealthCheckInfo healthCheckInfo;
 
 
     public RiskStatisticPreTask(RedisClient redisClient, EnvHandler envHandler, RiskStatisticPreDataRepository riskCheckPreDataRepository,
-                                JvmMonitorMetricDataRepository jvmMonitorMetricDataRepository, AppInfoRepository appInfoRepository,
+                                JvmMonitorMetricDataService jvmMonitorMetricDataRepository, AppInfoRepository appInfoRepository,
                                 PodInfo podInfo, HealthCheckDataRepository healthCheckDataRepository, HealthCheckInfo healthCheckInfo) {
         this.redisClient = redisClient;
         this.envHandler = envHandler;
