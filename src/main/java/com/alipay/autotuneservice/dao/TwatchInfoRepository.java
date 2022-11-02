@@ -21,4 +21,6 @@ public interface TwatchInfoRepository {
     List<TwatchInfoDo> findInfoByPod(String podName);
 
     List<TwatchInfoDo> findInfoByAgent(String agentName);
+
+    List<TwatchInfoDo> listAll();
 }

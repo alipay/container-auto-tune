@@ -73,4 +73,16 @@ public class TwatchInfoRepositoryImpl extends BaseDao implements TwatchInfoRepos
         return Optional.of(result).orElse(Lists.newArrayList()).stream()
                 .map(converter::serialize).collect(Collectors.toList());
     }
+
+    @Override
+    public List<TwatchInfoDo> listAll() {
+        return  mDSLContext.select()
+                .from(TABLE)
+                .orderBy(TABLE.GMT_MODIFIED)
+                .limit(200)
+                .fetchInto(TwatchInfoRecord.class)
+                .stream()
+                .map(converter::serialize)
+                .collect(Collectors.toList());
+    }
 }

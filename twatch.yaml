@@ -37,7 +37,7 @@ spec:
           effect: "NoSchedule"
       containers:
         - name: twatch
-          image: registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:aliyun-prod_twatch_8fb6f63_20220919094747
+          image: registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:aliyun-prod_twatch_ead8013_20221031165109
           env:
             - name: TMAESTRO_SERVER_URL
               value: "http://tmaestro:9001"

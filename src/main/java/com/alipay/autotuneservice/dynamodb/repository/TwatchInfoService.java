@@ -123,4 +123,8 @@ public class TwatchInfoService {
             log.error("insert TwatchInfoDo occurs an error", e);
         }
     }
+
+    public List<TwatchInfoDo> listAll() {
+        return twatchInfoRepository.listAll();
+    }
 }
