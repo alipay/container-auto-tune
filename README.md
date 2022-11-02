@@ -39,8 +39,8 @@ bash start.sh
 
 * Mailing list:
     * dev list: for dev/user discussion. [us](mailto:tmaestro@antgroup.com)
-* WeChat group: [WeChat QR code](https://github.com/alipay/container-auto-tune/assets/WeChat-QR.png)
-* DingTalk: [DingTalk QR code](https://github.com/alipay/container-auto-tune/assets/DingTalk-QR.png)
+* WeChat group: [WeChat QR code](https://github.com/alipay/container-auto-tune/blob/main/assets/WeChat-QR.png)
+* DingTalk: [DingTalk QR code](https://github.com/alipay/container-auto-tune/blob/main/assets/DingTalk-QR.png)
 
 ## Contributing
 
