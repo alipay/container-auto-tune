@@ -24,7 +24,7 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.pipeline_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PIPELINE_ID</code>.
      */
     public TuningParamTaskDataRecord setPipelineId(Integer value) {
         set(0, value);
@@ -32,14 +32,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.pipeline_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PIPELINE_ID</code>.
      */
     public Integer getPipelineId() {
         return (Integer) get(0);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.app_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.APP_ID</code>.
      */
     public TuningParamTaskDataRecord setAppId(Integer value) {
         set(1, value);
@@ -47,14 +47,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.app_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.APP_ID</code>.
      */
     public Integer getAppId() {
         return (Integer) get(1);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.app_name</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.APP_NAME</code>.
      */
     public TuningParamTaskDataRecord setAppName(String value) {
         set(2, value);
@@ -62,14 +62,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.app_name</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.APP_NAME</code>.
      */
     public String getAppName() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.pods</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PODS</code>.
      */
     public TuningParamTaskDataRecord setPods(String value) {
         set(3, value);
@@ -77,14 +77,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.pods</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PODS</code>.
      */
     public String getPods() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.optimization_type</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.OPTIMIZATION_TYPE</code>.
      */
     public TuningParamTaskDataRecord setOptimizationType(String value) {
         set(4, value);
@@ -92,14 +92,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.optimization_type</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.OPTIMIZATION_TYPE</code>.
      */
     public String getOptimizationType() {
         return (String) get(4);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.problem_describe</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PROBLEM_DESCRIBE</code>.
      */
     public TuningParamTaskDataRecord setProblemDescribe(String value) {
         set(5, value);
@@ -107,14 +107,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.problem_describe</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PROBLEM_DESCRIBE</code>.
      */
     public String getProblemDescribe() {
         return (String) get(5);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.problem_type</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PROBLEM_TYPE</code>.
      */
     public TuningParamTaskDataRecord setProblemType(String value) {
         set(6, value);
@@ -122,14 +122,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.problem_type</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PROBLEM_TYPE</code>.
      */
     public String getProblemType() {
         return (String) get(6);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.direction</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.DIRECTION</code>.
      */
     public TuningParamTaskDataRecord setDirection(String value) {
         set(7, value);
@@ -137,14 +137,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.direction</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.DIRECTION</code>.
      */
     public String getDirection() {
         return (String) get(7);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_nums</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_NUMS</code>.
      */
     public TuningParamTaskDataRecord setTrialNums(Integer value) {
         set(8, value);
@@ -152,14 +152,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_nums</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_NUMS</code>.
      */
     public Integer getTrialNums() {
         return (Integer) get(8);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_params</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_PARAMS</code>.
      */
     public TuningParamTaskDataRecord setTrialParams(String value) {
         set(9, value);
@@ -167,14 +167,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_params</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_PARAMS</code>.
      */
     public String getTrialParams() {
         return (String) get(9);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.max_iter</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.MAX_ITER</code>.
      */
     public TuningParamTaskDataRecord setMaxIter(Integer value) {
         set(10, value);
@@ -182,14 +182,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.max_iter</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.MAX_ITER</code>.
      */
     public Integer getMaxIter() {
         return (Integer) get(10);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_time_min</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_TIME_MIN</code>.
      */
     public TuningParamTaskDataRecord setTrialTimeMin(Integer value) {
         set(11, value);
@@ -197,14 +197,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_time_min</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_TIME_MIN</code>.
      */
     public Integer getTrialTimeMin() {
         return (Integer) get(11);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_time_max</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_TIME_MAX</code>.
      */
     public TuningParamTaskDataRecord setTrialTimeMax(Integer value) {
         set(12, value);
@@ -212,14 +212,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_time_max</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_TIME_MAX</code>.
      */
     public Integer getTrialTimeMax() {
         return (Integer) get(12);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_start_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_START_TIME</code>.
      */
     public TuningParamTaskDataRecord setTrialStartTime(LocalDateTime value) {
         set(13, value);
@@ -227,14 +227,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_start_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_START_TIME</code>.
      */
     public LocalDateTime getTrialStartTime() {
         return (LocalDateTime) get(13);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_stop_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_STOP_TIME</code>.
      */
     public TuningParamTaskDataRecord setTrialStopTime(LocalDateTime value) {
         set(14, value);
@@ -242,14 +242,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_stop_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_STOP_TIME</code>.
      */
     public LocalDateTime getTrialStopTime() {
         return (LocalDateTime) get(14);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.start_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.START_TIME</code>.
      */
     public TuningParamTaskDataRecord setStartTime(LocalDateTime value) {
         set(15, value);
@@ -257,14 +257,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.start_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.START_TIME</code>.
      */
     public LocalDateTime getStartTime() {
         return (LocalDateTime) get(15);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.end_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.END_TIME</code>.
      */
     public TuningParamTaskDataRecord setEndTime(LocalDateTime value) {
         set(16, value);
@@ -272,14 +272,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.end_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.END_TIME</code>.
      */
     public LocalDateTime getEndTime() {
         return (LocalDateTime) get(16);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.task_status</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TASK_STATUS</code>.
      */
     public TuningParamTaskDataRecord setTaskStatus(String value) {
         set(17, value);
@@ -287,14 +287,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.task_status</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TASK_STATUS</code>.
      */
     public String getTaskStatus() {
         return (String) get(17);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.before_params</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.BEFORE_PARAMS</code>.
      */
     public TuningParamTaskDataRecord setBeforeParams(String value) {
         set(18, value);
@@ -302,14 +302,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.before_params</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.BEFORE_PARAMS</code>.
      */
     public String getBeforeParams() {
         return (String) get(18);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.modify_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.MODIFY_TIME</code>.
      */
     public TuningParamTaskDataRecord setModifyTime(LocalDateTime value) {
         set(19, value);
@@ -317,14 +317,14 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.modify_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.MODIFY_TIME</code>.
      */
     public LocalDateTime getModifyTime() {
         return (LocalDateTime) get(19);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.compare_pods</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.COMPARE_PODS</code>.
      */
     public TuningParamTaskDataRecord setComparePods(String value) {
         set(20, value);
@@ -332,7 +332,7 @@ public class TuningParamTaskDataRecord extends UpdatableRecordImpl<TuningParamTa
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.compare_pods</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.COMPARE_PODS</code>.
      */
     public String getComparePods() {
         return (String) get(20);

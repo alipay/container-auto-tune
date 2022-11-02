@@ -18,7 +18,7 @@ package com.alipay.autotuneservice.agent.twatch;
 
 import com.alipay.autotuneservice.agent.twatch.model.AgentActionRequest;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
-import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoRepository;
+import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
 import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.util.AgentConstant;
 import io.reactivex.Observable;
@@ -48,9 +48,9 @@ public class DoInvokeRunner {
     @Autowired
     private AsyncTaskExecutor          subExecutor;
     @Autowired
-    private AsyncTaskExecutor          webTaskExecutor;
+    private AsyncTaskExecutor webTaskExecutor;
     @Autowired
-    private TwatchInfoRepository       twatchInfoRepository;
+    private TwatchInfoService twatchInfoRepository;
 
     @PostConstruct
     public void init() {

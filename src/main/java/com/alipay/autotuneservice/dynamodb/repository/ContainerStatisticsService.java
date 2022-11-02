@@ -18,10 +18,10 @@ package com.alipay.autotuneservice.dynamodb.repository;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.autotuneservice.agent.twatch.DoInvokeRunner;
+import com.alipay.autotuneservice.dao.ContainerStatisticRepository;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
 import com.alipay.autotuneservice.multiCloudAdapter.NosqlService;
-import com.alipay.autotuneservice.util.DynamodbUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
@@ -30,19 +30,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author huangkaifei
- * @version : ContainerStatisticsRepository.java, v 0.1 2022年04月20日 11:37 AM huangkaifei Exp $
+ * @version : ContainerStatisticsService.java, v 0.1 2022年04月20日 11:37 AM huangkaifei Exp $
  */
 @Slf4j
 @Service
-public class ContainerStatisticsRepository {
+public class ContainerStatisticsService {
 
     private static final String TABLE_NAME        = "ContainerStatistics";
     private static final String CONTAINERID_INDEX = "containerId-index";
@@ -52,6 +49,8 @@ public class ContainerStatisticsRepository {
     private DoInvokeRunner      doInvokeRunner;
     @Autowired
     private NosqlService        nosqlService;
+    @Autowired
+    private ContainerStatisticRepository containerStatisticRepository;
 
     /**
      * insert
@@ -65,10 +64,10 @@ public class ContainerStatisticsRepository {
             return;
         }
         try {
-            log.debug("ContainerStatisticsRepository#insert enter. statistics={}",
+            log.debug("ContainerStatisticsService#insert enter. statistics={}",
                 JSON.toJSONString(statistics));
-            //DynamodbUtils.getProvider().insert(statistics, TABLE_NAME);
-            nosqlService.insert(statistics, TABLE_NAME);
+            //nosqlService.insert(statistics, TABLE_NAME);
+            containerStatisticRepository.insert(statistics);
         } catch (Exception e) {
             log.error("insert statistics for containerId={} occurs an error.",
                 statistics.getContainerId(), e);
@@ -76,14 +75,9 @@ public class ContainerStatisticsRepository {
     }
 
     public List<ContainerStatistics> queryContainerStats(String containerId, long start, long end) {
-        //DynamodbUtils.getProvider().query().table(TABLE_NAME)
-        //        .partition(containerId)
-        //        .conditional(start, end)
-        //        .execute(ContainerStatistics.class)
-        //        .stream().map(page -> new ArrayList<>(page.items()))
-        //        .flatMap(Collection::stream).collect(Collectors.toList());
-        return nosqlService.queryRange(TABLE_NAME, "containerId", containerId, "gmtCreated", start,
-            end, ContainerStatistics.class);
+        return containerStatisticRepository.queryRange(containerId, start, end);
+        //return nosqlService.queryRange(TABLE_NAME, "containerId", containerId, "gmtCreated", start,
+        //    end, ContainerStatistics.class);
     }
 
     public List<ContainerStatistics> queryContainerStatsByPodName(String podName, long start,

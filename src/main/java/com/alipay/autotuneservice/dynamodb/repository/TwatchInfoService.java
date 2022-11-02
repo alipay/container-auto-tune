@@ -17,6 +17,7 @@
 package com.alipay.autotuneservice.dynamodb.repository;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.autotuneservice.dao.TwatchInfoRepository;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
 import com.alipay.autotuneservice.multiCloudAdapter.NosqlService;
@@ -37,14 +38,17 @@ import static java.util.stream.Collectors.toCollection;
 
 /**
  * @author huangkaifei
- * @version : TwatchInfoRepository.java, v 0.1 2022年04月19日 1:00 PM huangkaifei Exp $
+ * @version : TwatchInfoService.java, v 0.1 2022年04月19日 1:00 PM huangkaifei Exp $
  */
 @Slf4j
 @Service
-public class TwatchInfoRepository {
+public class TwatchInfoService {
 
     @Autowired
     private NosqlService nosqlService;
+
+    @Autowired
+    private TwatchInfoRepository twatchInfoRepository;
 
     public List<TwatchInfoDo> getAllTwatchInfoBasedPods(List<PodInfoRecord> podsList) {
         final List<TwatchInfoDo> list = Collections.synchronizedList(new ArrayList<>());
@@ -85,7 +89,7 @@ public class TwatchInfoRepository {
     }
 
     public List<TwatchInfoDo> findInfoByPod(String podName) {
-        return getInfos("podName-index", "podName", podName);
+        return twatchInfoRepository.findInfoByPod(podName);
     }
 
     public TwatchInfoDo findOneByPod(String podName) {
@@ -97,13 +101,14 @@ public class TwatchInfoRepository {
     }
 
     public List<TwatchInfoDo> findInfoByAgent(String agentName) {
-        return getInfos("agentName-index", "agentName", agentName);
+        return twatchInfoRepository.findInfoByAgent(agentName);
     }
 
     public List<TwatchInfoDo> findInfoByContainerId(String containerId) {
-        return getInfos("containerId-index", "containerId", containerId);
+        return twatchInfoRepository.findByContainerId(containerId);
     }
 
+    @Deprecated
     private List<TwatchInfoDo> getInfos(String indexName, String key, String value) {
         List<TwatchInfoDo> twatchInfoDos = nosqlService.queryByPkIndex(TWATCH_TABLE, indexName, key, value, TwatchInfoDo.class);
         twatchInfoDos.sort(comparing(TwatchInfoDo::getDtPeriod));
@@ -113,9 +118,13 @@ public class TwatchInfoRepository {
 
     public void insert(TwatchInfoDo infoDo) {
         try {
-            nosqlService.insert(infoDo, TWATCH_TABLE);
+            twatchInfoRepository.insert(infoDo);
         } catch (Exception e) {
             log.error("insert TwatchInfoDo occurs an error", e);
         }
+    }
+
+    public List<TwatchInfoDo> listAll() {
+        return twatchInfoRepository.listAll();
     }
 }

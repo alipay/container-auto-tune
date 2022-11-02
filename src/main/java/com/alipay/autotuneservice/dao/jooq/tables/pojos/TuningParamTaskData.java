@@ -111,14 +111,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.pipeline_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PIPELINE_ID</code>.
      */
     public Integer getPipelineId() {
         return this.pipelineId;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.pipeline_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PIPELINE_ID</code>.
      */
     public TuningParamTaskData setPipelineId(Integer pipelineId) {
         this.pipelineId = pipelineId;
@@ -126,14 +126,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.app_id</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.APP_ID</code>.
      */
     public Integer getAppId() {
         return this.appId;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.app_id</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.APP_ID</code>.
      */
     public TuningParamTaskData setAppId(Integer appId) {
         this.appId = appId;
@@ -141,14 +141,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.app_name</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.APP_NAME</code>.
      */
     public String getAppName() {
         return this.appName;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.app_name</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.APP_NAME</code>.
      */
     public TuningParamTaskData setAppName(String appName) {
         this.appName = appName;
@@ -156,14 +156,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.pods</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PODS</code>.
      */
     public String getPods() {
         return this.pods;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.pods</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PODS</code>.
      */
     public TuningParamTaskData setPods(String pods) {
         this.pods = pods;
@@ -171,14 +171,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.optimization_type</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.OPTIMIZATION_TYPE</code>.
      */
     public String getOptimizationType() {
         return this.optimizationType;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.optimization_type</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.OPTIMIZATION_TYPE</code>.
      */
     public TuningParamTaskData setOptimizationType(String optimizationType) {
         this.optimizationType = optimizationType;
@@ -186,14 +186,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.problem_describe</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PROBLEM_DESCRIBE</code>.
      */
     public String getProblemDescribe() {
         return this.problemDescribe;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.problem_describe</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PROBLEM_DESCRIBE</code>.
      */
     public TuningParamTaskData setProblemDescribe(String problemDescribe) {
         this.problemDescribe = problemDescribe;
@@ -201,14 +201,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.problem_type</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PROBLEM_TYPE</code>.
      */
     public String getProblemType() {
         return this.problemType;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.problem_type</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.PROBLEM_TYPE</code>.
      */
     public TuningParamTaskData setProblemType(String problemType) {
         this.problemType = problemType;
@@ -216,14 +216,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.direction</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.DIRECTION</code>.
      */
     public String getDirection() {
         return this.direction;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.direction</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.DIRECTION</code>.
      */
     public TuningParamTaskData setDirection(String direction) {
         this.direction = direction;
@@ -231,14 +231,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_nums</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_NUMS</code>.
      */
     public Integer getTrialNums() {
         return this.trialNums;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_nums</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_NUMS</code>.
      */
     public TuningParamTaskData setTrialNums(Integer trialNums) {
         this.trialNums = trialNums;
@@ -246,14 +246,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_params</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_PARAMS</code>.
      */
     public String getTrialParams() {
         return this.trialParams;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_params</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_PARAMS</code>.
      */
     public TuningParamTaskData setTrialParams(String trialParams) {
         this.trialParams = trialParams;
@@ -261,14 +261,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.max_iter</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.MAX_ITER</code>.
      */
     public Integer getMaxIter() {
         return this.maxIter;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.max_iter</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.MAX_ITER</code>.
      */
     public TuningParamTaskData setMaxIter(Integer maxIter) {
         this.maxIter = maxIter;
@@ -276,14 +276,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_time_min</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_TIME_MIN</code>.
      */
     public Integer getTrialTimeMin() {
         return this.trialTimeMin;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_time_min</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_TIME_MIN</code>.
      */
     public TuningParamTaskData setTrialTimeMin(Integer trialTimeMin) {
         this.trialTimeMin = trialTimeMin;
@@ -291,14 +291,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_time_max</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_TIME_MAX</code>.
      */
     public Integer getTrialTimeMax() {
         return this.trialTimeMax;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_time_max</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_TIME_MAX</code>.
      */
     public TuningParamTaskData setTrialTimeMax(Integer trialTimeMax) {
         this.trialTimeMax = trialTimeMax;
@@ -306,14 +306,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_start_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_START_TIME</code>.
      */
     public LocalDateTime getTrialStartTime() {
         return this.trialStartTime;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_start_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_START_TIME</code>.
      */
     public TuningParamTaskData setTrialStartTime(LocalDateTime trialStartTime) {
         this.trialStartTime = trialStartTime;
@@ -321,14 +321,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.trial_stop_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_STOP_TIME</code>.
      */
     public LocalDateTime getTrialStopTime() {
         return this.trialStopTime;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.trial_stop_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TRIAL_STOP_TIME</code>.
      */
     public TuningParamTaskData setTrialStopTime(LocalDateTime trialStopTime) {
         this.trialStopTime = trialStopTime;
@@ -336,14 +336,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.start_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.START_TIME</code>.
      */
     public LocalDateTime getStartTime() {
         return this.startTime;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.start_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.START_TIME</code>.
      */
     public TuningParamTaskData setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
@@ -351,14 +351,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.end_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.END_TIME</code>.
      */
     public LocalDateTime getEndTime() {
         return this.endTime;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.end_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.END_TIME</code>.
      */
     public TuningParamTaskData setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
@@ -366,14 +366,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.task_status</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TASK_STATUS</code>.
      */
     public String getTaskStatus() {
         return this.taskStatus;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.task_status</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.TASK_STATUS</code>.
      */
     public TuningParamTaskData setTaskStatus(String taskStatus) {
         this.taskStatus = taskStatus;
@@ -381,14 +381,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.before_params</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.BEFORE_PARAMS</code>.
      */
     public String getBeforeParams() {
         return this.beforeParams;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.before_params</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.BEFORE_PARAMS</code>.
      */
     public TuningParamTaskData setBeforeParams(String beforeParams) {
         this.beforeParams = beforeParams;
@@ -396,14 +396,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.modify_time</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.MODIFY_TIME</code>.
      */
     public LocalDateTime getModifyTime() {
         return this.modifyTime;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.modify_time</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.MODIFY_TIME</code>.
      */
     public TuningParamTaskData setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
@@ -411,14 +411,14 @@ public class TuningParamTaskData implements Serializable {
     }
 
     /**
-     * Getter for <code>tmaestro-lite.tuning_param_task_data.compare_pods</code>.
+     * Getter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.COMPARE_PODS</code>.
      */
     public String getComparePods() {
         return this.comparePods;
     }
 
     /**
-     * Setter for <code>tmaestro-lite.tuning_param_task_data.compare_pods</code>.
+     * Setter for <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA.COMPARE_PODS</code>.
      */
     public TuningParamTaskData setComparePods(String comparePods) {
         this.comparePods = comparePods;

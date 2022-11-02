@@ -8,19 +8,25 @@ import com.alipay.autotuneservice.dao.jooq.tables.AppInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.AppLog;
 import com.alipay.autotuneservice.dao.jooq.tables.BaseLine;
 import com.alipay.autotuneservice.dao.jooq.tables.ConfigInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.ContainerProcessInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.ContainerStatistics;
 import com.alipay.autotuneservice.dao.jooq.tables.ExpertKnowledge;
 import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.HelpInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMarketInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmOptsConfig;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.K8sAccessTokenInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetaInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.MeterMetricInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.NodeInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.PodAttach;
 import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckControl;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
+import com.alipay.autotuneservice.dao.jooq.tables.RiskStatisticPreData;
 import com.alipay.autotuneservice.dao.jooq.tables.StorageInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TaskPipelineInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuneLogInfo;
@@ -33,163 +39,198 @@ import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskData;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskDataDev;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTrialData;
+import com.alipay.autotuneservice.dao.jooq.tables.TwatchInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.UserInfo;
 
 
 /**
- * Convenience access to all tables in tmaestro-lite.
+ * Convenience access to all tables in TMAESTRO-LITE.
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
 
     /**
-     * 应用管理表
+     * The table <code>TMAESTRO-LITE.APP_INFO</code>.
      */
     public static final AppInfo APP_INFO = AppInfo.APP_INFO;
 
     /**
-     * 应用日志
+     * The table <code>TMAESTRO-LITE.APP_LOG</code>.
      */
     public static final AppLog APP_LOG = AppLog.APP_LOG;
 
     /**
-     * 基线管理表
+     * The table <code>TMAESTRO-LITE.BASE_LINE</code>.
      */
     public static final BaseLine BASE_LINE = BaseLine.BASE_LINE;
 
     /**
-     * 应用管理表
+     * The table <code>TMAESTRO-LITE.CONFIG_INFO</code>.
      */
     public static final ConfigInfo CONFIG_INFO = ConfigInfo.CONFIG_INFO;
 
     /**
-     * 专家经验
+     * The table <code>TMAESTRO-LITE.CONTAINER_PROCESS_INFO</code>.
+     */
+    public static final ContainerProcessInfo CONTAINER_PROCESS_INFO = ContainerProcessInfo.CONTAINER_PROCESS_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.CONTAINER_STATISTICS</code>.
+     */
+    public static final ContainerStatistics CONTAINER_STATISTICS = ContainerStatistics.CONTAINER_STATISTICS;
+
+    /**
+     * The table <code>TMAESTRO-LITE.EXPERT_KNOWLEDGE</code>.
      */
     public static final ExpertKnowledge EXPERT_KNOWLEDGE = ExpertKnowledge.EXPERT_KNOWLEDGE;
 
     /**
-     * 健康检查
+     * The table <code>TMAESTRO-LITE.HEALTH_CHECK_INFO</code>.
      */
     public static final HealthCheckInfo HEALTH_CHECK_INFO = HealthCheckInfo.HEALTH_CHECK_INFO;
 
     /**
-     * agent安装帮助
+     * The table <code>TMAESTRO-LITE.HELP_INFO</code>.
      */
     public static final HelpInfo HELP_INFO = HelpInfo.HELP_INFO;
 
     /**
-     * 调参管理表
+     * The table <code>TMAESTRO-LITE.JVM_MARKET_INFO</code>.
      */
     public static final JvmMarketInfo JVM_MARKET_INFO = JvmMarketInfo.JVM_MARKET_INFO;
 
     /**
-     * The table <code>tmaestro-lite.jvm_opts_config</code>.
+     * The table <code>TMAESTRO-LITE.JVM_MONITOR_METRIC_DATA</code>.
+     */
+    public static final JvmMonitorMetricData JVM_MONITOR_METRIC_DATA = JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA;
+
+    /**
+     * The table <code>TMAESTRO-LITE.JVM_OPTS_CONFIG</code>.
      */
     public static final JvmOptsConfig JVM_OPTS_CONFIG = JvmOptsConfig.JVM_OPTS_CONFIG;
 
     /**
-     * The table <code>tmaestro-lite.jvm_tuning_risk_center</code>.
+     * The table <code>TMAESTRO-LITE.JVM_RISK_STATISTIC_PROBLEM</code>.
+     */
+    public static final JvmRiskStatisticProblem JVM_RISK_STATISTIC_PROBLEM = JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM;
+
+    /**
+     * The table <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER</code>.
      */
     public static final JvmTuningRiskCenter JVM_TUNING_RISK_CENTER = JvmTuningRiskCenter.JVM_TUNING_RISK_CENTER;
 
     /**
-     * k8s;access token信息表
+     * The table <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO</code>.
      */
     public static final K8sAccessTokenInfo K8S_ACCESS_TOKEN_INFO = K8sAccessTokenInfo.K8S_ACCESS_TOKEN_INFO;
 
     /**
-     * 存放注册监控的元数据信息
+     * The table <code>TMAESTRO-LITE.METER_META_INFO</code>.
      */
     public static final MeterMetaInfo METER_META_INFO = MeterMetaInfo.METER_META_INFO;
 
     /**
-     * 节点管理表
+     * The table <code>TMAESTRO-LITE.METER_METRIC_INFO</code>.
+     */
+    public static final MeterMetricInfo METER_METRIC_INFO = MeterMetricInfo.METER_METRIC_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.NODE_INFO</code>.
      */
     public static final NodeInfo NODE_INFO = NodeInfo.NODE_INFO;
 
     /**
-     * pod attach info
-
+     * The table <code>TMAESTRO-LITE.POD_ATTACH</code>.
      */
     public static final PodAttach POD_ATTACH = PodAttach.POD_ATTACH;
 
     /**
-     * 单机管理表
+     * The table <code>TMAESTRO-LITE.POD_INFO</code>.
      */
     public static final PodInfo POD_INFO = PodInfo.POD_INFO;
 
     /**
-     * 风险识别控制表
+     * The table <code>TMAESTRO-LITE.RISK_CHECK_CONTROL</code>.
      */
     public static final RiskCheckControl RISK_CHECK_CONTROL = RiskCheckControl.RISK_CHECK_CONTROL;
 
     /**
-     * 风险识别任务表
+     * The table <code>TMAESTRO-LITE.RISK_CHECK_TASK</code>.
      */
     public static final RiskCheckTask RISK_CHECK_TASK = RiskCheckTask.RISK_CHECK_TASK;
 
     /**
-     * s3永久文件存储卷
+     * The table <code>TMAESTRO-LITE.RISK_STATISTIC_PRE_DATA</code>.
+     */
+    public static final RiskStatisticPreData RISK_STATISTIC_PRE_DATA = RiskStatisticPreData.RISK_STATISTIC_PRE_DATA;
+
+    /**
+     * The table <code>TMAESTRO-LITE.STORAGE_INFO</code>.
      */
     public static final StorageInfo STORAGE_INFO = StorageInfo.STORAGE_INFO;
 
     /**
-     * 任务管理表
+     * The table <code>TMAESTRO-LITE.TASK_PIPELINE_INFO</code>.
      */
     public static final TaskPipelineInfo TASK_PIPELINE_INFO = TaskPipelineInfo.TASK_PIPELINE_INFO;
 
     /**
-     * 调参记录表
+     * The table <code>TMAESTRO-LITE.TUNE_LOG_INFO</code>.
      */
     public static final TuneLogInfo TUNE_LOG_INFO = TuneLogInfo.TUNE_LOG_INFO;
 
     /**
-     * 负责用户修改的调参参数的管理
+     * The table <code>TMAESTRO-LITE.TUNE_PARAM_INFO</code>.
      */
     public static final TuneParamInfo TUNE_PARAM_INFO = TuneParamInfo.TUNE_PARAM_INFO;
 
     /**
-     * 调参pipeline
+     * The table <code>TMAESTRO-LITE.TUNE_PIPELINE</code>.
      */
     public static final TunePipeline TUNE_PIPELINE = TunePipeline.TUNE_PIPELINE;
 
     /**
-     * 调参pipeline阶段
+     * The table <code>TMAESTRO-LITE.TUNE_PIPELINE_PHASE</code>.
      */
     public static final TunePipelinePhase TUNE_PIPELINE_PHASE = TunePipelinePhase.TUNE_PIPELINE_PHASE;
 
     /**
-     * 调参计划
+     * The table <code>TMAESTRO-LITE.TUNE_PLAN</code>.
      */
     public static final TunePlan TUNE_PLAN = TunePlan.TUNE_PLAN;
 
     /**
-     * 调参池管理表
+     * The table <code>TMAESTRO-LITE.TUNE_POOL_INFO</code>.
      */
     public static final TunePoolInfo TUNE_POOL_INFO = TunePoolInfo.TUNE_POOL_INFO;
 
     /**
-     * The table <code>tmaestro-lite.tuning_param_task_data</code>.
+     * The table <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA</code>.
      */
     public static final TuningParamTaskData TUNING_PARAM_TASK_DATA = TuningParamTaskData.TUNING_PARAM_TASK_DATA;
 
     /**
-     * The table <code>tmaestro-lite.tuning_param_task_data_dev</code>.
+     * The table <code>TMAESTRO-LITE.TUNING_PARAM_TASK_DATA_DEV</code>.
      */
     public static final TuningParamTaskDataDev TUNING_PARAM_TASK_DATA_DEV = TuningParamTaskDataDev.TUNING_PARAM_TASK_DATA_DEV;
 
     /**
-     * The table <code>tmaestro-lite.tuning_param_task_info</code>.
+     * The table <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO</code>.
      */
     public static final TuningParamTaskInfo TUNING_PARAM_TASK_INFO = TuningParamTaskInfo.TUNING_PARAM_TASK_INFO;
 
     /**
-     * The table <code>tmaestro-lite.tuning_param_trial_data</code>.
+     * The table <code>TMAESTRO-LITE.TUNING_PARAM_TRIAL_DATA</code>.
      */
     public static final TuningParamTrialData TUNING_PARAM_TRIAL_DATA = TuningParamTrialData.TUNING_PARAM_TRIAL_DATA;
 
     /**
-     * 用户信息表
+     * The table <code>TMAESTRO-LITE.TWATCH_INFO</code>.
+     */
+    public static final TwatchInfo TWATCH_INFO = TwatchInfo.TWATCH_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.USER_INFO</code>.
      */
     public static final UserInfo USER_INFO = UserInfo.USER_INFO;
 }

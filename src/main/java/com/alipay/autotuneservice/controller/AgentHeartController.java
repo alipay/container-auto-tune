@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,8 @@ import com.alipay.autotuneservice.agent.twatch.hearbeat.HeartBeatResponse;
 import com.alipay.autotuneservice.agent.twatch.model.AgentActionRequest;
 import com.alipay.autotuneservice.agent.twatch.monitor.ContainerMetricRunner;
 import com.alipay.autotuneservice.configuration.NoLogin;
+import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
+import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
 import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.alipay.autotuneservice.model.agent.BoundUnionRequest;
 import com.alipay.autotuneservice.model.agent.CallBackRequest;
@@ -49,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -66,6 +69,8 @@ public class AgentHeartController {
     private ContainerMetricRunner containerMetricRunner;
     @Autowired
     private CommandService        commandService;
+    @Autowired
+    private TwatchInfoService     twatchInfoService;
 
     /**
      * 接收客户端心跳
@@ -89,7 +94,7 @@ public class AgentHeartController {
                 return ServiceBaseResult.successResult();
             }
             log.info("receive HeartBeat from agent:{}, date:{}, requests size:{}", agentName, date,
-                requests.size());
+                    requests.size());
             //组织返回信息
             HeartBeatResponse heartBeatResponse = new HeartBeatResponse();
             heartBeatResponse.setAgentName(agentName);
@@ -98,7 +103,7 @@ public class AgentHeartController {
         } catch (Exception e) {
             log.error("receive heartbeat occurs an error.", e);
             return ServiceBaseResult.failureResult(HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                String.format("处理agent=%s心跳失败, errMsg=%s", agentName, e.getMessage()));
+                    String.format("处理agent=%s心跳失败, errMsg=%s", agentName, e.getMessage()));
         }
     }
 
@@ -123,9 +128,9 @@ public class AgentHeartController {
         } catch (Exception e) {
             log.error("doCallBack an error.", e);
             return ServiceBaseResult.failureResult(
-                HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                String.format("doCallBack失败-->request=[%s],errMsg=%s",
-                    JSONObject.toJSONString(request), e.getMessage()));
+                    HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                    String.format("doCallBack失败-->request=[%s],errMsg=%s",
+                            JSONObject.toJSONString(request), e.getMessage()));
         }
     }
 
@@ -142,7 +147,7 @@ public class AgentHeartController {
             log.info("boundUnion request boundUnionRequest isEmpty={}", boundUnionRequest == null);
             Preconditions.checkArgument(boundUnionRequest != null, "boundUnionRequest不能为空.");
             Preconditions.checkArgument(CollectionUtils.isNotEmpty(boundUnionRequest.getInfoDos()),
-                "infoDos不能为空.");
+                    "infoDos不能为空.");
             agentHeartService.boundUnion(boundUnionRequest.getInfoDos());
             return ServiceBaseResult.successResult();
         } catch (Exception e) {
@@ -170,7 +175,7 @@ public class AgentHeartController {
             String domainUrl = SystemUtil.getDomainUrl();
             System.out.println(domainUrl);
             String result = agentInvokeService.getPodEnv(AgentInvokeServiceImpl.InvokeType.SYNC,
-                podName);
+                    podName);
             return ServiceBaseResult.successResult(result);
         } catch (Exception e) {
             return ServiceBaseResult.failureResult(e.getMessage());
@@ -182,7 +187,7 @@ public class AgentHeartController {
     public ServiceBaseResult<String> getProcess(@RequestParam(value = "podName") String podName) {
         try {
             String result = agentInvokeService.getProcessByPod(
-                AgentInvokeServiceImpl.InvokeType.SYNC, podName);
+                    AgentInvokeServiceImpl.InvokeType.SYNC, podName);
             return ServiceBaseResult.successResult(result);
         } catch (Exception e) {
             return ServiceBaseResult.failureResult(e.getMessage());
@@ -233,7 +238,7 @@ public class AgentHeartController {
     public ServiceBaseResult<Boolean> checkAgentInstall(@RequestParam(value = "podName") String podName) {
         try {
             return ServiceBaseResult.successResult(agentInvokeService
-                .checkPodIsInstallTuneAgent(podName));
+                    .checkPodIsInstallTuneAgent(podName));
         } catch (Exception e) {
             return ServiceBaseResult.failureResult(e.getMessage());
         }
@@ -245,7 +250,7 @@ public class AgentHeartController {
         try {
             TraceIdGenerator.generateAndSet();
             Map<String, String> podHealthIndexes = agentInvokeService
-                .getAllPodHealthIndexes(podName);
+                    .getAllPodHealthIndexes(podName);
             return ServiceBaseResult.successResult(JSON.toJSONString(podHealthIndexes));
         } catch (Exception e) {
             return ServiceBaseResult.failureResult(e.getMessage());
@@ -261,4 +266,15 @@ public class AgentHeartController {
             return ServiceBaseResult.failureResult(e.getMessage());
         }
     }
+
+    @NoLogin
+    @GetMapping("/twatch/list")
+    public ServiceBaseResult<List<TwatchInfoDo>> listAllTwatch() {
+        try {
+            return ServiceBaseResult.successResult(twatchInfoService.listAll());
+        } catch (Exception e) {
+            return ServiceBaseResult.failureResult(e.getMessage());
+        }
+    }
+
 }

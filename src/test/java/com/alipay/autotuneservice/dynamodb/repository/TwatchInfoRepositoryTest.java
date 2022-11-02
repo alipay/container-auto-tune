@@ -27,7 +27,7 @@ import java.util.List;
 public class TwatchInfoRepositoryTest {
 
     @Autowired
-    private TwatchInfoRepository repository;
+    private TwatchInfoService repository;
 
     @Test
     void findInfoByPod() {

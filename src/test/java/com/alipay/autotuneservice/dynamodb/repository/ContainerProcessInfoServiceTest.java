@@ -28,10 +28,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @SpringBootTest
-public class ContainerProcessInfoRepositoryTest {
+public class ContainerProcessInfoServiceTest {
 
     @Autowired
-    private ContainerProcessInfoRepository processInfoRepository;
+    private ContainerProcessInfoService processInfoRepository;
 
     @Test
     public void batchInsertProcessInfo() {

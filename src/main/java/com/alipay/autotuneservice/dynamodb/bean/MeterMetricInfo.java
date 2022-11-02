@@ -17,7 +17,7 @@ public class MeterMetricInfo {
     private long appId;
     private String appName;
     private String metricName;
-    private String metricVal;
+    private String data;
     private String meterVendor;
     private long gmtCreated;
     /**

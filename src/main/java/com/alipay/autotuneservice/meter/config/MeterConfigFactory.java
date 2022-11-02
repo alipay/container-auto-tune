@@ -33,14 +33,14 @@ public class MeterConfigFactory {
     @Autowired
     private MeterMetaInfoRepository metaInfoRepository;
 
-    @PostConstruct
+    //@PostConstruct
     public void init() {
-        List<MeterMeta> meterMetas = metaInfoRepository.listAppMeters();
-        Optional.ofNullable(meterMetas)
-                .orElse(Lists.newArrayList())
-                .stream()
-                .filter(item -> item != null && StringUtils.isNotEmpty(item.getMeterName()) && ObjectUtil.checkInteger(item.getAppId()))
-                .forEach(METER_MATAS::add);
+        //List<MeterMeta> meterMetas = metaInfoRepository.listAppMeters();
+        //Optional.ofNullable(meterMetas)
+        //        .orElse(Lists.newArrayList())
+        //        .stream()
+        //        .filter(item -> item != null && StringUtils.isNotEmpty(item.getMeterName()) && ObjectUtil.checkInteger(item.getAppId()))
+        //        .forEach(METER_MATAS::add);
     }
 
     public final Set<MeterMeta> getMeterMatas(){

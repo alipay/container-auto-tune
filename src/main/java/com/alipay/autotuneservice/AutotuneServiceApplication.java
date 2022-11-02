@@ -16,15 +16,27 @@
  */
 package com.alipay.autotuneservice;
 
+import com.alipay.autotuneservice.h2.H2DBManagerImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
+
+import java.sql.SQLException;
 
 @SpringBootApplication()
 public class AutotuneServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AutotuneServiceApplication.class, args);
+        SpringApplication application = new SpringApplication(AutotuneServiceApplication.class);
+        application.addListeners((ApplicationListener<ContextClosedEvent>) event -> {
+            try {
+                H2DBManagerImpl.closeConn();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+        application.run(args);
     }
-
 }

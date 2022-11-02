@@ -16,6 +16,8 @@
  */
 package com.alipay.autotuneservice.infrastructure.saas.common.cache;
 
+import com.alipay.autotuneservice.fake.FakeRedissonClient;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RTopic;
@@ -24,6 +26,8 @@ import org.redisson.client.codec.Codec;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -34,11 +38,13 @@ import java.util.function.Consumer;
 @Slf4j
 @Component
 public class RedisClient {
-    private final RedissonClient redissonClient;
+    private static final Map<String, List<Object>> LRANGE_MAP          = new ConcurrentHashMap<>();
+    private final        RedissonClient      redissonClient = new FakeRedissonClient();
 
-    public RedisClient(RedissonClient redissonClient) {
-        this.redissonClient = redissonClient;
-    }
+    //public RedisClient(RedissonClient redissonClient) {
+    //    this.redissonClient = redissonClient;
+    //}
+
 
     public RedissonClient getRedissonClient() {
         return redissonClient;
@@ -172,7 +178,8 @@ public class RedisClient {
      * @return List<Object>
      */
     public List<Object> lrange(String key) {
-        return redissonClient.getList(key).readAll();
+        return LRANGE_MAP.containsKey(key) ? LRANGE_MAP.get(key) : null;
+        //return redissonClient.getList(key).readAll();
     }
 
     /**
@@ -183,7 +190,13 @@ public class RedisClient {
      * @return boolean
      */
     public boolean rpush(String key, Object obj) {
-        return redissonClient.getList(key).add(obj);
+        if (!LRANGE_MAP.containsKey(key)) {
+            LRANGE_MAP.put(key, Lists.newArrayList(obj));
+            return true;
+        }
+        LRANGE_MAP.get(key).add(obj);
+        return true;
+        //return redissonClient.getList(key).add(obj);
     }
 
     /**

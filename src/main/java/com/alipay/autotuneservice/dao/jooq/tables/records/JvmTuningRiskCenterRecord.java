@@ -24,7 +24,7 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.id</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.ID</code>.
      */
     public JvmTuningRiskCenterRecord setId(Long value) {
         set(0, value);
@@ -32,14 +32,14 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.id</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.ID</code>.
      */
     public Long getId() {
         return (Long) get(0);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.appId</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.APPID</code>.
      */
     public JvmTuningRiskCenterRecord setAppid(Integer value) {
         set(1, value);
@@ -47,14 +47,14 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.appId</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.APPID</code>.
      */
     public Integer getAppid() {
         return (Integer) get(1);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.app</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.APP</code>.
      */
     public JvmTuningRiskCenterRecord setApp(String value) {
         set(2, value);
@@ -62,14 +62,14 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.app</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.APP</code>.
      */
     public String getApp() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.metric</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.METRIC</code>.
      */
     public JvmTuningRiskCenterRecord setMetric(String value) {
         set(3, value);
@@ -77,14 +77,14 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.metric</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.METRIC</code>.
      */
     public String getMetric() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.model</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.MODEL</code>.
      */
     public JvmTuningRiskCenterRecord setModel(String value) {
         set(4, value);
@@ -92,14 +92,14 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.model</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.MODEL</code>.
      */
     public String getModel() {
         return (String) get(4);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.dt</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.DT</code>.
      */
     public JvmTuningRiskCenterRecord setDt(String value) {
         set(5, value);
@@ -107,14 +107,14 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.dt</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.DT</code>.
      */
     public String getDt() {
         return (String) get(5);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.sucess</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.SUCESS</code>.
      */
     public JvmTuningRiskCenterRecord setSucess(String value) {
         set(6, value);
@@ -122,14 +122,14 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.sucess</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.SUCESS</code>.
      */
     public String getSucess() {
         return (String) get(6);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.info</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.INFO</code>.
      */
     public JvmTuningRiskCenterRecord setInfo(String value) {
         set(7, value);
@@ -137,14 +137,14 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.info</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.INFO</code>.
      */
     public String getInfo() {
         return (String) get(7);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.lowline</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.LOWLINE</code>.
      */
     public JvmTuningRiskCenterRecord setLowline(Double value) {
         set(8, value);
@@ -152,14 +152,14 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.lowline</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.LOWLINE</code>.
      */
     public Double getLowline() {
         return (Double) get(8);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.upline</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.UPLINE</code>.
      */
     public JvmTuningRiskCenterRecord setUpline(Double value) {
         set(9, value);
@@ -167,14 +167,14 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.upline</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.UPLINE</code>.
      */
     public Double getUpline() {
         return (Double) get(9);
     }
 
     /**
-     * Setter for <code>tmaestro-lite.jvm_tuning_risk_center.timestamp</code>.
+     * Setter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.TIMESTAMP</code>.
      */
     public JvmTuningRiskCenterRecord setTimestamp(LocalDateTime value) {
         set(10, value);
@@ -182,7 +182,7 @@ public class JvmTuningRiskCenterRecord extends UpdatableRecordImpl<JvmTuningRisk
     }
 
     /**
-     * Getter for <code>tmaestro-lite.jvm_tuning_risk_center.timestamp</code>.
+     * Getter for <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER.TIMESTAMP</code>.
      */
     public LocalDateTime getTimestamp() {
         return (LocalDateTime) get(10);

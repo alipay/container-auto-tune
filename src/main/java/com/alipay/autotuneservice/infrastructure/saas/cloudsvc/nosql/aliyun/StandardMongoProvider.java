@@ -47,6 +47,7 @@ import java.util.Set;
  * @date 2022/7/7 15:50
  **/
 @Slf4j
+@Deprecated
 public class StandardMongoProvider {
 
     MongoClient    mongoClient;
@@ -57,13 +58,13 @@ public class StandardMongoProvider {
     private String databaseName;
 
     public StandardMongoProvider() {
-        try {
-            init();
-            mongoClient = MongoClients.create(connectionUrl);
-            db = mongoClient.getDatabase(databaseName);
-        } catch (Exception e) {
-            log.error("StandardMongoProvider - create mongodb client occurs ann error.", e);
-        }
+        //try {
+        //    init();
+        //    mongoClient = MongoClients.create(connectionUrl);
+        //    db = mongoClient.getDatabase(databaseName);
+        //} catch (Exception e) {
+        //    log.error("StandardMongoProvider - create mongodb client occurs ann error.", e);
+        //}
     }
 
     public MongoClient getMongoClient() {

@@ -5,6 +5,7 @@
 package com.alipay.autotuneservice.dynamodb.bean;
 
 import com.google.common.base.Preconditions;
+import lombok.Builder;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,6 +16,7 @@ import java.io.Serializable;
  * @version : TwatchDO.java, v 0.1 2022年04月10日 10:31 PM huangkaifei Exp $
  */
 @Data
+@Builder
 public class TwatchInfoDo implements Serializable {
 
     private String containerId;

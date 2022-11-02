@@ -7,7 +7,7 @@ package com.alipay.autotuneservice.schedule;
 import com.alipay.autotuneservice.controller.model.meter.MeterMeta;
 import com.alipay.autotuneservice.controller.model.meter.MeterMetricResult;
 import com.alipay.autotuneservice.dynamodb.bean.MeterMetricInfo;
-import com.alipay.autotuneservice.dynamodb.repository.MeterMetricInfoRepository;
+import com.alipay.autotuneservice.dynamodb.repository.MeterMetricInfoService;
 import com.alipay.autotuneservice.meter.MeterService;
 import com.alipay.autotuneservice.meter.config.MeterConfigFactory;
 import com.alipay.autotuneservice.util.DateUtils;
@@ -38,7 +38,7 @@ public class MonitorMeterMetricTask {
     private MeterConfigFactory meterConfigFactory;
 
     @Autowired
-    private MeterMetricInfoRepository metricInfoRepository;
+    private MeterMetricInfoService metricInfoRepository;
 
     //@Scheduled(fixedRate = 60 * 1000) // 待接入后放开,防止占表空间
     public void execute() {
@@ -68,7 +68,7 @@ public class MonitorMeterMetricTask {
         collect.stream().parallel().forEach(item -> {
             MeterMetricInfo build = MeterMetricInfo.builder()
                     .metricName(item.getMetricName())
-                    .metricVal(item.getMetricResult())
+                    .data(item.getMetricResult())
                     .gmtCreated(DateUtils.nowTimestamp())
                     .dt(DateUtils.getNowDt())
                     .appId(appId)

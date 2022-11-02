@@ -21,6 +21,7 @@ import java.util.function.Supplier;
  * @author yiqi
  * @date 2022/07/06
  */
+@Deprecated
 public class RedisFactory {
 
     private static final String HOST;
@@ -64,7 +65,8 @@ public class RedisFactory {
      * @return
      */
     public static RedisClient redisClient() {
-        return getCache(() -> new RedisClient(redissonClient()), "redisClient");
+        return null;
+        //return getCache(() -> new RedisClient(redissonClient()), "redisClient");
     }
 
     /**

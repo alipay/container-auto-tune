@@ -16,6 +16,7 @@
  */
 package com.alipay.autotuneservice.dynamodb.bean;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -23,6 +24,7 @@ import lombok.Data;
  * @version : JvmMonitorMetric.java, v 0.1 2022年04月13日 4:08 PM huangkaifei Exp $
  */
 @Data
+@Builder
 public class JvmMonitorMetricData {
 
     private String  cluster;       //集群名

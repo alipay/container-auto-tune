@@ -18,12 +18,12 @@ package com.alipay.autotuneservice.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
-import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataRepository;
+import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataService;
 import org.junit.Test;
 
 public class DynamoDBServiceTest {
 
-    private JvmMonitorMetricDataRepository repository = new JvmMonitorMetricDataRepository();
+    private JvmMonitorMetricDataService repository = new JvmMonitorMetricDataService();
 
     @Test
     public void getPodLatestOneMinuteJvmMetric() {

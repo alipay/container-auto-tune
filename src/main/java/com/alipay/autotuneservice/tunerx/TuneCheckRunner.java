@@ -51,13 +51,18 @@ public class TuneCheckRunner {
 
     @Scheduled(fixedRate = 60 * 1000)
     public void run() {
-        redisClient.doExec(LOCK_KEY, () -> {
-            log.info(String.format("get %s lock", LOCK_KEY));
-            //check状态机驱动
-            doChecker();
-            //check最终一致性
-            doAsyncWork();
-        });
+        log.info(String.format("get %s lock", LOCK_KEY));
+        //check状态机驱动
+        doChecker();
+        //check最终一致性
+        doAsyncWork();
+        //redisClient.doExec(LOCK_KEY, () -> {
+        //    log.info(String.format("get %s lock", LOCK_KEY));
+        //    //check状态机驱动
+        //    doChecker();
+        //    //check最终一致性
+        //    doAsyncWork();
+        //});
     }
 
     private void doAsyncWork() {

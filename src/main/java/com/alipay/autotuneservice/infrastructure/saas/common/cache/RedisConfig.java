@@ -30,6 +30,7 @@ import java.util.Objects;
  * @author huoyuqi
  * @version Redis.java, v 0.1 2022年02月09日 5:38 下午 huoyuqi
  */
+@Deprecated
 @Configuration
 @ConditionalOnProperty(prefix = "spring.redis", name = "host")
 @EnableConfigurationProperties(RedisProperties.class)
@@ -38,14 +39,15 @@ public class RedisConfig {
     @Autowired
     private RedisProperties redisProperties;
 
-    /**
-     * redisClient配置
-     * @return RedisClient.class
-     */
-    @Bean
-    public RedisClient aliyunJedisClient(RedissonClient redissonClient) {
-        return new RedisClient(redissonClient);
-    }
+    ///**
+    // * redisClient配置
+    // * @return RedisClient.class
+    // */
+    //@Deprecated
+    //@Bean
+    //public RedisClient aliyunJedisClient(RedissonClient redissonClient) {
+    //    return new RedisClient(redissonClient);
+    //}
 
     /**
      * redisson配置

@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:h2:/tmp/h2db/tmaestro;INIT=create schema if not exists `tmaestro-lite`;
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+  h2:
+    console:
+      settings:
+        web-allow-others: true
+      enabled: true

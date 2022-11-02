@@ -23,7 +23,7 @@ import com.alipay.autotuneservice.dao.JvmTuningRiskCenterRepository;
 import com.alipay.autotuneservice.dao.jooq.tables.pojos.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.pojos.RiskCheckTask;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
-import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataRepository;
+import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataService;
 import com.alipay.autotuneservice.service.riskcheck.entity.CheckType;
 import com.alipay.autotuneservice.service.riskcheck.entity.MConsumer;
 import com.alipay.autotuneservice.service.riskcheck.entity.RiskCheckEnum;
@@ -55,7 +55,7 @@ public class RiskCheckHandler {
     private JvmTuningRiskCenterRepository  jvmTuningRiskCenterRepository;
 
     @Autowired
-    private JvmMonitorMetricDataRepository jvmMetricRepository;
+    private JvmMonitorMetricDataService jvmMetricRepository;
 
     public RiskCheckEnum executeRiskCheck(RiskCheckTask riskCheckTask, MConsumer<RiskCheckEnum, RiskCollector, RiskTaskStatus> callBack) {
         log.info(LogUtil.scureLogFormat("executeRiskCheck start"));

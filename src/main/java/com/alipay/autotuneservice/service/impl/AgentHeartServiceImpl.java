@@ -7,6 +7,7 @@ import com.alipay.autotuneservice.dao.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
+import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
 import com.alipay.autotuneservice.infrastructure.saas.cloudsvc.k8s.K8sClient;
 import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.agent.CallBackRequest;
@@ -48,9 +49,9 @@ public class AgentHeartServiceImpl implements AgentHeartService {
     private static final List<String>               FILTER_NAMESPACE = ImmutableList.of("kube-system");
 
     @Autowired
-    private RedisClient    redisClient;
+    private RedisClient         redisClient;
     @Autowired
-    private DoInvokeRunner doInvokeRunner;
+    private DoInvokeRunner      doInvokeRunner;
     @Autowired
     private AppInfoService      appInfoService;
     @Autowired
@@ -65,6 +66,8 @@ public class AgentHeartServiceImpl implements AgentHeartService {
     private AsyncTaskExecutor   podEventExecutor;
     @Autowired
     private NosqlService        nosqlService;
+    @Autowired
+    private TwatchInfoService   twatchInfoService;
 
     @Override
     public Set<AgentActionRequest> askAction(String agentName) {
@@ -122,7 +125,8 @@ public class AgentHeartServiceImpl implements AgentHeartService {
             }
         }).forEach(infoDo -> {
             try {
-                nosqlService.insert(infoDo, TWATCH_TABLE);
+                twatchInfoService.insert(infoDo);
+                //nosqlService.insert(infoDo, TWATCH_TABLE);
             } catch (Exception e) {
                 log.error("boundUnion is error", e);
             }

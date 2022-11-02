@@ -21,6 +21,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ *
  * @author fangxueyang
  * @version RiskCheckPreData.java, v 0.1 2022年08月15日 17:37 hongshu
  */

@@ -21,9 +21,9 @@ import com.alipay.autotuneservice.dao.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
-import com.alipay.autotuneservice.dynamodb.repository.ContainerProcessInfoRepository;
-import com.alipay.autotuneservice.dynamodb.repository.ContainerStatisticsRepository;
-import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoRepository;
+import com.alipay.autotuneservice.dynamodb.repository.ContainerProcessInfoService;
+import com.alipay.autotuneservice.dynamodb.repository.ContainerStatisticsService;
+import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
 import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.agent.ContainerMetric;
 import com.alipay.autotuneservice.model.agent.ContainerMetricRequest;
@@ -58,13 +58,13 @@ import java.util.stream.Collectors;
 public class ContainerMetricRunner {
 
     @Autowired
-    private ContainerProcessInfoRepository processInfoRepository;
+    private ContainerProcessInfoService processInfoRepository;
     @Autowired
-    private ContainerStatisticsRepository  statisticsRepository;
+    private ContainerStatisticsService  statisticsRepository;
     @Autowired
-    private TwatchInfoRepository           twatchInfoRepository;
+    private TwatchInfoService           twatchInfoRepository;
     @Autowired
-    private PodInfo                        podInfo;
+    private PodInfo                       podInfo;
     @Autowired
     private RedisClient                    redisClient;
     @Autowired

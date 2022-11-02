@@ -30,35 +30,6 @@ Execute below command in project root path.
 make
 ```
 
-## Prerequisites
-
-please confirm the below components installed before you run on your local environment.
-* Redis
-* MongoDB
-* Mysql
-* kubectl
-
-please set configurations of mongoDB, redis, mysql in tmaestro-properties-configmap.yaml file for below item value.
-  ```text
-  MONGO_DOMAIN,
-  MONGO_USERNAME,
-  MONGO_PASSWORD,
-  MONGO_DATABASE,
-  
-  REDIS_HOST,
-  REDIS_PASSWORD,
-  
-  MYSQL_URL,
-  MYSQL_USERNAME
-  ```
-
-### import tables of Mysql
-* import scripts the following mysql scripts to create database and tables which service stores
-```text
-  deploy/mysql/tmaestro-lite-database-create.sql
-  deploy/mysql/tmaestro-lite-tables-create.sql
-```
-
 ## run locally
 ```text
 bash start.sh

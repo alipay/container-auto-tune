@@ -52,7 +52,8 @@ public class TuneEffectTask {
         }
         try {
             TraceIdGenerator.generateAndSet();
-            redisClient.doExec(LOCK_LEY, this::invoke);
+            invoke();
+            //redisClient.doExec(LOCK_LEY, this::invoke);
         } finally {
             TraceIdGenerator.clear();
         }

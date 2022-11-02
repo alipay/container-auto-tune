@@ -5,8 +5,6 @@
 package com.alipay.autotuneservice.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.alipay.autotuneservice.controller.model.EffectTypeVO;
 import com.alipay.autotuneservice.controller.model.TuneEffectVO;
 import com.alipay.autotuneservice.controller.model.TuneTestTimePipeVO;
@@ -19,8 +17,6 @@ import com.alipay.autotuneservice.dao.TuneParamTrialDataRepository;
 import com.alipay.autotuneservice.dao.TunePipelineRepository;
 import com.alipay.autotuneservice.dao.TunePlanRepository;
 import com.alipay.autotuneservice.dao.TuningParamTaskData;
-import com.alipay.autotuneservice.dao.impl.AppInfoRepositoryImpl;
-import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.HealthCheckInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TuneLogInfoRecord;
@@ -28,11 +24,9 @@ import com.alipay.autotuneservice.dao.jooq.tables.records.TuningParamTaskDataRec
 import com.alipay.autotuneservice.dao.jooq.tables.records.TuningParamTrialDataRecord;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
-import com.alipay.autotuneservice.dynamodb.repository.ContainerStatisticsRepository;
-import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataRepository;
+import com.alipay.autotuneservice.dynamodb.repository.ContainerStatisticsService;
+import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataService;
 import com.alipay.autotuneservice.model.common.AppInfo;
-import com.alipay.autotuneservice.model.common.AppInstallInfo;
-import com.alipay.autotuneservice.model.common.AppStatus;
 import com.alipay.autotuneservice.model.common.AppTag;
 import com.alipay.autotuneservice.model.common.EffectTypeEnum;
 import com.alipay.autotuneservice.model.common.TrailTuneTaskStatus;
@@ -41,7 +35,6 @@ import com.alipay.autotuneservice.model.pipeline.MachineId;
 import com.alipay.autotuneservice.model.pipeline.PipelineStatus;
 import com.alipay.autotuneservice.model.pipeline.TunePipeline;
 import com.alipay.autotuneservice.model.tune.TunePlan;
-import com.alipay.autotuneservice.model.tune.TunePlanStatus;
 import com.alipay.autotuneservice.model.tune.TuneTaskStatus;
 import com.alipay.autotuneservice.model.tune.trail.TrailTuneContext;
 import com.alipay.autotuneservice.model.tune.trail.TrialTuneMetric;
@@ -52,7 +45,6 @@ import com.alipay.autotuneservice.util.DateUtils;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,15 +53,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -99,12 +84,12 @@ public class TuneEffectServiceImpl implements TuneEffectService {
     private TunePlanRepository tunePlanRepository;
 
     @Autowired
-    private PodInfo podInfo;
+    private PodInfo                     podInfo;
     @Autowired
-    private JvmMonitorMetricDataRepository jvmMetricRepository;
+    private JvmMonitorMetricDataService jvmMetricRepository;
 
     @Autowired
-    private ContainerStatisticsRepository repository;
+    private ContainerStatisticsService repository;
 
     @Autowired
     private TuneLogInfo tuneLogInfo;

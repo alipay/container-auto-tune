@@ -30,6 +30,11 @@ tmaestro_yaml_env_subst(){
   cp ${TMAESTRO_YAML_NEW}  ./${TMAESTRO_YAML}
 }
 
+echo "${Green} ===> start build image.${end}"
+make
+check_image
+tmaestro_yaml_env_subst
+
 echo "${Green} ===> start to get latest tmaestro image.${end}"
 check_image
 tmaestro_yaml_env_subst
@@ -44,7 +49,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "${Green}===> start to create tmaestro-properties configmap${end}"
-kubectl apply -f tmaestro-properties-configmap.yaml
+#kubectl apply -f tmaestro-properties-configmap.yaml
 
 echo "${Green}===> start deploy tmaestro.${end}"
 kubectl apply -f tmaestro-lite.yaml
