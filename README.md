@@ -39,12 +39,8 @@ bash start.sh
 
 * Mailing list:
     * dev list: for dev/user discussion. [us](mailto:tmaestro@antgroup.com)
-
-* Bugs:
-* Gitter:
-* Twitter:
-* DingTalk   
-  ![DingTalk](docs/logo/DingTalk-QR-code.png)
+* WeChat group: [WeChat QR code](https://github.com/alipay/container-auto-tune/assets/WeChat-QR.png)
+* DingTalk: [DingTalk QR code](https://github.com/alipay/container-auto-tune/assets/DingTalk-QR.png)
 
 ## Contributing
 
