@@ -44,6 +44,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     private static final String USER_REGISTER_KEY = "autotune_user_register_lock_";
 
+    @Deprecated
     @Override
     public UserInfo registerByAccountId(@Nullable String tenantCode, UserInfoBasic user) throws InterruptedException {
         // find tenant

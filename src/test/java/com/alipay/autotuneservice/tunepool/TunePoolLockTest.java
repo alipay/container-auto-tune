@@ -51,13 +51,13 @@ public class TunePoolLockTest {
             while (true) {
                 try {
                     TimeUnit.SECONDS.sleep(0);
-                    redisClient.tryLock("xx", 0, r -> {
-                        try {
-                            TimeUnit.SECONDS.sleep(0);
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                        }
-                    });
+                    //redisClient.tryLock("xx", 0, r -> {
+                    //    try {
+                    //        TimeUnit.SECONDS.sleep(0);
+                    //    } catch (InterruptedException ex) {
+                    //        ex.printStackTrace();
+                    //    }
+                    //});
                 } catch (Exception e) {
                     log.error("xx", e);
                 }
