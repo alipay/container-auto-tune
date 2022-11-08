@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 @Slf4j
 @Component
 public class RedisClient {
-    private static final Map<String, List<Object>> LRANGE_MAP          = new ConcurrentHashMap<>();
+    private static final Map<String, Object> LRANGE_MAP          = new ConcurrentHashMap<>();
     private final        RedissonClient      redissonClient = new FakeRedissonClient();
 
     //public RedisClient(RedissonClient redissonClient) {
@@ -51,7 +51,7 @@ public class RedisClient {
     }
 
     /**
-     * 执行redis setnx 命令
+     * 执行redis setnx 命令, 命令在指定的 key 不存在时，为 key 设置指定的值。
      *
      * @param key     key
      * @param value   value
@@ -64,7 +64,7 @@ public class RedisClient {
     }
 
     /**
-     * 执行redis setex命令
+     * 执行redis setex命令, 命令在指定的 key 不存在时，为 key 设置指定的值。
      *
      * @param key     key
      * @param value   value
@@ -178,7 +178,7 @@ public class RedisClient {
      * @return List<Object>
      */
     public List<Object> lrange(String key) {
-        return LRANGE_MAP.containsKey(key) ? LRANGE_MAP.get(key) : null;
+        return LRANGE_MAP.containsKey(key) ? (List<Object>) LRANGE_MAP.get(key) : null;
         //return redissonClient.getList(key).readAll();
     }
 
@@ -194,7 +194,8 @@ public class RedisClient {
             LRANGE_MAP.put(key, Lists.newArrayList(obj));
             return true;
         }
-        LRANGE_MAP.get(key).add(obj);
+        List<Object> o = (List<Object>) LRANGE_MAP.get(key);
+        o.add(obj);
         return true;
         //return redissonClient.getList(key).add(obj);
     }

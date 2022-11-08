@@ -15,10 +15,22 @@ body:
     validations:
       required: true
   - type: textarea
+    id: assign
+    attributes:
+      label: Assgin People
+      description: If possible, please assign the people to fix this issue.
+  - type: textarea
     id: proposal
     attributes:
       label: Proposal
       description: Maybe you have considered some ideas or solutions about this feature.
+    validations:
+      required: true
+  - type: textarea
+    id: ac
+    attributes:
+      label: Acceptance criteria (AC)
+      description: If possible, please give the ac for feature when it was finished.
     validations:
       required: true
   - type: textarea
