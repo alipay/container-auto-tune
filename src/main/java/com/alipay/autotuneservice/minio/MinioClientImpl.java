@@ -24,7 +24,7 @@ import javax.annotation.PostConstruct;
 @Component
 public class MinioClientImpl implements IMinioClient {
 
-    private static final String MINIO_SERVER     = "http://localhost:30087";
+    private static final String MINIO_API_SERVER = "http://localhost:30087";
     private static final String MINIO_ACCESS_KEY = "minioadmin";
     private static final String MINIO_SECRET_KEY = "minioadmin";
 
@@ -38,7 +38,7 @@ public class MinioClientImpl implements IMinioClient {
     private MinioClient getClient() {
         if (minioClient == null) {
             return MinioClient.builder()
-                    .endpoint(MINIO_SERVER)
+                    .endpoint(MINIO_API_SERVER)
                     .credentials(MINIO_ACCESS_KEY, MINIO_SECRET_KEY)
                     .build();
         }
@@ -52,19 +52,19 @@ public class MinioClientImpl implements IMinioClient {
 
     @Override
     public Boolean checkBucketExists(String bucket) {
-        try{
+        try {
             return getMinioClient().bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("");
         }
     }
 
     @Override
     public Boolean checkObjectExists(String bucket, String object) {
-        try{
+        try {
             // TO BE SUPPORTED
             return false;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("");
         }
     }
@@ -117,7 +117,7 @@ public class MinioClientImpl implements IMinioClient {
                     .object(object)
                     .isObjectExists(true)
                     .build();
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("downloadObject occurs an error.", e);
             throw new RuntimeException(e);
         }
