@@ -31,8 +31,8 @@ body:
     attributes:
       label: Acceptance criteria (AC)
       description: If possible, please give the ac for feature when it was finished.
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     id: context
     attributes:
