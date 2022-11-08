@@ -42,6 +42,7 @@ public final class ObjectUtil {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
+    @Deprecated
     public static void tryLock(RedisClient redisClient, String key, int waitTime, AbsLockAction lockAction) throws InterruptedException {
         RLock lock = redisClient.getLock(key);
         boolean tryLock = lock.tryLock((long) waitTime, TimeUnit.SECONDS);

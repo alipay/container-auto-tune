@@ -17,12 +17,16 @@
 package com.alipay.autotuneservice.infrastructure.saas.common.cache;
 
 import com.alipay.autotuneservice.fake.FakeRedissonClient;
+import com.alipay.autotuneservice.message.TuneMessageBroker;
+import com.alipay.autotuneservice.message.TuneMessageEventListener;
+import com.alipay.autotuneservice.service.chronicmap.ChronicleMapService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.Codec;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -41,10 +45,8 @@ public class RedisClient {
     private static final Map<String, Object> LRANGE_MAP          = new ConcurrentHashMap<>();
     private final        RedissonClient      redissonClient = new FakeRedissonClient();
 
-    //public RedisClient(RedissonClient redissonClient) {
-    //    this.redissonClient = redissonClient;
-    //}
-
+    @Autowired
+    private ChronicleMapService chronicleMapService;
 
     public RedissonClient getRedissonClient() {
         return redissonClient;
@@ -60,7 +62,8 @@ public class RedisClient {
      * @return
      */
     public boolean setNx(String key, Object value, long timeout, TimeUnit unit) {
-        return redissonClient.getBucket(key).trySet(value, timeout, unit);
+        //return redissonClient.getBucket(key).trySet(value, timeout, unit);
+        return chronicleMapService.setNx(key, value, timeout, unit);
     }
 
     /**
@@ -72,7 +75,8 @@ public class RedisClient {
      * @param unit    时间单位
      */
     public void setEx(String key, Object value, long timeout, TimeUnit unit) {
-        redissonClient.getBucket(key).set(value, timeout, unit);
+        //redissonClient.getBucket(key).set(value, timeout, unit);
+        chronicleMapService.setEx(key, value, timeout, unit);
     }
 
     /**
@@ -84,7 +88,8 @@ public class RedisClient {
      * @return T
      */
     public <T> T get(String key, Class<T> clazz) {
-        Object o = redissonClient.getBucket(key).get();
+        //Object o = redissonClient.getBucket(key).get();
+        Object o = chronicleMapService.get(key);
         return clazz.cast(o);
     }
 
@@ -95,11 +100,8 @@ public class RedisClient {
      * @return Object
      */
     public Object get(String key) {
-        return redissonClient.getBucket(key).get();
-    }
-
-    public String get(String key, Codec codec) {
-        return redissonClient.getBucket(key, codec).get().toString();
+        //return redissonClient.getBucket(key).get();
+        return chronicleMapService.get(key);
     }
 
     /**
@@ -109,7 +111,8 @@ public class RedisClient {
      * @param value 缓存对象
      */
     public void set(String key, Object value) {
-        redissonClient.getBucket(key).set(value);
+        //redissonClient.getBucket(key).set(value);
+        chronicleMapService.set(key, value);
     }
 
     /**
@@ -120,7 +123,8 @@ public class RedisClient {
      * @param expire 超时时间
      */
     public void set(String key, Object value, long expire) {
-        redissonClient.getBucket(key).set(value, expire, TimeUnit.SECONDS);
+        //redissonClient.getBucket(key).set(value, expire, TimeUnit.SECONDS);
+        chronicleMapService.set(key, value, expire);
     }
 
     /**
@@ -129,7 +133,8 @@ public class RedisClient {
      * @param key 缓存key
      */
     public void remove(String key) {
-        redissonClient.getBucket(key).delete();
+        //redissonClient.getBucket(key).delete();
+        chronicleMapService.del(key);
     }
 
     /**
@@ -168,7 +173,8 @@ public class RedisClient {
      * @param key
      */
     public void del(String key) {
-        redissonClient.getBucket(key).delete();
+        //redissonClient.getBucket(key).delete();
+        chronicleMapService.del(key);
     }
 
     /**
@@ -201,64 +207,13 @@ public class RedisClient {
     }
 
     /**
-     * redis sadd
-     *
-     * @param key key
-     * @param obj 缓存对象
-     * @return boolean
-     */
-    public boolean sadd(String key, String obj) {
-        return redissonClient.getSet(key).add(obj);
-    }
-
-    /**
-     * redis sremove
-     *
-     * @param key key
-     * @param obj 缓存对象
-     * @return boolean
-     */
-    public void smove(String key, Object obj) {
-        redissonClient.getSet(key).remove(obj);
-    }
-
-    /**
-     * redis sismember
-     *
-     * @param key key
-     * @param obj 缓存对象
-     * @return boolean
-     */
-    public boolean sismember(String key, Object obj) {
-        return redissonClient.getSet(key).contains(obj);
-    }
-
-    /**
-     * redis lock
-     *
-     * @param key        key
-     * @param lockAction 加锁完成之后的事情
-     * @return boolean
-     */
-    public void lock(String key, AbsLockAction lockAction) {
-        RLock lock = redissonClient.getLock(key);
-        try {
-            lock.lock();
-            lockAction.onAcquire(key);
-            lockAction.doInLock(key);
-        } finally {
-            lock.unlock();
-            lockAction.onExit(key);
-        }
-    }
-
-    /**
      * redis 尝试加锁
      *
      * @param key        key
      * @param lockAction 加锁完成之后的事情
      * @return boolean
      */
+    @Deprecated
     public void tryLock(String key, int waitTime, AbsLockAction lockAction)
                                                                            throws InterruptedException {
         RLock lock = redissonClient.getLock(key);
@@ -274,33 +229,6 @@ public class RedisClient {
         } else {
             lockAction.tryLockFail(key);
         }
-    }
-
-    /**
-     * @return booleanF
-     * @Author YiJin
-     * @Description 阻塞锁
-     * @Date 2022/7/18
-     * @Param [key, waitTime（单位：秒）]
-     **/
-    public boolean tryLock(String key, int waitTime) {
-        RLock lock = redissonClient.getLock(key);
-        try {
-            return lock.tryLock(waitTime, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * @return void
-     * @Author YiJin
-     * @Description 解锁
-     * @Date 2022/7/19
-     * @Param [key]
-     **/
-    public void unLock(String key) {
-        redissonClient.getLock(key).unlock();
     }
 
     /**
@@ -344,10 +272,14 @@ public class RedisClient {
      * 关闭redis
      */
     public void shutdown() {
-        redissonClient.shutdown();
+        //redissonClient.shutdown();
+        chronicleMapService.shutdown();
     }
 
     /**
+     * @see TuneMessageBroker#pub(com.alipay.autotuneservice.message.TuneMessageEvent)
+     * @deprecated
+     *
      * redis发布
      *
      * @param tuneEvent 事件
@@ -360,6 +292,9 @@ public class RedisClient {
     }
 
     /**
+     * @see TuneMessageEventListener#subscribe(java.util.function.Consumer)
+     * @deprecated
+     *
      * 订阅
      *
      * @param consumer Consumer
