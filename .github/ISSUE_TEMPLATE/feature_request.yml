@@ -16,8 +16,8 @@ body:
       required: true
   - type: textarea
     id: assign
+    assignees: ""
     attributes:
-      assignees:
       label: Assgin People
       description: If possible, please assign the people to fix this issue.
   - type: textarea
