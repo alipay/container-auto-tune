@@ -25,6 +25,7 @@ import javax.annotation.PostConstruct;
 public class MinioClientImpl implements IMinioClient {
 
     private static final String MINIO_API_SERVER = "http://localhost:30087";
+
     private static final String MINIO_ACCESS_KEY = "minioadmin";
     private static final String MINIO_SECRET_KEY = "minioadmin";
 
