@@ -15,7 +15,7 @@ spec:
         app: tmaestro
     spec:
       containers:
-        - image: tmaestro/202211090322
+        - image: tmaestro/202211091508
           imagePullPolicy: Never
           name: tmaestro-server
           ports:
@@ -50,27 +50,27 @@ spec:
           image:  registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:ats_tmaster_front_202209051751
           ports:
             - containerPort: 80
-        - name: minio-server
-          image: quay.io/minio/minio:latest
-          ports:
-            - containerPort: 9098
-            - containerPort: 9099
-          command:
-            - /bin/bash
-            - -c
-          args:
-            - minio server /data --address :9098 --console-address :9099 # the /data path is for the minio server put uploaded file
-          volumeMounts:
-            - mountPath: /data
-              name: localvolume # Corresponds to the `spec.volumes` Persistent Volume
+#        - name: minio-server
+#          image: quay.io/minio/minio:latest
+#          ports:
+#            - containerPort: 9098
+#            - containerPort: 9099
+#          command:
+#            - /bin/bash
+#            - -c
+#          args:
+#            - minio server /data --address :9098 --console-address :9099 # the /data path is for the minio server put uploaded file
+#          volumeMounts:
+#            - mountPath: /data
+#              name: localvolume # Corresponds to the `spec.volumes` Persistent Volume
       volumes:
         - name: tmaestro
           configMap:
             name: tmaestro-kube-config
-        - name: localvolume
-          hostPath: # MinIO generally recommends using locally-attached volumes
-            path: /mnt/disk1/data # Specify a path to a local drive or volume on the Kubernetes worker node
-            type: DirectoryOrCreate # The path to the last directory must exist
+#        - name: localvolume
+#          hostPath: # MinIO generally recommends using locally-attached volumes
+#            path: /mnt/disk1/data # Specify a path to a local drive or volume on the Kubernetes worker node
+#            type: DirectoryOrCreate # The path to the last directory must exist
 ---
 apiVersion: v1
 kind: Service
