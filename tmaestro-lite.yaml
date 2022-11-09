@@ -15,7 +15,7 @@ spec:
         app: tmaestro
     spec:
       containers:
-        - image: tmaestro/202211021115
+        - image: tmaestro/202211091508
           imagePullPolicy: Never
           name: tmaestro-server
           ports:
@@ -50,10 +50,27 @@ spec:
           image:  registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:ats_tmaster_front_202209051751
           ports:
             - containerPort: 80
+#        - name: minio-server
+#          image: quay.io/minio/minio:latest
+#          ports:
+#            - containerPort: 9098
+#            - containerPort: 9099
+#          command:
+#            - /bin/bash
+#            - -c
+#          args:
+#            - minio server /data --address :9098 --console-address :9099 # the /data path is for the minio server put uploaded file
+#          volumeMounts:
+#            - mountPath: /data
+#              name: localvolume # Corresponds to the `spec.volumes` Persistent Volume
       volumes:
         - name: tmaestro
           configMap:
             name: tmaestro-kube-config
+#        - name: localvolume
+#          hostPath: # MinIO generally recommends using locally-attached volumes
+#            path: /mnt/disk1/data # Specify a path to a local drive or volume on the Kubernetes worker node
+#            type: DirectoryOrCreate # The path to the last directory must exist
 ---
 apiVersion: v1
 kind: Service
@@ -61,11 +78,10 @@ metadata:
   name: tmaestro
 spec:
   ports:
-    #    nodePort(集群外访问的端口) -> port(service) -> targetPort(POD的容器端口)
-    - port: 9001       # Service的容器端口
+    - port: 9001
       name: http
-      targetPort: 9001  # POD的容器端口
-      nodePort: 30081   # 集群外访问的端口
+      targetPort: 9001
+      nodePort: 30081
       protocol: TCP
     - port: 9000
       name: grpc
@@ -85,6 +101,16 @@ spec:
       name: alog-intelligent-url
       targetPort: 9091
       nodePort: 30085
+    - port: 9099       # Minio console port
+      name: minioconsole
+      targetPort: 9099
+      nodePort: 30086
+      protocol: TCP
+    - port: 9098      # Minio server api port
+      name: minioapi
+      targetPort: 9098
+      nodePort: 30087
+      protocol: TCP
   type: NodePort
   selector:
     app: tmaestro
