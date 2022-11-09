@@ -47,8 +47,8 @@ public class MinioServerStarter {
     }
 
     private void start() {
-        if (!execCmd("mkdir /tmp/minio-server")) {
-            return;
+        if (!execCmd("ls /tmp/minio-server")) {
+            execCmd("mkdir /tmp/minio-server");
         }
         log.info("*********start download minio********");
         String downloadCmd = "curl -o /tmp/minio-server/minio https://dl.min.io/server/minio/release/linux-amd64/minio";
@@ -56,7 +56,6 @@ public class MinioServerStarter {
             log.error("download minio file failed.");
             return;
         }
-
         log.info("start chmod /tmp/minio-server/minio......");
         String chmodCmd = "chmod +x  /tmp/minio-server/minio";
         if (!execCmd(chmodCmd)) {
