@@ -15,7 +15,7 @@ spec:
         app: tmaestro
     spec:
       containers:
-        - image: tmaestro/202211091508
+        - image: tmaestro/202211151959
           imagePullPolicy: Never
           name: tmaestro-server
           ports:
@@ -45,11 +45,11 @@ spec:
           image: registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:ats_intelligent_param_tuning_open_202209151414
           ports:
             - containerPort: 5000
-        - name: tmaestro-front
-          imagePullPolicy: Always
-          image:  registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:ats_tmaster_front_202209051751
-          ports:
-            - containerPort: 80
+#        - name: tmaestro-front
+#          imagePullPolicy: Always
+#          image:  registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:ats_tmaster_front_202209051751
+#          ports:
+#            - containerPort: 80
 #        - name: minio-server
 #          image: quay.io/minio/minio:latest
 #          ports:
