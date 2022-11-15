@@ -342,6 +342,12 @@
             <artifactId>chronicle-map</artifactId>
             <version>3.22.9</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>8.4.2</version>
+        </dependency>
     </dependencies>
 
     <build>
