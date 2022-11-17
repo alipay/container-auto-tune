@@ -14,14 +14,16 @@ enum ReportType {
 
 message ExecuteStep {
     string step_class = 1;
-    map<string, string> args = 2;
+    string session_id = 2;
+    map<string, string> args = 3;
 }
 
 message CommandResponse {
     bool success = 1;
     string message = 2;
     ReportType type = 3;
-    repeated ExecuteStep execute_steps = 4;
+    string union_code = 5;
+    repeated ExecuteStep execute_steps = 6;
 }
 
 message CommonResponse {
@@ -33,6 +35,36 @@ message SystemMetricsGrpc {
     int32 system_cpu_count = 1;
     double system_cpu_load = 2;
     double process_cpu_load = 3;
+}
+
+message JStateMetricsGrpc {
+    double s0c = 1;
+    double s1c = 2;
+    double s0u = 3;
+    double s1u = 4;
+    double ec = 5;
+    double eu = 6;
+    double oc = 7;
+    double ou = 8;
+    double mc = 9;
+    double mu = 10;
+    double ccsc = 11;
+    double ccsu = 12;
+    int32  ygc = 13;
+    double ygct = 14;
+    int32  fgc = 15;
+    double fgct = 16;
+    double gct = 17;
+    double ngcmn = 18;
+    double ngcmx = 19;
+    double ngc = 20;
+    double ogcmn = 21;
+    double ogcmx = 22;
+    double ogc = 23;
+    double mcmn = 24;
+    double mcmx = 25;
+    double ccsmn = 26;
+    double ccsmx = 27;
 }
 
 message MemoryMetricsGrpc {
@@ -47,39 +79,22 @@ message GcMetricsGrpc {
     int64 gc_time = 2;
 }
 
-message JfrEventGrpc {
-    string event_type = 1;
-    int64 timestamp = 2;
-    map<string, string> tags = 3;
-}
-
-message JfrGaugeMetricGrpc {
-    string name = 1;
-    double value = 2;
-    int64 timestamp = 3;
-    map<string, string> tags = 4;
-}
-
-message JfrSummaryMetricGrpc {
-    string name = 1;
-    int32 count = 2;
-    double sum = 3;
-    double min = 4;
-    double max = 5;
-    int64 start_time = 6;
-    int64 end_time = 7;
-    map<string, string> tags = 8;
-}
-
 message SystemCommonGrpc {
     string app_name = 1;
     string access_token = 2;
-    int64 timestamp = 3;
-    string hostname = 4;
-    string namespace = 5;
-    string pod_ip = 6;
-    string java_version = 7;
-    repeated string collectors = 8;
+    string server_type = 3;
+    int64 timestamp = 4;
+    string hostname = 5;
+    string namespace = 6;
+    string pod_ip = 7;
+    string java_version = 8;
+    repeated string collectors = 9;
+    string union_code = 10;
+}
+
+message CallBackRequest {
+    string session_id = 1;
+    map<string, string> tags = 2;
 }
 
 message MetricsGrpcRequest {
@@ -88,18 +103,20 @@ message MetricsGrpcRequest {
     MemoryMetricsGrpc eden_memory_metric = 3;
     MemoryMetricsGrpc old_memory_metric = 4;
     MemoryMetricsGrpc meta_memory_metric = 5;
-    GcMetricsGrpc young_gc_metric = 6;
-    GcMetricsGrpc full_gc_metric = 7;
-    repeated JfrEventGrpc jfr_event_metric = 8;
-    repeated JfrGaugeMetricGrpc jfr_gauge_metric = 9;
-    repeated JfrSummaryMetricGrpc jfr_summary_metric = 10;
+    MemoryMetricsGrpc code_cache_metric = 6;
+    MemoryMetricsGrpc jvm_memory_metric = 7;
+    MemoryMetricsGrpc system_memory_metric = 8;
+    GcMetricsGrpc young_gc_metric = 9;
+    GcMetricsGrpc full_gc_metric = 10;
+    JStateMetricsGrpc jstate_metrics = 11;
 }
 
 message FileRequest {
     string name = 1;
     bytes data = 2;
     int64 offset = 3;
-    SystemCommonGrpc system_common = 4;
+    string session_id = 4;
+    SystemCommonGrpc system_common = 5;
 }
 
 message FileResponse {
@@ -111,4 +128,5 @@ service ReportService {
     rpc Report (MetricsGrpcRequest) returns (CommonResponse) {}
     rpc Upload (stream FileRequest) returns (stream FileResponse) {}
     rpc HeartBeat (SystemCommonGrpc) returns (CommandResponse) {}
+    rpc CallBack (CallBackRequest) returns (CommonResponse) {}
 }

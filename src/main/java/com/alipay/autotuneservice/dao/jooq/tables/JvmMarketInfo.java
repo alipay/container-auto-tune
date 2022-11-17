@@ -62,7 +62,7 @@ public class JvmMarketInfo extends TableImpl<JvmMarketInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.JVM_MARKET_INFO.JVM_CONFIG</code>. jvm配置
      */
-    public final TableField<JvmMarketInfoRecord, String> JVM_CONFIG = createField(DSL.name("JVM_CONFIG"), SQLDataType.VARCHAR(2000).nullable(false), this, "jvm配置");
+    public final TableField<JvmMarketInfoRecord, String> JVM_CONFIG = createField(DSL.name("JVM_CONFIG"), SQLDataType.VARCHAR(1000).nullable(false), this, "jvm配置");
 
     /**
      * The column <code>TMAESTRO-LITE.JVM_MARKET_INFO.RECOMMEND</code>. 简介

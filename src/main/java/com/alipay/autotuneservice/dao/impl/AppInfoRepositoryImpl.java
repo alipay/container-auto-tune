@@ -130,7 +130,10 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
 
     @Override
     public AppInfoRecord findAppModel(String accessToken, String k8sNamespace, String appName) {
-        return mDSLContext.select()
+        return mDSLContext.select().from(Tables.APP_INFO)
+                .where(Tables.APP_INFO.ACCESS_TOKEN.eq(accessToken))
+                .and(Tables.APP_INFO.NAMESPACE.eq(k8sNamespace))
+                .and(Tables.APP_INFO.APP_NAME.eq(appName))
                 .fetchOneInto(AppInfoRecord.class);
     }
 
@@ -145,6 +148,9 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
         insertRecord.setAppName(record.getAppName());
         insertRecord.setStatus(AppStatus.ALIVE.name());
         insertRecord.setCreatedTime(DateUtils.now());
+        insertRecord.setAccessToken(record.getAccessToken());
+        insertRecord.setNamespace(record.getNamespace());
+        insertRecord.setServerType(record.getServerType());
         insertRecord.store();
         return insertRecord.getId();
     }

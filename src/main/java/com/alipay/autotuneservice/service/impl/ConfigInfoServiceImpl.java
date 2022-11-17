@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,6 @@ import com.alipay.autotuneservice.controller.model.configVO.WeekEnum;
 import com.alipay.autotuneservice.dao.ConfigInfoRepository;
 import com.alipay.autotuneservice.dao.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.records.ConfigInfoRecord;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.service.ConfigInfoService;
 import com.alipay.autotuneservice.service.PodService;
 import com.google.common.collect.Maps;
@@ -44,32 +43,29 @@ import java.util.Map;
 public class ConfigInfoServiceImpl implements ConfigInfoService {
 
     @Autowired
-    private ConfigInfoRepository        configInfoRepository;
+    private ConfigInfoRepository configInfoRepository;
 
     @Autowired
-    private PodService                  podService;
+    private PodService podService;
 
     @Autowired
-    private PodInfo                     podInfo;
-
-    @Autowired
-    private RedisClient                 redisClient;
+    private PodInfo podInfo;
 
     //如果owner没配置调参时间，默认时间除了饭点都可调
     private static final List<TimeHHmm> DEFAULT_TIME_CHECKER = new ArrayList<TimeHHmm>() {
-                                                                 {
-                                                                     add(new TimeHHmm("12:00",
-                                                                         "14:00"));
-                                                                     add(new TimeHHmm("17:00",
-                                                                         "19:00"));
-                                                                 }
-                                                             };
+        {
+            add(new TimeHHmm("12:00",
+                    "14:00"));
+            add(new TimeHHmm("17:00",
+                    "19:00"));
+        }
+    };
 
     @Override
     public Boolean checkTuneIsEnableByAppID(Integer appID) {
         try {
             ConfigInfoVO configInfoVO = findAPPConfigByAPPID(appID);
-            if ((configInfoVO==null) || !configInfoVO.getAutoTune()) {
+            if ((configInfoVO == null) || !configInfoVO.getAutoTune()) {
                 return true;
             }
             String dateTime = getPodTimeOfApp(appID);
@@ -119,7 +115,7 @@ public class ConfigInfoServiceImpl implements ConfigInfoService {
             configInfoVO.setAdvancedSetup(ConfigInfoVO.defaultAdvancedSetup());
             configInfoVO.setTimeZone(findTimeZone(appID));
             configInfoVO.setOperateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                .format(new Date()));
+                    .format(new Date()));
             configInfoRepository.save(configInfoVO);
         }
         return configInfoVO;

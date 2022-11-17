@@ -18,7 +18,6 @@ import com.alipay.autotuneservice.dao.jooq.tables.records.NodeInfoRecord;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerProcessInfo;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
-import com.alipay.autotuneservice.infrastructure.rpc.model.PsResponse;
 import com.alipay.autotuneservice.model.agent.ContainerMetric;
 import com.alipay.autotuneservice.model.common.AppModel;
 import com.alipay.autotuneservice.model.common.AppStatus;
@@ -27,23 +26,17 @@ import com.alipay.autotuneservice.model.common.NodeStatus;
 import com.alipay.autotuneservice.model.statistics.StatisticsResponse;
 import com.alipay.autotuneservice.meter.model.MeterMetric;
 import com.alipay.autotuneservice.service.AppInfoService;
-import com.amazonaws.regions.Regions;
-import com.auto.tune.client.GcMetricsGrpc;
-import com.auto.tune.client.MemoryMetricsGrpc;
-import com.auto.tune.client.MetricsGrpcRequest;
-import com.auto.tune.client.SystemCommonGrpc;
+import com.auto.tune.client.*;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -152,28 +145,6 @@ public class ConvertUtils {
         return appModel;
     }
 
-    public static K8sAccessTokenInfoRecord convert2K8sAccessTokenInfoRecord(K8sAccessTokenModel k8sAccessTokenModel) {
-        if (Objects.isNull(k8sAccessTokenModel)) {
-            return null;
-        }
-        K8sAccessTokenInfoRecord record = new K8sAccessTokenInfoRecord();
-        record.setCreateTime(LocalDateTime.now());
-        record.setUpdatedTime(LocalDateTime.now());
-        record.setAccessToken(k8sAccessTokenModel.getAccessToken());
-        record.setAccessKeyId(k8sAccessTokenModel.getAccessKeyId());
-        record.setSecretAccessKey(k8sAccessTokenModel.getSecretAccessKey());
-        record.setClusterId(k8sAccessTokenModel.getClusterId());
-        record.setClusterName(k8sAccessTokenModel.getClusterName());
-        record.setEndpoint(k8sAccessTokenModel.getEndpoint());
-        record.setCer(k8sAccessTokenModel.getCer());
-        try {
-            record.setRegion(Regions.fromName(k8sAccessTokenModel.getRegion()).name());
-        } catch (Exception e) {
-            record.setRegion(k8sAccessTokenModel.getRegion());
-        }
-        return record;
-    }
-
     public static K8sAccessTokenModel convert2K8sAccessTokenModel(K8sAccessTokenInfoRecord record) {
         if (Objects.isNull(record)) {
             return null;
@@ -206,16 +177,22 @@ public class ConvertUtils {
     public static JvmMonitorMetricData convert2JvmMonitorMetricData(MetricsGrpcRequest request, AppInfoService appInfoService) {
         Preconditions.checkArgument(request != null, "MetricsGrpcRequest can not be null.");
         Preconditions.checkArgument(StringUtils.isNotBlank(request.getSystemCommon().getAccessToken()), "AccessToken can not be empty.");
-        JvmMonitorMetricData gcMetaData = JvmMonitorMetricData.builder().build();
+        JvmMonitorMetricData gcMetaData = new JvmMonitorMetricData();
         // system common
         SystemCommonGrpc systemCommon = request.getSystemCommon();
-        gcMetaData.setPeriod(DateUtils.truncate2Minute(systemCommon.getTimestamp()));
+        gcMetaData.setPeriod(systemCommon.getTimestamp());
+        log.info("convert2JvmMonitorMetricData hostName={}, serverType={}", systemCommon.getHostname() ,systemCommon.getServerType());
         try {
-            String appName = systemCommon.getHostname().substring(0, StringUtils.lastOrdinalIndexOf(systemCommon.getHostname(), "-", 2));
+            String appName = StringUtils.equals(systemCommon.getServerType(), "VM") ? systemCommon.getAppName()
+                    : systemCommon.getHostname().substring(0, StringUtils.lastOrdinalIndexOf(systemCommon.getHostname(), "-", 2));
             gcMetaData.setApp(appName);
-            String accessToken = systemCommon.getAccessToken().equals("1") ? "IOeiob2AI9n_YBjvjy04krmS5pe0xeEt"
-                    : systemCommon.getAccessToken();
+            String accessToken = systemCommon.getAccessToken();
             AppInfoRecord appInfoRecord = appInfoService.getByAppAndATAndNamespace(appName, accessToken, systemCommon.getNamespace());
+            if (Objects.isNull(appInfoRecord)) {
+                log.error("convert2JvmMonitorMetricData appInfoRecord=null, appName={},accessToken={}, namespace={}", appName, accessToken,
+                        systemCommon.getNamespace());
+                return null;
+            }
             gcMetaData.setAppId(appInfoRecord.getId());
             gcMetaData.setCluster(appInfoRecord.getClusterName());
         } catch (Exception e) {
@@ -226,7 +203,10 @@ public class ConvertUtils {
             long dt = Long.parseLong(DateUtils.formatTimestampToStr(System.currentTimeMillis(), DateTimeFormatter.ofPattern("yyyyMMdd")));
             gcMetaData.setDt(dt);
         } catch (Exception e) {
-            log.error("convert2dt occurs an error.", e);
+            log.error("convert2JvmMonitorMetricData - convert2dt occurs an error.", e);
+        }
+        if (StringUtils.equals("VM", systemCommon.getServerType())) {
+            gcMetaData.setApp(systemCommon.getAppName());
         }
         // ygc
         GcMetricsGrpc ygcMetric = request.getYoungGcMetric();
@@ -254,41 +234,58 @@ public class ConvertUtils {
         gcMetaData.setMeta_max(metaMemMetric.getMax());
         gcMetaData.setMeta_used(metaMemMetric.getUsed());
         gcMetaData.setMeta_util(metaMemMetric.getUtil());
+        // jvm mem are
+        MemoryMetricsGrpc jvmMemMetric = request.getJvmMemoryMetric();
+        gcMetaData.setJvm_mem_util(jvmMemMetric.getUtil());
+        gcMetaData.setJvm_mem_used(jvmMemMetric.getUsed());
+        gcMetaData.setJvm_mem_max(jvmMemMetric.getMax());
+        gcMetaData.setJvm_mem_capacity(jvmMemMetric.getCapacity());
+        // system mem are
+        MemoryMetricsGrpc systemMemMetric = request.getSystemMemoryMetric();
+        gcMetaData.setSystem_mem_util(systemMemMetric.getUtil());
+        gcMetaData.setSystem_mem_used(systemMemMetric.getUsed());
+        gcMetaData.setSystem_mem_max(systemMemMetric.getMax());
+        gcMetaData.setSystem_mem_capacity(systemMemMetric.getCapacity());
+        //jstate
+        JStateMetricsGrpc jStateMetricsGrpc = request.getJstateMetrics();
+        gcMetaData.setS0c(jStateMetricsGrpc.getS0C());
+        gcMetaData.setS1c(jStateMetricsGrpc.getS1C());
+        gcMetaData.setS0u(jStateMetricsGrpc.getS0U());
+        gcMetaData.setS1u(jStateMetricsGrpc.getS1U());
+        gcMetaData.setEc(jStateMetricsGrpc.getEc());
+        gcMetaData.setEu(jStateMetricsGrpc.getEu());
+        gcMetaData.setOc(jStateMetricsGrpc.getOc());
+        gcMetaData.setOu(jStateMetricsGrpc.getOu());
+        gcMetaData.setMc(jStateMetricsGrpc.getMc());
+        gcMetaData.setMu(jStateMetricsGrpc.getMu());
+        gcMetaData.setCcsc(jStateMetricsGrpc.getCcsc());
+        gcMetaData.setCcsu(jStateMetricsGrpc.getCcsu());
+        gcMetaData.setYgc(jStateMetricsGrpc.getYgc());
+        gcMetaData.setYgct(jStateMetricsGrpc.getYgct());
+        gcMetaData.setFgc(jStateMetricsGrpc.getFgc());
+        gcMetaData.setFgct(jStateMetricsGrpc.getFgct());
+        gcMetaData.setGct(jStateMetricsGrpc.getGct());
+        gcMetaData.setNgcmn(jStateMetricsGrpc.getNgcmn());
+        gcMetaData.setNgcmx(jStateMetricsGrpc.getNgcmx());
+        gcMetaData.setNgc(jStateMetricsGrpc.getNgc());
+        gcMetaData.setOgcmn(jStateMetricsGrpc.getOgcmn());
+        gcMetaData.setOgcmx(jStateMetricsGrpc.getOgcmx());
+        gcMetaData.setOgc(jStateMetricsGrpc.getOgc());
+        gcMetaData.setMcmn(jStateMetricsGrpc.getMcmn());
+        gcMetaData.setMcmx(jStateMetricsGrpc.getMcmx());
+        gcMetaData.setCcsmn(jStateMetricsGrpc.getCcsmn());
+        gcMetaData.setCcsmx(jStateMetricsGrpc.getCcsmx());
+        //code cache
+        MemoryMetricsGrpc codeCacheMetricsGrpc = request.getCodeCacheMetric();
+        gcMetaData.setCodeCacheMax(codeCacheMetricsGrpc.getMax());
+        gcMetaData.setCodeCacheUtil(codeCacheMetricsGrpc.getUtil());
+        gcMetaData.setCodeCacheUsed(codeCacheMetricsGrpc.getUsed());
+        //cpu
+        SystemMetricsGrpc systemMetricsGrpc = request.getSystemMetrics();
+        gcMetaData.setCpuCount(systemMetricsGrpc.getSystemCpuCount());
+        gcMetaData.setProcessCpuLoad(systemMetricsGrpc.getProcessCpuLoad());
+        gcMetaData.setSystemCpuLoad(systemMetricsGrpc.getSystemCpuLoad());
         return gcMetaData;
-    }
-
-    public static List<ContainerProcessInfo> convert2ContainerProcessInfos(Integer appId, ContainerMetric processMetric) {
-        if (processMetric == null || StringUtils.isBlank(processMetric.getProcessInfo())) {
-            return null;
-        }
-        PsResponse processInfo = JSON.parseObject(processMetric.getProcessInfo(), new TypeReference<PsResponse>() {});
-        String[][] processes = processInfo.getProcesses();
-        List<ContainerProcessInfo> list = new ArrayList<>();
-        Stream.of(processes).forEach(item -> {
-            if (!ArrayUtils.isEmpty(item)) {
-                list.add(buildContainerProcessInfo(processMetric.getMonitorTime(), appId, processMetric.getPodName(),
-                        processMetric.getContainerId(), item));
-            }
-        });
-        return list;
-    }
-
-    @Deprecated
-    public static List<ContainerProcessInfo> convert2ContainerProcessInfos(Integer appId, String podName, String containerId,
-                                                                           String result) {
-        if (StringUtils.isBlank(containerId) || StringUtils.isBlank(result)) {
-            log.info("convert2ContainerProcessInfos containerId or result is empty.");
-            return null;
-        }
-        PsResponse processInfo = JSON.parseObject(result, new TypeReference<PsResponse>() {});
-        String[][] processes = processInfo.getProcesses();
-        List<ContainerProcessInfo> list = new ArrayList<>();
-        Stream.of(processes).forEach(item -> {
-            if (!ArrayUtils.isEmpty(item)) {
-                list.add(buildContainerProcessInfo(222222L, appId, podName, containerId, item));
-            }
-        });
-        return list;
     }
 
     private static ContainerProcessInfo buildContainerProcessInfo(final Long monitorTime, Integer appId, String podName, String containerId,
@@ -402,31 +399,6 @@ public class ConvertUtils {
         return resList;
     }
 
-    public static List<PodProcessInfo> convert2PodProcessInfoListV2(String processInfo) {
-        try {
-            if (StringUtils.isEmpty(processInfo)) {
-                return null;
-            }
-            PsResponse psProcessInfo = JSON.parseObject(processInfo, new TypeReference<PsResponse>() {});
-            String[][] processes = psProcessInfo.getProcesses();
-            return Stream.of(processes)
-                    .map(item -> {
-                        if (!ArrayUtils.isEmpty(item)) {
-                            try {
-                                return PodProcessInfo.builder().pid(Long.parseLong(item[1])).command(item[10]).build();
-                            } catch (Exception e) {
-                            }
-                        }
-                        return null;
-                    })
-                    .filter(item -> item != null && item.getCommand().startsWith("java -jar"))
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("convert2PodProcessInfoListV2 processInfo={} occurs an error", processInfo, e);
-            return Lists.newArrayList();
-        }
-    }
-
     public static List<PodProcessInfo> convert2PodProcessInfo(String processInfo) {
         log.info("convert2PodProcessInfo processInfo={}", processInfo);
         if (StringUtils.isBlank(processInfo)) {
@@ -456,8 +428,6 @@ public class ConvertUtils {
         return stb.toString();
     }
 
-
-
     public static MeterMetaInfoRecord convert2MeterMetaRecord(MeterMeta meterMeta) {
         MeterMetaInfoRecord record = new MeterMetaInfoRecord();
         record.setAppId(meterMeta.getAppId());
@@ -468,7 +438,7 @@ public class ConvertUtils {
         return record;
     }
 
-    public static MeterMeta convertByMeterRecord(MeterMetaInfoRecord record){
+    public static MeterMeta convertByMeterRecord(MeterMetaInfoRecord record) {
         if (record == null) {
             return null;
         }
@@ -481,13 +451,13 @@ public class ConvertUtils {
                 .build();
     }
 
-    public static List<MeterMetric> convert2MeterMetaList(String metricList){
+    public static List<MeterMetric> convert2MeterMetaList(String metricList) {
         if (StringUtils.isEmpty(metricList)) {
             return Lists.newArrayList();
         }
         try {
-            return JSONObject.parseObject(metricList, new TypeReference<List<MeterMetric>>(){});
-        }catch (Exception e) {
+            return JSONObject.parseObject(metricList, new TypeReference<List<MeterMetric>>() {});
+        } catch (Exception e) {
             return Lists.newArrayList();
         }
     }

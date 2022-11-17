@@ -1,5 +1,8 @@
 package com.alipay.autotuneservice.minio;
 
+import com.alipay.autotuneservice.base.minio.IMinioClient;
+import com.alipay.autotuneservice.base.minio.MinioDownloadObjectResult;
+import com.alipay.autotuneservice.base.minio.MinioUploadFileResult;
 import io.minio.MinioClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

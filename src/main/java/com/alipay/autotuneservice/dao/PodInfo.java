@@ -24,6 +24,8 @@ public interface PodInfo {
 
     List<PodInfoRecord> getByAllPodByAppId(Integer appId);
 
+    List<PodInfoRecord> getAllAlivePodsByType(String serverType);
+
     List<PodInfoRecord> getAllAlivePodsByToken(String accessToken, String clusterName);
 
     List<PodInfoRecord> findByAppIds(List<Integer> appIds);

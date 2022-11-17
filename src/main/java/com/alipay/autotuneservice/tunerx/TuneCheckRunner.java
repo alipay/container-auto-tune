@@ -5,7 +5,6 @@ import com.alibaba.fastjson.TypeReference;
 import com.alipay.autotuneservice.dao.TunePipelineRepository;
 import com.alipay.autotuneservice.dao.TunePoolInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TunePoolInfoRecord;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.pipeline.Status;
 import com.alipay.autotuneservice.model.pipeline.TunePipeline;
 import com.alipay.autotuneservice.model.tunepool.MetaData;
@@ -36,33 +35,22 @@ public class TuneCheckRunner {
     /**
      * 调参最终一致性
      */
-    private static final String LOCK_KEY = "tuneConsistRunner";
-
+    private static final String                 LOCK_KEY = "tuneConsistRunner";
     @Autowired
-    private RedisClient  redisClient;
+    private              TunePoolInfo           tunePoolInfo;
     @Autowired
-    private TunePoolInfo tunePoolInfo;
+    private              TuneDispatchRunner     tuneDispatchRunner;
     @Autowired
-    private TuneDispatchRunner     tuneDispatchRunner;
+    private              TuneEventWatcher       tuneEventWatcher;
     @Autowired
-    private TuneEventWatcher       tuneEventWatcher;
-    @Autowired
-    private TunePipelineRepository tunePipelineRepository;
+    private              TunePipelineRepository tunePipelineRepository;
 
     @Scheduled(fixedRate = 60 * 1000)
     public void run() {
-        log.info(String.format("get %s lock", LOCK_KEY));
         //check状态机驱动
-        doChecker();
+        //doChecker();
         //check最终一致性
-        doAsyncWork();
-        //redisClient.doExec(LOCK_KEY, () -> {
-        //    log.info(String.format("get %s lock", LOCK_KEY));
-        //    //check状态机驱动
-        //    doChecker();
-        //    //check最终一致性
-        //    doAsyncWork();
-        //});
+        //doAsyncWork();
     }
 
     private void doAsyncWork() {

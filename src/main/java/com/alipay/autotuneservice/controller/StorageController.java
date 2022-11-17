@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,12 +19,10 @@ package com.alipay.autotuneservice.controller;
 import com.alipay.autotuneservice.configuration.NoLogin;
 import com.alipay.autotuneservice.dao.StorageRepository;
 import com.alipay.autotuneservice.model.ServiceBaseResult;
-import com.alipay.autotuneservice.model.common.CloudType;
 import com.alipay.autotuneservice.model.common.FileContent;
 import com.alipay.autotuneservice.model.common.StorageInfo;
 import com.alipay.autotuneservice.service.StorageInfoService;
 import com.alipay.autotuneservice.util.UserUtil;
-import com.amazonaws.services.s3.model.S3Object;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +63,7 @@ public class StorageController {
         log.info("uploadLog, file:{}", file.getOriginalFilename());
         try {
             String s3Key = storageInfoService.uploadFileToS3(file.getInputStream(),
-                file.getOriginalFilename());
+                    file.getOriginalFilename());
             StorageInfo storageInfo = new StorageInfo(s3Key, file.getOriginalFilename());
             StorageInfo savedStorage = storageRepository.save(storageInfo);
             return ServiceBaseResult.successResult(savedStorage);
@@ -80,27 +78,13 @@ public class StorageController {
     public ResponseEntity<StreamingResponseBody> download(HttpServletResponse response,
                                                           @PathVariable(name = "fileName") String fileName) {
         StorageInfo storageInfo = storageRepository.findByFileName(fileName);
-        InputStream inputStream = wrapDownloadFile(storageInfo, fileName);
+        InputStream inputStream = wrapDownloadFile(fileName);
         return ResponseEntity.ok(this.createResponseStream(response, inputStream,
-            storageInfo.getFileName()));
+                storageInfo.getFileName()));
     }
 
-    private InputStream wrapDownloadFile(StorageInfo storageInfo, String fileName) {
-        CloudType cloudType = CloudType.K8S;
-        switch (cloudType) {
-            case K8S:
-                return downloadFileFromLocal(fileName);
-            case ALIYUN:
-                return storageInfoService.downloadFileFromAliS3(storageInfo.getS3Key());
-            case AWS:
-                S3Object s3Object = storageInfoService.downloadFileFromS3(storageInfo.getS3Key());
-                if (s3Object != null) {
-                    return s3Object.getObjectContent();
-                }
-                return null;
-        }
-        throw new UnsupportedOperationException(String.format(
-            "current cloudType=%s can not be supported.", cloudType));
+    private InputStream wrapDownloadFile(String fileName) {
+        throw new UnsupportedOperationException();
     }
 
     public InputStream downloadFileFromLocal(String fileName) {
@@ -126,11 +110,11 @@ public class StorageController {
                                                                            @RequestParam(value = "type", required = false) String type) {
         log.info("download config_java_opts.sh, type={}", type);
         String inputAccessToken = StringUtils.isBlank(accessToken) ? UserUtil.getAccessToken()
-            : accessToken;
+                : accessToken;
         FileContent fileContent = storageInfoService.generateIntegrateAgentScript(inputAccessToken,
-            type);
+                type);
         return ResponseEntity.ok(this.createResponseStream(response,
-            fileContent.getAsInputStream(), fileContent.getLength(), fileContent.getFileName()));
+                fileContent.getAsInputStream(), fileContent.getLength(), fileContent.getFileName()));
     }
 
     /**
@@ -143,14 +127,14 @@ public class StorageController {
                                                                             @RequestParam(value = "region") String region,
                                                                             @RequestParam(value = "clusterName") String clusterName) {
         String inputAccessToken = StringUtils.isBlank(accessToken) ? UserUtil.getAccessToken()
-            : accessToken;
+                : accessToken;
         FileContent fileContent = storageInfoService.generateTmaestroEntryShell(inputAccessToken,
-            region, clusterName);
+                region, clusterName);
         if (fileContent == null) {
             return ResponseEntity.internalServerError().body(null);
         }
         return ResponseEntity.ok(this.createResponseStream(response,
-            fileContent.getAsInputStream(), fileContent.getLength(), fileContent.getFileName()));
+                fileContent.getAsInputStream(), fileContent.getLength(), fileContent.getFileName()));
     }
 
     /**
@@ -159,16 +143,18 @@ public class StorageController {
     @NoLogin
     @GetMapping(path = "/installTuneAgent.sh")
     public ResponseEntity<StreamingResponseBody> downloadAttachAgentFile(HttpServletResponse response,
-                                                                         @RequestParam(value = "accessToken", required = false) String accessToken,
-                                                                         @RequestParam(value = "attachId", required = false) Integer attachId) {
+                                                                         @RequestParam(value = "accessToken", required = false)
+                                                                         String accessToken,
+                                                                         @RequestParam(value = "attachId", required = false)
+                                                                         Integer attachId) {
         log.info("downloadAttachAgentFile, accessToken:{}, attachId:{}", accessToken, attachId);
         FileContent fileContent = storageInfoService.generateInstallAttachAutoTuneJar(accessToken,
-            attachId);
+                attachId);
         if (fileContent == null) {
             return ResponseEntity.internalServerError().body(null);
         }
         return ResponseEntity.ok(this.createResponseStream(response,
-            fileContent.getAsInputStream(), fileContent.getLength(), fileContent.getFileName()));
+                fileContent.getAsInputStream(), fileContent.getLength(), fileContent.getFileName()));
     }
 
     /**
@@ -177,13 +163,14 @@ public class StorageController {
     @NoLogin
     @GetMapping(path = "/tmaster.yml")
     public ResponseEntity<StreamingResponseBody> downloadTmasterYaml(HttpServletResponse response,
-                                                                     @RequestParam(required = false, defaultValue = "") String accessToken) {
+                                                                     @RequestParam(required = false, defaultValue = "")
+                                                                     String accessToken) {
         FileContent fileContent = storageInfoService.generateAutoTuneYaml(accessToken);
         if (fileContent == null) {
             return ResponseEntity.internalServerError().body(null);
         }
         return ResponseEntity.ok(this.createResponseStream(response,
-            fileContent.getAsInputStream(), fileContent.getLength(), fileContent.getFileName()));
+                fileContent.getAsInputStream(), fileContent.getLength(), fileContent.getFileName()));
     }
 
     private StreamingResponseBody createResponseStream(HttpServletResponse response, InputStream inputStream, int fileLength,

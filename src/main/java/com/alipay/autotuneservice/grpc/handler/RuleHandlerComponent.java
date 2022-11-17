@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,18 +16,26 @@
  */
 package com.alipay.autotuneservice.grpc.handler;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.alipay.autotuneservice.dao.CommandInfoRepository;
+import com.alipay.autotuneservice.dao.jooq.tables.records.CommandInfoRecord;
 import com.alipay.autotuneservice.grpc.GrpcCommon;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
+import com.alipay.autotuneservice.model.common.CommandInfo;
+import com.alipay.autotuneservice.model.common.CommandStatus;
 import com.alipay.autotuneservice.model.rule.RuleAction;
-import com.alipay.autotuneservice.model.rule.RuleModel;
-import com.alipay.autotuneservice.model.rule.RuleType;
+import com.alipay.autotuneservice.util.AgentConstant;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author dutianze
@@ -38,39 +46,54 @@ import java.util.concurrent.TimeUnit;
 public class RuleHandlerComponent {
 
     @Autowired
-    private RedisClient         redisClient;
-
-    private static final String RULE_CACHE_KEY_PREFIX = "autotune_rule_flag";
+    private CommandInfoRepository commandInfoRepository;
 
     public List<ActionParam> checkRuleFlag(GrpcCommon grpcCommon) {
-        // accessToken + appName 相同app只有一台发送日志文件
-        String cacheKey = this.buildCacheKey(grpcCommon);
-        boolean allowSend = redisClient.setNx(cacheKey, "lock", 1, TimeUnit.DAYS);
-        List<ActionParam> actionParams = new ArrayList<>();
-        if (!allowSend) {
-            return actionParams;
+        //根据unionCode，查询指令
+        String unionCode = grpcCommon.getUnionCode();
+        if (StringUtils.isEmpty(unionCode)) {
+            return Lists.newArrayList();
         }
-        ActionParam actionParam = new ActionParam(RuleAction.GC_DUMP);
-        actionParams.add(actionParam);
-        return actionParams;
+        List<CommandInfo> commandInfos = commandInfoRepository.getByUnionCode(unionCode, CommandStatus.INIT);
+        if (CollectionUtils.isEmpty(commandInfos)) {
+            return Lists.newArrayList();
+        }
+        return commandInfos.stream().map(commandInfo -> {
+                    ActionParam actionParam = new ActionParam(RuleAction.valueOfType(commandInfo.getRuleAction()));
+                    if (StringUtils.isNotEmpty(commandInfo.getContext())) {
+                        actionParam.setParams(JSON.parseObject(commandInfo.getContext(),
+                                new TypeReference<Map<String, String>>() {}));
+                    }
+                    actionParam.setSessionId(commandInfo.getSessionId());
+                    actionParam.setId(commandInfo.getId());
+                    return actionParam;
+                })
+                .filter(actionParam -> actionParam.getRuleAction() != RuleAction.UNKNOWN)
+                .filter(actionParam -> {
+                    //更新状态
+                    return updateStatus(actionParam.getId(), CommandStatus.PENDING);
+                })
+                .collect(Collectors.toList());
     }
 
-    private RuleHandler build(RuleModel ruleModel) {
-        RuleType ruleType = ruleModel.getRuleType();
-        switch (ruleType) {
-            case MANUAL_TRIGGER:
-                break;
-            case AUTO_TIMING:
-                return new ScheduleRuleHandler(ruleModel);
-            case AUTO_THRESHOLD:
-                return new ThresholdRuleHandler(ruleModel);
-        }
-        log.error("RuleHandlerComponent build RuleHandler error, ruleModel:{}", ruleModel);
-        throw new RuntimeException("RuleHandlerComponent build RuleHandler error");
+    private boolean updateStatus(long id, CommandStatus commandStatus) {
+        return commandInfoRepository.uStatus(id, commandStatus);
     }
 
-    private String buildCacheKey(GrpcCommon grpcCommon) {
-        return String.join("_", RULE_CACHE_KEY_PREFIX, grpcCommon.getAccessToken(),
-            grpcCommon.getNamespace(), grpcCommon.getAppName());
+    public boolean updateResult(String sessionId, Map<String, String> resultObj, CommandStatus commandStatus) {
+        return commandInfoRepository.uResult(sessionId, resultObj, commandStatus);
+    }
+
+    public boolean updateBySessionId(String sessionId, Map<String, String> tagsMap) {
+        CommandInfoRecord commandInfoRecord = commandInfoRepository.getBySessionId(sessionId);
+        Map<String, String> tmp = Maps.newHashMap();
+        if (commandInfoRecord != null) {
+            String context = commandInfoRecord.getContext();
+            if (StringUtils.isNotEmpty(context)) {
+                tmp.putAll(JSON.parseObject(context, new TypeReference<Map<String, String>>() {}));
+            }
+        }
+        tmp.putAll(tagsMap);
+        return commandInfoRepository.uStatusBySessionId(sessionId, CommandStatus.valueOf(tmp.get(AgentConstant.STATUS)), tmp);
     }
 }

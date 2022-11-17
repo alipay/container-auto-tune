@@ -19,7 +19,7 @@ import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row15;
+import org.jooq.Row16;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -104,7 +104,7 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.APP_INFO.APP_DEFAULT_JVM</code>. 集群jvm生效配置;集群jvm生效配置
      */
-    public final TableField<AppInfoRecord, String> APP_DEFAULT_JVM = createField(DSL.name("APP_DEFAULT_JVM"), SQLDataType.VARCHAR(1024), this, "集群jvm生效配置;集群jvm生效配置");
+    public final TableField<AppInfoRecord, String> APP_DEFAULT_JVM = createField(DSL.name("APP_DEFAULT_JVM"), SQLDataType.VARCHAR(1000), this, "集群jvm生效配置;集群jvm生效配置");
 
     /**
      * The column <code>TMAESTRO-LITE.APP_INFO.CLUSTER_NAME</code>. k8s集群名
@@ -125,6 +125,11 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
      * The column <code>TMAESTRO-LITE.APP_INFO.CLUSTER_ID</code>. 集群ID
      */
     public final TableField<AppInfoRecord, String> CLUSTER_ID = createField(DSL.name("CLUSTER_ID"), SQLDataType.VARCHAR(255), this, "集群ID");
+
+    /**
+     * The column <code>TMAESTRO-LITE.APP_INFO.SERVER_TYPE</code>. 资源类型
+     */
+    public final TableField<AppInfoRecord, String> SERVER_TYPE = createField(DSL.name("SERVER_TYPE"), SQLDataType.VARCHAR(255), this, "资源类型");
 
     private AppInfo(Name alias, Table<AppInfoRecord> aliased) {
         this(alias, aliased, null);
@@ -211,11 +216,11 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row15 type methods
+    // Row16 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row15<Integer, Integer, String, String, String, String, String, LocalDateTime, LocalDateTime, String, String, String, String, String, String> fieldsRow() {
-        return (Row15) super.fieldsRow();
+    public Row16<Integer, Integer, String, String, String, String, String, LocalDateTime, LocalDateTime, String, String, String, String, String, String, String> fieldsRow() {
+        return (Row16) super.fieldsRow();
     }
 }

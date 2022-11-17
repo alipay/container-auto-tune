@@ -4,9 +4,6 @@
  */
 package com.alipay.autotuneservice.configuration;
 
-import com.alipay.autotuneservice.infrastructure.saas.cloudsvc.k8s.K8sClient;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler;
@@ -25,7 +22,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author dutianze
@@ -117,22 +113,6 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setRejectedExecutionHandler((r, executor1) -> log.info("The eventExecutor is discarded"));
         executor.initialize();
         return executor;
-    }
-
-    @Bean(name = "lCache")
-    public Cache<String, Object> lCache() {
-        return CacheBuilder.newBuilder()
-                .maximumSize(100) // 设置缓存的最大容量
-                .concurrencyLevel(5) // 设置并发级别为10
-                //设置写缓存后8秒钟过期
-                .expireAfterWrite(1, TimeUnit.MINUTES)
-                .removalListener((notification) -> {
-                    Object obj = notification.getValue();
-                    if (obj instanceof K8sClient) {
-                        ((K8sClient) obj).close();
-                    }
-                })
-                .build();
     }
 
     @Override

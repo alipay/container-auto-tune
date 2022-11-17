@@ -13,7 +13,6 @@ import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.alipay.autotuneservice.model.common.AppStatus;
 import com.alipay.autotuneservice.model.common.AppTag;
 import com.alipay.autotuneservice.model.common.AppTag.Lang;
-import com.alipay.autotuneservice.service.AppHealthCheckService;
 import com.alipay.autotuneservice.service.riskcheck.RiskCheckService;
 import com.alipay.autotuneservice.service.riskcheck.entity.CheckResponse;
 import com.alipay.autotuneservice.util.UserUtil;
@@ -25,12 +24,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static com.alipay.autotuneservice.service.impl.AppHealthCheckServiceImpl.HEALTH_CHECK_COUNT;
 
 /**
  * @author huoyuqi
@@ -41,9 +37,6 @@ import static com.alipay.autotuneservice.service.impl.AppHealthCheckServiceImpl.
 @RestController
 @RequestMapping("/api/healthCheck")
 public class AppHealthCheckController {
-
-    @Autowired
-    private AppHealthCheckService appHealthCheckService;
 
     @Autowired
     private AppInfoRepository appInfoRepository;
@@ -71,7 +64,7 @@ public class AppHealthCheckController {
                                 return new ArrayList<>();
                             }
                             Map<Integer, List<PodInfoRecord>> appIdMapPods = podInfo.batchGetPodInstallTuneAgentNumsByAppId(
-                                    records.stream().map(AppInfoRecord::getId).collect(Collectors.toList()))
+                                            records.stream().map(AppInfoRecord::getId).collect(Collectors.toList()))
                                     .stream()
                                     .filter(p -> p.getAgentInstall() >= 1)
                                     .collect(Collectors.groupingBy(PodInfoRecord::getAppId));
@@ -151,10 +144,7 @@ public class AppHealthCheckController {
     public ServiceBaseResult<Integer> submitCheck(@PathVariable(value = "appId") Integer appId) {
         return ServiceBaseResult.invoker()
                 .paramCheck(() -> Preconditions.checkArgument(appId > 0, "appid can not be less than 0"))
-                .makeResult(() -> {
-                    log.info("submitCheck enter. appId={}", appId);
-                    return appHealthCheckService.submitHealthCheck(appId);
-                });
+                .makeResult(() -> -1);
     }
 
     /**
@@ -165,17 +155,10 @@ public class AppHealthCheckController {
      */
     @GetMapping("/{healthCheckId}")
     public ServiceBaseResult<HealthCheckVO> refreshCheck(@PathVariable(value = "healthCheckId") Integer healthCheckId,
-                                                         @RequestParam(value = "count",required = false) Integer count) {
+                                                         @RequestParam(value = "count", required = false) Integer count) {
         return ServiceBaseResult.invoker()
                 .paramCheck(() -> Preconditions.checkArgument(healthCheckId > 0, "healthId can not be less than 0"))
-                .makeResult(() -> {
-                    log.info("refreshCheck enter. healthCheckId={}", healthCheckId);
-                    Integer countTmp = count;
-                    if(countTmp==null || countTmp>HEALTH_CHECK_COUNT){
-                        countTmp = HEALTH_CHECK_COUNT;
-                    }
-                    return appHealthCheckService.refreshCheck(healthCheckId,countTmp);
-                });
+                .makeResult(() -> new HealthCheckVO());
     }
 
     /**
@@ -187,7 +170,7 @@ public class AppHealthCheckController {
     public ServiceBaseResult<HealthCheckVO> getLastDate(@PathVariable(value = "appid") Integer appId) {
         return ServiceBaseResult.invoker()
                 .paramCheck(() -> Preconditions.checkArgument(appId > 0, "appId can not be less than 0"))
-                .makeResult(() -> appHealthCheckService.getLastData(appId));
+                .makeResult(() -> new HealthCheckVO());
     }
 
     /**
@@ -198,7 +181,7 @@ public class AppHealthCheckController {
         try {
             log.info("refreshCheck healthCheckId = {}", healthCheckId);
             Preconditions.checkArgument(healthCheckId != null, "healthCheckId 不能为空.");
-            return ServiceBaseResult.successResult(appHealthCheckService.healthDetail(healthCheckId));
+            return ServiceBaseResult.successResult(new HealthCheckVO());
         } catch (Exception e) {
             log.error("evaluate occurs an error.", e);
             return ServiceBaseResult.failureResult(HttpStatus.SC_INTERNAL_SERVER_ERROR,

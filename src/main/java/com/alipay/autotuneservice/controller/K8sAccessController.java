@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@ import com.alipay.autotuneservice.controller.model.K8sAccessTokenModel;
 import com.alipay.autotuneservice.dao.AppInfoRepository;
 import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.alipay.autotuneservice.model.common.CloudType;
-import com.alipay.autotuneservice.service.UserInfoService;
 import com.alipay.autotuneservice.util.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -47,8 +46,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class K8sAccessController {
 
     @Autowired
-    private UserInfoService   userInfoService;
-    @Autowired
     private AppInfoRepository appInfoRepository;
     @Autowired
     private Environment       environment;
@@ -62,18 +59,17 @@ public class K8sAccessController {
             return ServiceBaseResult.failureResult(errorMsg);
         }
         log.info(
-            "saveAccessTokenInfo - request clusterId={}, clusterName={}, region={}, endpoint={}",
-            request.getClusterId(), request.getClusterName(), request.getRegion(),
-            request.getEndpoint());
-        boolean success = userInfoService.saveAccessTokenInfo(wrap(request));
-        return ServiceBaseResult.successResult(success);
+                "saveAccessTokenInfo - request clusterId={}, clusterName={}, region={}, endpoint={}",
+                request.getClusterId(), request.getClusterName(), request.getRegion(),
+                request.getEndpoint());
+        return ServiceBaseResult.successResult(Boolean.TRUE);
     }
 
     /**
-     *wrap保存到DB的K8sAccessTokenModel
-     *
+     * wrap保存到DB的K8sAccessTokenModel
+     * <p>
      * 这里要处理clusterName出于aws和aliyun创建k8s client使用的条件不一样， 同时是以最小改动满足现有的逻辑
-     *
+     * <p>
      * aws使用clusterName
      * aliyun使用clusterId
      *
@@ -92,7 +88,7 @@ public class K8sAccessController {
                 break;
             default:
                 throw new UnsupportedOperationException(String.format(
-                    "CloudType=%s is not supported.", JSON.toJSONString(cloudType)));
+                        "CloudType=%s is not supported.", JSON.toJSONString(cloudType)));
         }
         k8sModel.setClusterName(clusterIdentity);
         return k8sModel;
@@ -100,15 +96,15 @@ public class K8sAccessController {
 
     @RequestMapping(value = "/getAccessTokenInfo", method = RequestMethod.GET)
     @ResponseBody
-    public ServiceBaseResult<K8sAccessTokenModel> getAccessTokenInfo(@RequestParam(value = "accessToken", required = true) String accessToken,
-                                                                     @RequestParam(value = "clusterName", required = true) String clusterName) {
+    public ServiceBaseResult<K8sAccessTokenModel> getAccessTokenInfo(
+            @RequestParam(value = "accessToken", required = true) String accessToken,
+            @RequestParam(value = "clusterName", required = true) String clusterName) {
         log.info("getAccessTokenInfo enter.");
         if (StringUtils.isBlank(accessToken) || StringUtils.isBlank(clusterName)) {
             log.warn("input accessToken or clusterName empty.");
             return ServiceBaseResult.successResult(null);
         }
-        K8sAccessTokenModel k8sTokeInfo = userInfoService.getK8sTokeInfo(accessToken, clusterName);
-        return ServiceBaseResult.successResult(k8sTokeInfo);
+        return ServiceBaseResult.successResult(new K8sAccessTokenModel());
     }
 
     @RequestMapping(value = "/validate", method = RequestMethod.GET)
@@ -121,7 +117,7 @@ public class K8sAccessController {
             return ServiceBaseResult.successResult(Boolean.FALSE);
         }
         boolean res = CollectionUtils.isNotEmpty(appInfoRepository.getAppByTokenAndCluster(
-            accessToken, clusterName));
+                accessToken, clusterName));
         log.info("validateClusterAccessToken for custerName={} res={}", clusterName, res);
         return ServiceBaseResult.successResult(res);
     }

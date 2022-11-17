@@ -16,7 +16,6 @@
  */
 package com.alipay.autotuneservice.agent.twatch.model;
 
-import com.amazonaws.services.kms.model.UnsupportedOperationException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;

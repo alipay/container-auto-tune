@@ -97,7 +97,7 @@ public class TuneParamInfo extends TableImpl<TuneParamInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PARAM_INFO.UPDATE_PARAMS</code>. 更新的JVM参数，以JSON形式存储
      */
-    public final TableField<TuneParamInfoRecord, String> UPDATE_PARAMS = createField(DSL.name("UPDATE_PARAMS"), SQLDataType.VARCHAR(4096), this, "更新的JVM参数，以JSON形式存储");
+    public final TableField<TuneParamInfoRecord, String> UPDATE_PARAMS = createField(DSL.name("UPDATE_PARAMS"), SQLDataType.VARCHAR(1000), this, "更新的JVM参数，以JSON形式存储");
 
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PARAM_INFO.OPERATOR</code>. 操作员
@@ -112,7 +112,7 @@ public class TuneParamInfo extends TableImpl<TuneParamInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PARAM_INFO.DEFAULT_PARAM</code>. app默认启动参数
      */
-    public final TableField<TuneParamInfoRecord, String> DEFAULT_PARAM = createField(DSL.name("DEFAULT_PARAM"), SQLDataType.VARCHAR(4096), this, "app默认启动参数");
+    public final TableField<TuneParamInfoRecord, String> DEFAULT_PARAM = createField(DSL.name("DEFAULT_PARAM"), SQLDataType.VARCHAR(1000), this, "app默认启动参数");
 
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PARAM_INFO.VERSION</code>.

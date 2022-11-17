@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,6 @@ import com.alipay.autotuneservice.dao.TunePipelineRepository;
 import com.alipay.autotuneservice.dao.TuningParamTaskData;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TuneLogInfoRecord;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.common.PodStatus;
 import com.alipay.autotuneservice.model.pipeline.MachineId;
 import com.alipay.autotuneservice.model.pipeline.TunePipeline;
@@ -66,8 +65,6 @@ public class TuneChangeRunner extends TuneAbstractRunner {
     private AsyncTaskExecutor                             webTaskExecutor;
     @Autowired
     private PodInfo                                       podInfo;
-    @Autowired
-    private RedisClient                                   redisClient;
     @Autowired
     private TuneLogInfo                                   tuneLogInfo;
     @Autowired
@@ -127,9 +124,6 @@ public class TuneChangeRunner extends TuneAbstractRunner {
                     } catch (Exception e) {
                         //变更失败,记录日志
                         log.error("change is error", e);
-                    } finally {
-                        //移除锁定
-                        redisClient.del(changeRq.generateUnionKey());
                     }
                 });
     }
@@ -258,7 +252,7 @@ public class TuneChangeRunner extends TuneAbstractRunner {
     private Boolean isGrayPipeline(Integer pipelineId) {
         try {
             TunePipeline tunePipeline = tunePipelineRepository.findByMachineIdAndPipelineId(
-                MachineId.GRAY_PIPELINE, pipelineId);
+                    MachineId.GRAY_PIPELINE, pipelineId);
             if (null == tunePipeline) {
                 return Boolean.FALSE;
             }

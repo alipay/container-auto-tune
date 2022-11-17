@@ -1,10 +1,10 @@
 package com.alipay.autotuneservice.tunerx;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.autotuneservice.base.cache.LocalCache;
 import com.alipay.autotuneservice.dao.TuneLogInfo;
 import com.alipay.autotuneservice.dao.TunePipelineRepository;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TuneLogInfoRecord;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.pipeline.PipelineStatus;
 import com.alipay.autotuneservice.model.pipeline.TunePipeline;
 import com.alipay.autotuneservice.model.tune.TunePlan;
@@ -40,7 +40,7 @@ public class TuneDispatchRunner extends TuneAbstractRunner {
 
     private ObservableEmitter<TuneConsistencyRq> jemitter;
     @Autowired
-    private RedisClient                          redisClient;
+    private LocalCache<Object, Object>           localCache;
     @Autowired
     private PodService                           podService;
     @Autowired
@@ -135,7 +135,7 @@ public class TuneDispatchRunner extends TuneAbstractRunner {
                         return Boolean.FALSE;
                     }
                     //判断任务是否有提交记录
-                    Long time = redisClient.get(tuneConsistencyRq.generateUnionKey(), Long.class);
+                    Long time = (Long) localCache.get(tuneConsistencyRq.generateUnionKey());
                     if (time == null) {
                         return Boolean.TRUE;
                     }
@@ -147,7 +147,7 @@ public class TuneDispatchRunner extends TuneAbstractRunner {
                 })
                 .subscribe(tuneConsistencyRq -> {
                     //记录分发日志
-                    redisClient.setEx(tuneConsistencyRq.generateUnionKey(), System.currentTimeMillis(), 10, TimeUnit.MINUTES);
+                    localCache.put(tuneConsistencyRq.generateUnionKey(), System.currentTimeMillis(), 10 * 60);
                     log.info(Thread.currentThread().getName() + ":" + JSONObject.toJSONString(tuneConsistencyRq));
                     //下发分批策略，获取下当前应用的最大分批策略
                     List<TuneConsistencyRq.ChangeRq> changeRqs = tuneConsistencyRq.getChangeRqs();

@@ -77,7 +77,7 @@ public class NodeInfo extends TableImpl<NodeInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.NODE_INFO.NODE_TAGS</code>. 标签
      */
-    public final TableField<NodeInfoRecord, String> NODE_TAGS = createField(DSL.name("NODE_TAGS"), SQLDataType.VARCHAR(8192), this, "标签");
+    public final TableField<NodeInfoRecord, String> NODE_TAGS = createField(DSL.name("NODE_TAGS"), SQLDataType.VARCHAR(1000), this, "标签");
 
     /**
      * The column <code>TMAESTRO-LITE.NODE_INFO.ACCESS_TOKEN</code>. 关联的token

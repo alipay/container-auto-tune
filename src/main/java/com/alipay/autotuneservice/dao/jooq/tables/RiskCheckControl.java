@@ -94,7 +94,7 @@ public class RiskCheckControl extends TableImpl<RiskCheckControlRecord> {
     /**
      * The column <code>TMAESTRO-LITE.RISK_CHECK_CONTROL.RISK_MSG</code>. 风险详情
      */
-    public final TableField<RiskCheckControlRecord, String> RISK_MSG = createField(DSL.name("RISK_MSG"), SQLDataType.VARCHAR(5000), this, "风险详情");
+    public final TableField<RiskCheckControlRecord, String> RISK_MSG = createField(DSL.name("RISK_MSG"), SQLDataType.VARCHAR(1000), this, "风险详情");
 
     /**
      * The column <code>TMAESTRO-LITE.RISK_CHECK_CONTROL.CREATE_TIME</code>. 创建时间

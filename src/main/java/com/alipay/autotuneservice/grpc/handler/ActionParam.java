@@ -29,6 +29,8 @@ import java.util.Map;
 @Data
 public class ActionParam {
 
+    private long                id;
+    private String              sessionId;
     private RuleAction          ruleAction;
     private Map<String, String> params = new HashMap<>();
 

@@ -23,7 +23,6 @@ import com.alipay.autotuneservice.model.tunepool.MetaData;
 import com.alipay.autotuneservice.model.tunepool.MetaData.Type;
 import com.alipay.autotuneservice.model.tunepool.TuneEntity;
 import com.alipay.autotuneservice.model.tunepool.TunePoolStatus;
-import com.alipay.autotuneservice.service.notification.EmailModelService;
 import com.alipay.autotuneservice.tunepool.TunePool;
 import com.alipay.autotuneservice.tunepool.TuneProcessor;
 import com.alipay.autotuneservice.tunepool.TuneSource;
@@ -55,9 +54,7 @@ public class TuneExecuteService {
     @Autowired
     private TuneLogInfo            tuneLogInfo;
     @Autowired
-    private EmailModelService emailModelService;
-    @Autowired
-    private TunePlanRepository tunePlanRepository;
+    private TunePlanRepository     tunePlanRepository;
     @Autowired
     private TunePipelineRepository tunePipelineRepository;
 
@@ -72,12 +69,11 @@ public class TuneExecuteService {
             case EVALUATE_BENEFIT:
                 log.info("execute ---- 评估预期收益");
                 pipelineRepository.saveWithTransaction(tunePipeline);
-                emailModelService.tunePredictEmail(tunePipeline.getPipelineId(),tunePipeline.getAppId());
                 break;
             case ADJUSTMENT_PARAMETER: {
                 log.info("execute ---- 生成调优参数");
                 // 新建实验pipeline
-                if(StringUtils.isNotEmpty(tunePipeline.getContext().getGrayJvm())){
+                if (StringUtils.isNotEmpty(tunePipeline.getContext().getGrayJvm())) {
                     tunePipeline.setMachineId(MachineId.TUNE_PIPELINE);
                     pipelineRepository.saveWithTransaction(tunePipeline);
                     break;
@@ -93,7 +89,6 @@ public class TuneExecuteService {
                 tunePipeline.setStatus(Status.WAIT);
                 TunePipeline batchTunePipeline = tunePipeline.generateNewTunePipeline(TuneStage.BATCH_NONE);
                 pipelineRepository.saveWithTransaction(tunePipeline, batchTunePipeline);
-                emailModelService.tuneProcessEmail(tunePipeline.getPipelineId(),tunePipeline.getAppId());
                 break;
             }
             case VERIFY_EFFECT:
@@ -103,13 +98,12 @@ public class TuneExecuteService {
             case CLOSED: {
                 log.info("execute ---- 退出");
                 // 处理关闭事件，关闭pipeline
-                if(grayCancel(tunePipeline)){
+                if (grayCancel(tunePipeline)) {
                     cancelGrayPipeline(tunePipeline);
                     break;
                 }
                 tunePipeline.setStatus(Status.CLOSED);
                 pipelineRepository.saveWithTransaction(tunePipeline);
-                emailModelService.tuneFinishEmail(tunePipeline.getPipelineId(),tunePipeline.getAppId());
                 break;
             }
             default:
@@ -319,14 +313,12 @@ public class TuneExecuteService {
         pipelineRepository.saveWithTransaction(tunePipeline, waitingBranch);
     }
 
-    private void cancelGrayPipeline(TunePipeline tunePipeline){
+    private void cancelGrayPipeline(TunePipeline tunePipeline) {
         List<TunePipeline> aliveTunePipelines = tunePipelineRepository.findByPlanId(tunePipeline.getTunePlanId());
         aliveTunePipelines.forEach(aliveTunePipeline -> aliveTunePipeline.setStatus(Status.CANCEL));
         tunePipelineRepository.saveWithTransaction(aliveTunePipelines.toArray(new TunePipeline[0]));
         tunePlanRepository.updateTuneStatusById(tunePipeline.getTunePlanId(), TunePlanStatus.CANCEL);
-        emailModelService.tuneCancelEmail(tunePipeline.getPipelineId(), tunePipeline.getAppId());
     }
-
 
     private void logBatch(TunePipeline tunePipeline) {
         TuneContext tuneContext = tunePipeline.getContext();
@@ -345,13 +337,14 @@ public class TuneExecuteService {
 
     /**
      * 判断是否是灰度取消按钮
+     *
      * @param tunePipeline
      * @return
      */
-    private Boolean grayCancel(TunePipeline tunePipeline){
-        if(tunePipeline.isGray()){
+    private Boolean grayCancel(TunePipeline tunePipeline) {
+        if (tunePipeline.isGray()) {
             TunePlan record = tunePlanRepository.findTunePlanById(tunePipeline.getTunePlanId());
-            if(null != record && null != record.getTuneStatus() && record.getTuneStatus().equals(TunePlanStatus.CANCEL)){
+            if (null != record && null != record.getTuneStatus() && record.getTuneStatus().equals(TunePlanStatus.CANCEL)) {
                 return true;
             }
         }
