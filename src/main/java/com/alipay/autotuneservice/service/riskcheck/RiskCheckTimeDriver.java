@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,13 +18,13 @@ package com.alipay.autotuneservice.service.riskcheck;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.alipay.autotuneservice.base.cache.LocalCache;
 import com.alipay.autotuneservice.configuration.EnvHandler;
 import com.alipay.autotuneservice.dao.JvmTuningRiskCenterRepository;
 import com.alipay.autotuneservice.dao.RiskCheckControlRepository;
 import com.alipay.autotuneservice.dao.RiskCheckTaskRepository;
 import com.alipay.autotuneservice.dao.jooq.tables.pojos.RiskCheckControl;
 import com.alipay.autotuneservice.dao.jooq.tables.pojos.RiskCheckTask;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.service.riskcheck.entity.RiskCheckEnum;
 import com.alipay.autotuneservice.service.riskcheck.entity.RiskControlStatus;
 import com.alipay.autotuneservice.util.LogUtil;
@@ -46,22 +46,22 @@ public class RiskCheckTimeDriver {
     private static final String           LOCK_DELETE_LEY = "RiskCheckTimeDriver_delete_validate";
     private static final Integer          STORAGE_TIME    = 60;
     @Autowired
-    private RiskCheckHandler              riskCheckHandler;
+    private              RiskCheckHandler riskCheckHandler;
 
     @Autowired
-    private RiskCheckTaskRepository       riskCheckTaskRepository;
+    private RiskCheckTaskRepository riskCheckTaskRepository;
 
     @Autowired
-    private RiskCheckControlRepository    riskCheckControlRepository;
+    private RiskCheckControlRepository riskCheckControlRepository;
 
     @Autowired
     private JvmTuningRiskCenterRepository jvmTuningRiskCenterRepository;
 
     @Autowired
-    private RedisClient                   redisClient;
+    private LocalCache<Object, Object> localCache;
 
     @Autowired
-    private EnvHandler                    envHandler;
+    private EnvHandler envHandler;
 
     @Scheduled(fixedRate = 60 * 1000)
     public void doTask() {
@@ -71,12 +71,6 @@ public class RiskCheckTimeDriver {
         executeTask();
 
         handleJobStatus();
-        //redisClient.doExec(LOCK_TASK_LEY, () -> {
-        //
-        //    executeTask();
-        //
-        //    handleJobStatus();
-        //});
     }
 
     @Scheduled(cron = "0 0 22 * * ?")
@@ -84,12 +78,10 @@ public class RiskCheckTimeDriver {
         if (envHandler.isDev()) {
             return;
         }
-        redisClient.doExec(LOCK_DELETE_LEY, () -> {
-            LocalDateTime now = LocalDateTime.now();
-            riskCheckControlRepository.delete(now.minusDays(STORAGE_TIME));
-            riskCheckTaskRepository.delete(now.minusDays(STORAGE_TIME));
-            jvmTuningRiskCenterRepository.delete(now.minusDays(STORAGE_TIME));
-        });
+        LocalDateTime now = LocalDateTime.now();
+        riskCheckControlRepository.delete(now.minusDays(STORAGE_TIME));
+        riskCheckTaskRepository.delete(now.minusDays(STORAGE_TIME));
+        jvmTuningRiskCenterRepository.delete(now.minusDays(STORAGE_TIME));
     }
 
     /**
@@ -104,11 +96,12 @@ public class RiskCheckTimeDriver {
             LogUtil.logRegister(riskCheckTask.getTaskTraceId());
             log.info(LogUtil.scureLogFormat("riskCheckTimeDriver execute"));
             riskCheckHandler.executeRiskCheck(riskCheckTask, (checkResult, riskCollector, status) -> {
-                log.info(LogUtil.scureLogFormat("更新执行状态 %s,%s,%s",checkResult,JSON.toJSONString(riskCollector),status));
+                log.info(LogUtil.scureLogFormat("更新执行状态 %s,%s,%s", checkResult, JSON.toJSONString(riskCollector), status));
                 riskCheckTaskRepository.updateByTaskID(riskCheckTask.getId(), status, checkResult, JSON.toJSONString(riskCollector));
                 if (RiskCheckEnum.HIGH_RISK == checkResult) {
                     riskCheckTaskRepository.updateByJobId(riskCheckTask.getJobId());
-                    riskCheckControlRepository.update(riskCheckTask.getJobId(), checkResult, RiskControlStatus.END, JSON.toJSONString(riskCollector), LocalDateTime.now());
+                    riskCheckControlRepository.update(riskCheckTask.getJobId(), checkResult, RiskControlStatus.END,
+                            JSON.toJSONString(riskCollector), LocalDateTime.now());
                 }
             });
         });
@@ -135,7 +128,8 @@ public class RiskCheckTimeDriver {
                 ).filter(RiskCheckEnum.LOW_RISK::equals).collect(Collectors.toList());
                 if (lowRisk.size() >= Math.ceil(taskIDs.size() * 0.6)) {
                     riskCheckTaskRepository.updateByJobId(riskCheckControl.getId());
-                    riskCheckControlRepository.update(riskCheckControl.getId(), RiskCheckEnum.LOW_RISK, RiskControlStatus.END, taskList.get(0).getTaskRiskMsg(), LocalDateTime.now());
+                    riskCheckControlRepository.update(riskCheckControl.getId(), RiskCheckEnum.LOW_RISK, RiskControlStatus.END,
+                            taskList.get(0).getTaskRiskMsg(), LocalDateTime.now());
                     return;
                 }
 
@@ -144,12 +138,14 @@ public class RiskCheckTimeDriver {
                 ).filter(RiskCheckEnum.UNKNOW::equals).collect(Collectors.toList());
                 if (unknow.size() >= Math.ceil(taskIDs.size() * 0.5)) {
                     riskCheckTaskRepository.updateByJobId(riskCheckControl.getId());
-                    riskCheckControlRepository.update(riskCheckControl.getId(), RiskCheckEnum.UNKNOW, RiskControlStatus.END, taskList.get(0).getTaskRiskMsg(), LocalDateTime.now());
+                    riskCheckControlRepository.update(riskCheckControl.getId(), RiskCheckEnum.UNKNOW, RiskControlStatus.END,
+                            taskList.get(0).getTaskRiskMsg(), LocalDateTime.now());
                     return;
                 }
 
                 if (taskList.size() == taskIDs.size()) {
-                    riskCheckControlRepository.update(riskCheckControl.getId(), RiskCheckEnum.NORMAL, RiskControlStatus.END, null, LocalDateTime.now());
+                    riskCheckControlRepository.update(riskCheckControl.getId(), RiskCheckEnum.NORMAL, RiskControlStatus.END, null,
+                            LocalDateTime.now());
                 }
             } catch (Exception e) {
                 log.error("handleJobStatus error", e);

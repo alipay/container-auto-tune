@@ -384,6 +384,21 @@ public class PodInfoRecord extends UpdatableRecordImpl<PodInfoRecord> {
         return (String) get(23);
     }
 
+    /**
+     * Setter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>. 资源类型
+     */
+    public PodInfoRecord setServerType(String value) {
+        set(24, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>. 资源类型
+     */
+    public String getServerType() {
+        return (String) get(24);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -407,7 +422,7 @@ public class PodInfoRecord extends UpdatableRecordImpl<PodInfoRecord> {
     /**
      * Create a detached, initialised PodInfoRecord
      */
-    public PodInfoRecord(Integer id, Integer appId, Integer nodeId, String podName, String ip, String status, LocalDateTime createdTime, String podJvm, String env, String podDeployType, String podTemplate, String podTags, String accessToken, String clusterName, String k8sNamespace, String podStatus, LocalDateTime updatedTime, Integer cpuCoreLimit, Integer memLimit, String cpuLimit, Integer agentInstall, String dHostname, String nodeIp, String nodeName) {
+    public PodInfoRecord(Integer id, Integer appId, Integer nodeId, String podName, String ip, String status, LocalDateTime createdTime, String podJvm, String env, String podDeployType, String podTemplate, String podTags, String accessToken, String clusterName, String k8sNamespace, String podStatus, LocalDateTime updatedTime, Integer cpuCoreLimit, Integer memLimit, String cpuLimit, Integer agentInstall, String dHostname, String nodeIp, String nodeName, String serverType) {
         super(PodInfo.POD_INFO);
 
         setId(id);
@@ -434,5 +449,6 @@ public class PodInfoRecord extends UpdatableRecordImpl<PodInfoRecord> {
         setDHostname(dHostname);
         setNodeIp(nodeIp);
         setNodeName(nodeName);
+        setServerType(serverType);
     }
 }

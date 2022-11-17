@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,6 @@ import com.alibaba.fastjson.JSON;
 import com.alipay.autotuneservice.dao.TwatchInfoRepository;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
-import com.alipay.autotuneservice.multiCloudAdapter.NosqlService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +30,6 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static com.alipay.autotuneservice.util.AgentConstant.TWATCH_TABLE;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
@@ -43,9 +41,6 @@ import static java.util.stream.Collectors.toCollection;
 @Slf4j
 @Service
 public class TwatchInfoService {
-
-    @Autowired
-    private NosqlService nosqlService;
 
     @Autowired
     private TwatchInfoRepository twatchInfoRepository;
@@ -106,14 +101,6 @@ public class TwatchInfoService {
 
     public List<TwatchInfoDo> findInfoByContainerId(String containerId) {
         return twatchInfoRepository.findByContainerId(containerId);
-    }
-
-    @Deprecated
-    private List<TwatchInfoDo> getInfos(String indexName, String key, String value) {
-        List<TwatchInfoDo> twatchInfoDos = nosqlService.queryByPkIndex(TWATCH_TABLE, indexName, key, value, TwatchInfoDo.class);
-        twatchInfoDos.sort(comparing(TwatchInfoDo::getDtPeriod));
-        Collections.reverse(twatchInfoDos);
-        return twatchInfoDos;
     }
 
     public void insert(TwatchInfoDo infoDo) {

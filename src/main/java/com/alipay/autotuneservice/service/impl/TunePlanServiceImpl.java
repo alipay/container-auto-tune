@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,13 +16,13 @@
  */
 package com.alipay.autotuneservice.service.impl;
 
+import com.alipay.autotuneservice.base.cache.LocalCache;
 import com.alipay.autotuneservice.controller.model.TuneEffectVO;
 import com.alipay.autotuneservice.controller.model.TunePlanVO;
 import com.alipay.autotuneservice.controller.model.tuneplan.QueryTunePlanVO;
 import com.alipay.autotuneservice.controller.model.tuneplan.TunePlanActionEnum;
 import com.alipay.autotuneservice.dao.HealthCheckInfo;
 import com.alipay.autotuneservice.dao.TunePlanRepository;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.common.InstallType;
 import com.alipay.autotuneservice.model.dto.PipelineDTO;
 import com.alipay.autotuneservice.model.pipeline.Status;
@@ -46,7 +46,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -59,17 +58,17 @@ import java.util.stream.Collectors;
 public class TunePlanServiceImpl implements TunePlanService {
 
     @Autowired
-    private TunePlanRepository  tunePlanRepository;
+    private TunePlanRepository         tunePlanRepository;
     @Autowired
-    private TunePipelineService tunePipelineService;
+    private TunePipelineService        tunePipelineService;
     @Autowired
-    private PodService          podService;
+    private PodService                 podService;
     @Autowired
-    private HealthCheckInfo     healthCheckInfo;
+    private HealthCheckInfo            healthCheckInfo;
     @Autowired
-    private AppInfoService      appInfoService;
+    private AppInfoService             appInfoService;
     @Autowired
-    private RedisClient         redisClient;
+    private LocalCache<Object, Object> localCache;
 
     @Override
     public Boolean execAction(Integer pipelineId, TunePlanActionEnum actionEnum) {
@@ -77,16 +76,16 @@ public class TunePlanServiceImpl implements TunePlanService {
         TunePlanVO tunePipelineVO = tunePipelineService.getTunePipelineById(pipelineId);
         if (tunePipelineVO.getTunePlanId() == null) {
             throw new UnsupportedOperationException(String.format("根据pipelineId=%s未查询到运行中的调优计划",
-                pipelineId));
+                    pipelineId));
         }
         Integer tunePlanId = tunePipelineVO.getTunePlanId();
         // check tune plan status
         TunePlan tunePlan = tunePlanRepository.findTunePlanById(tunePlanId);
         if (TunePlanStatus.END.equals(tunePlan.getTunePlanStatus())) {
             log.error("TunePlanServiceImpl#execAction - The tunePlanId={} was finished.",
-                tunePlanId);
+                    tunePlanId);
             throw new UnsupportedOperationException(String.format(
-                "The tunePlanId=%s has been finished.", tunePlanId));
+                    "The tunePlanId=%s has been finished.", tunePlanId));
         }
         Boolean result = doAction(tunePlanId, actionEnum);
         log.info("execAction result={} for pipelineId={}", result, pipelineId);
@@ -171,12 +170,12 @@ public class TunePlanServiceImpl implements TunePlanService {
             return 0;
         }
         String cacheKey = String.format("now_%s_Nums_%s", type.name(), appId);
-        Integer nums = (Integer) redisClient.get(cacheKey);
+        Integer nums = (Integer) localCache.get(cacheKey);
         if (ObjectUtil.checkInteger(nums)) {
             return nums;
         }
         Integer appPodNum = getNumsFunc.apply(appId);
-        redisClient.setNx(cacheKey, appPodNum, 2, TimeUnit.MINUTES);
+        localCache.put(cacheKey, appPodNum, 2 * 60);
         return appPodNum;
     }
 

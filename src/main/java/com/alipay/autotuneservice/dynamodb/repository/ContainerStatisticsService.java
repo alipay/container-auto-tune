@@ -21,7 +21,6 @@ import com.alipay.autotuneservice.agent.twatch.DoInvokeRunner;
 import com.alipay.autotuneservice.dao.ContainerStatisticRepository;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
-import com.alipay.autotuneservice.multiCloudAdapter.NosqlService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
@@ -47,8 +46,6 @@ public class ContainerStatisticsService {
 
     @Autowired
     private DoInvokeRunner      doInvokeRunner;
-    @Autowired
-    private NosqlService        nosqlService;
     @Autowired
     private ContainerStatisticRepository containerStatisticRepository;
 

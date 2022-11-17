@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,13 +18,13 @@ package com.alipay.autotuneservice.controller;
 
 import com.alipay.autotuneservice.configuration.NoLogin;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
-import com.alipay.autotuneservice.dynamodb.bean.HealthCheckData;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
 import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.alipay.autotuneservice.service.ProxyService;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,8 +65,8 @@ public class ProxyController {
     @NoLogin
     @RequestMapping("/containerStatistics")
     public ServiceBaseResult<List<ContainerStatistics>> findCStatistic(@RequestParam(value = "containerId") String containerId,
-                                                                            @RequestParam(value = "start") Long start,
-                                                                            @RequestParam(value = "end") Long end) {
+                                                                       @RequestParam(value = "start") Long start,
+                                                                       @RequestParam(value = "end") Long end) {
         return ServiceBaseResult
                 .invoker()
                 .paramCheck(() -> {
@@ -74,7 +74,7 @@ public class ProxyController {
                     Preconditions.checkArgument(start != null && start > 0, "Input param start must be positive.");
                     Preconditions.checkArgument(end != null && end > 0, "Input param end must be positive.");
                 })
-                .makeResult(() -> this.proxyService.findCStatistic(containerId,start,end));
+                .makeResult(() -> this.proxyService.findCStatistic(containerId, start, end));
     }
 
     /**
@@ -92,21 +92,7 @@ public class ProxyController {
                     Preconditions.checkArgument(start != null && start > 0, "Input param start must be positive.");
                     Preconditions.checkArgument(end != null && end > 0, "Input param end must be positive.");
                 })
-                .makeResult(() -> this.proxyService.findJvmMonMetricRange(podName,start,end));
-    }
-
-    /**
-     * query jvmProblemData day
-     */
-    @NoLogin
-    @RequestMapping("/jvmProblemPerDay")
-    public ServiceBaseResult<List<HealthCheckData>> getJvmProblemPerDay(@RequestParam(value = "dt") String dt) {
-        return ServiceBaseResult
-                .invoker()
-                .paramCheck(() -> {
-                    Preconditions.checkArgument(StringUtils.isNotEmpty(dt), "dt is empty");
-                })
-                .makeResult(() -> this.proxyService.getJvmProblemPerDay(dt));
+                .makeResult(() -> Lists.newArrayList());
     }
 
     /**
@@ -122,7 +108,7 @@ public class ProxyController {
                     Preconditions.checkArgument(StringUtils.isNotEmpty(podName), "podName is empty");
                     Preconditions.checkArgument(dt != null && dt > 0, "Input param dt must be positive.");
                 })
-                .makeResult(() -> this.proxyService.findJvmMonMetricDay(podName,dt));
+                .makeResult(() -> Lists.newArrayList());
     }
 
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,14 +18,17 @@ package com.alipay.autotuneservice.service.impl;
 
 import com.alipay.autotuneservice.configuration.ConstantsProperties;
 import com.alipay.autotuneservice.dao.AppLogRepository;
+import com.alipay.autotuneservice.dao.CommandInfoRepository;
+import com.alipay.autotuneservice.grpc.GrpcCommon;
 import com.alipay.autotuneservice.model.common.CloudType;
+import com.alipay.autotuneservice.model.common.CommandStatus;
 import com.alipay.autotuneservice.model.common.FileContent;
 import com.alipay.autotuneservice.model.common.IntegrateAgentEnum;
 import com.alipay.autotuneservice.service.AppInfoService;
 import com.alipay.autotuneservice.service.StorageInfoService;
 import com.alipay.autotuneservice.util.SystemUtil;
-import com.amazonaws.services.s3.model.S3Object;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 import freemarker.core.TemplateClassResolver;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -35,9 +38,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,34 +56,36 @@ import java.util.Optional;
 @Service
 public class StorageInfoServiceImpl implements StorageInfoService {
 
-    private static final String DOCKER_START_SHELL_TEMPLATE      = "config_java_opts.flt";
-    public static final String  DOCKER_START_SHELL_FILE          = "config_java_opts.sh";
+    private static final String DOCKER_START_SHELL_TEMPLATE = "config_java_opts.flt";
+    public static final  String DOCKER_START_SHELL_FILE     = "config_java_opts.sh";
 
-    private static final String TMAESTRO_ENTRY_TEMPLATE          = "tmaestro-entry.flt";
-    private static final String ALIYUN_TMAESTRO_ENTRY_TEMPLATE   = "aliyun-tmaestro-entry.flt";
-    private static final String LITE_TMAESTRO_ENTRY_TEMPLATE     = "lite-tmaestro-entry.flt";
-    public static final String  TMAESTRO_ENTRY_FILE              = "tmaestro-entry.sh";
+    private static final String TMAESTRO_ENTRY_TEMPLATE        = "tmaestro-entry.flt";
+    private static final String ALIYUN_TMAESTRO_ENTRY_TEMPLATE = "aliyun-tmaestro-entry.flt";
+    private static final String LITE_TMAESTRO_ENTRY_TEMPLATE   = "lite-tmaestro-entry.flt";
+    public static final  String TMAESTRO_ENTRY_FILE            = "tmaestro-entry.sh";
 
-    private static final String TWATCH_DAEMON_SET_YAML_TEMPLATE  = "twatch.flt";
-    public static final String  TWATCH_DAEMON_SET_YAML_FILE      = "twatch.yml";
+    private static final String TWATCH_DAEMON_SET_YAML_TEMPLATE = "twatch.flt";
+    public static final  String TWATCH_DAEMON_SET_YAML_FILE     = "twatch.yml";
 
-    private static final String TMAESTRO_ONBOARD_TEMPLATE        = "tmaestro-onboard.flt";
-    public static final String  TMAESTRO_ONBOARD_FILE            = "tmaestro-onboard";
+    private static final String TMAESTRO_ONBOARD_TEMPLATE = "tmaestro-onboard.flt";
+    public static final  String TMAESTRO_ONBOARD_FILE     = "tmaestro-onboard";
 
     private static final String INSTALL_AUTO_TUNE_AGENT_TEMPLATE = "installTuneAgent.flt";
     private static final String INSTALL_AUTO_TUNE_AGENT_FILE     = "installTuneAgent.sh";
 
-    private static final String AUTO_TUNE_AGENT_YAML_TEMPLATE    = "autotuneAgentYaml.flt";
-    private static final String AUTO_TUNE_AGENT_YAML_FILE        = "tmaster.yml";
+    private static final String AUTO_TUNE_AGENT_YAML_TEMPLATE = "autotuneAgentYaml.flt";
+    private static final String AUTO_TUNE_AGENT_YAML_FILE     = "tmaster.yml";
 
     @Autowired
-    private AppInfoService      appInfoService;
+    private AppInfoService        appInfoService;
     @Autowired
-    private AppLogRepository    appLogRepository;
+    private AppLogRepository      appLogRepository;
     @Autowired
-    private ConstantsProperties constantProperties;
+    private ConstantsProperties   constantProperties;
     @Autowired
-    private Environment         env;
+    private Environment           env;
+    @Autowired
+    private CommandInfoRepository commandInfoRepository;
 
     @Override
     public FileContent generateTMaestroOnBoard(String accessToken) {
@@ -99,12 +107,12 @@ public class StorageInfoServiceImpl implements StorageInfoService {
                                        String dockerStartShellTemplate) {
         try {
             Preconditions.checkArgument(StringUtils.isNotBlank(accessToken),
-                "the accessToken can not be empty.");
+                    "the accessToken can not be empty.");
             Map<String, Object> map = new HashMap<>();
             map.put("accessToken", accessToken);
             map.put("tmaestro_server_url", constantProperties.getDomainUrl());
             return new FileContent(dockerStartShellFile, this.generateShellScript(
-                dockerStartShellTemplate, map));
+                    dockerStartShellTemplate, map));
         } catch (Exception e) {
             log.info("getFileContent for file={} occurs an error.", dockerStartShellFile, e);
             return null;
@@ -116,11 +124,11 @@ public class StorageInfoServiceImpl implements StorageInfoService {
                                                   String clusterName) {
         try {
             Preconditions.checkArgument(StringUtils.isNotBlank(accessToken),
-                "the accessToken can not be empty.");
+                    "the accessToken can not be empty.");
             Preconditions.checkArgument(StringUtils.isNotBlank(region),
-                "the region can not be empty.");
+                    "the region can not be empty.");
             Preconditions.checkArgument(StringUtils.isNotBlank(clusterName),
-                "the clusterName can not be empty.");
+                    "the clusterName can not be empty.");
             Map<String, Object> map = new HashMap<>();
             map.put("accessToken", accessToken);
             map.put("region", region);
@@ -128,7 +136,7 @@ public class StorageInfoServiceImpl implements StorageInfoService {
             map.put("TMAESTRO_HOME_PAGE_URL", constantProperties.getWebHomeUrl());
             map.put("tmaestro_server_url", constantProperties.getDomainUrl());
             return new FileContent(TMAESTRO_ENTRY_FILE, this.generateShellScript(
-                getTmaestroEntryTemplate(), map));
+                    getTmaestroEntryTemplate(), map));
         } catch (Exception e) {
             log.info("generateTmaestroEntryShell failed due to {}", e.getMessage());
             return null;
@@ -146,7 +154,7 @@ public class StorageInfoServiceImpl implements StorageInfoService {
                 return TMAESTRO_ENTRY_TEMPLATE;
         }
         throw new UnsupportedOperationException(String.format(
-            " can not find template by cloudType=%s", cloudType));
+                " can not find template by cloudType=%s", cloudType));
     }
 
     @Override
@@ -157,7 +165,7 @@ public class StorageInfoServiceImpl implements StorageInfoService {
         String imageId = "514796603615.dkr.ecr.us-east-1.amazonaws.com/saasalpha:twatch_202206021727";
         map.put("imageId", imageId);
         return new FileContent(TWATCH_DAEMON_SET_YAML_FILE, this.generateShellScript(
-            TWATCH_DAEMON_SET_YAML_TEMPLATE, map));
+                TWATCH_DAEMON_SET_YAML_TEMPLATE, map));
     }
 
     @Override
@@ -177,7 +185,7 @@ public class StorageInfoServiceImpl implements StorageInfoService {
         map.put("host", constantProperties.getGrpcHost());
         map.put("port", constantProperties.getGrpcPort());
         return new FileContent(AUTO_TUNE_AGENT_YAML_FILE, this.generateShellScript(
-            AUTO_TUNE_AGENT_YAML_TEMPLATE, map));
+                AUTO_TUNE_AGENT_YAML_TEMPLATE, map));
     }
 
     @Override
@@ -191,8 +199,13 @@ public class StorageInfoServiceImpl implements StorageInfoService {
     }
 
     @Override
-    public S3Object downloadFileFromS3(String s3Key) {
-        return null;
+    public void saveDumpFile(GrpcCommon grpcCommon, Path filePath, String fileName, String sessionId) throws IOException {
+        Preconditions.checkNotNull(filePath);
+        Preconditions.checkNotNull(fileName);
+        //存储媒介
+        String s3Key = this.uploadFileToS3(Files.newInputStream(filePath.toFile().toPath()), fileName);
+        Map<String, String> resultObj = ImmutableMap.of("filePath", filePath.toFile().getPath(), "fileName", fileName, "s3Key", s3Key);
+        commandInfoRepository.uResult(sessionId, resultObj, CommandStatus.FINISH);
     }
 
     private String generateShellScript(String templateDir, Map<String, Object> dataModel) {

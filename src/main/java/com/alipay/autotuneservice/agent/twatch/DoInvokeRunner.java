@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,9 +17,9 @@
 package com.alipay.autotuneservice.agent.twatch;
 
 import com.alipay.autotuneservice.agent.twatch.model.AgentActionRequest;
+import com.alipay.autotuneservice.base.cache.LocalCache;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
 import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.util.AgentConstant;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -44,13 +44,13 @@ public class DoInvokeRunner {
 
     private ObservableEmitter<Context> jemitter;
     @Autowired
-    private RedisClient                redisClient;
+    private LocalCache<Object, Object> localCache;
     @Autowired
     private AsyncTaskExecutor          subExecutor;
     @Autowired
-    private AsyncTaskExecutor webTaskExecutor;
+    private AsyncTaskExecutor          webTaskExecutor;
     @Autowired
-    private TwatchInfoService twatchInfoRepository;
+    private TwatchInfoService          twatchInfoRepository;
 
     @PostConstruct
     public void init() {
@@ -76,7 +76,7 @@ public class DoInvokeRunner {
                     AgentActionRequest agentActionRequest = context.getAgentActionRequest();
                     //写缓存
                     log.info("doSave sessionId=" + agentActionRequest.getSessionId());
-                    redisClient.rpush(AgentConstant.generateQueueKey(agentActionRequest.getAgentName()), agentActionRequest);
+                    localCache.put(AgentConstant.generateQueueKey(agentActionRequest.getAgentName()), agentActionRequest);
                     context.countDownLatch.countDown();
                 });
     }

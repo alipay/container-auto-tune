@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,11 +16,11 @@
  */
 package com.alipay.autotuneservice.configuration;
 
+import com.alipay.autotuneservice.base.cache.LocalCache;
 import com.alipay.autotuneservice.configuration.ResourcePermission.ResourceType;
 import com.alipay.autotuneservice.dao.AppInfoRepository;
 import com.alipay.autotuneservice.dao.TunePipelineRepository;
 import com.alipay.autotuneservice.dao.TunePlanRepository;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.common.AppInfo;
 import com.alipay.autotuneservice.model.exception.ResourceAccessForbiddenException;
 import com.alipay.autotuneservice.model.pipeline.TunePipeline;
@@ -43,7 +43,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,18 +56,18 @@ import java.util.stream.Stream;
 public class AspectConfiguration {
 
     @Autowired
-    private RedisClient                                     redisClient;
+    private TunePipelineRepository     tunePipelineRepository;
     @Autowired
-    private TunePipelineRepository                          tunePipelineRepository;
+    private AppInfoRepository          appInfoRepository;
     @Autowired
-    private AppInfoRepository                               appInfoRepository;
+    private TunePlanRepository         tunePlanRepository;
     @Autowired
-    private TunePlanRepository                              tunePlanRepository;
+    private LocalCache<Object, Object> localCache;
 
-    private static final String                             RESOURCE_PERMISSION_PREFIX = "TMASTER_RESOURCE_PERMISSION_PREFIX";
-    private static final String                             METHOD_CACHED_PREFIX       = "TMASTER_METHOD_CACHED_PREFIX";
+    private static final String RESOURCE_PERMISSION_PREFIX = "TMASTER_RESOURCE_PERMISSION_PREFIX";
+    private static final String METHOD_CACHED_PREFIX       = "TMASTER_METHOD_CACHED_PREFIX";
 
-    private final LocalVariableTableParameterNameDiscoverer parameterNameDiscoverer    = new LocalVariableTableParameterNameDiscoverer();
+    private final LocalVariableTableParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 
     @Around("@annotation(ResourcePermission)")
     public Object permissionCheck(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -82,26 +81,6 @@ public class AspectConfiguration {
             throw new ResourceAccessForbiddenException();
         }
         return joinPoint.proceed();
-    }
-
-    @Around("@annotation(Cached)")
-    public Object cached(ProceedingJoinPoint joinPoint) throws Throwable {
-        try {
-            Cached cached = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(
-                Cached.class);
-            String methodCachedKey = this.buildMethodCachedKey(joinPoint);
-            Object cachedResult = redisClient.get(methodCachedKey);
-            log.info("cached:{}", methodCachedKey);
-            if (cachedResult != null) {
-                return cachedResult;
-            }
-            Object result = joinPoint.proceed();
-            redisClient.setEx(methodCachedKey, result, cached.time(), cached.unit());
-            return result;
-        } catch (Exception e) {
-            log.error("cached, e", e);
-            return joinPoint.proceed();
-        }
     }
 
     private boolean permissionCheckIsValid(ProceedingJoinPoint joinPoint) throws Exception {
@@ -145,7 +124,7 @@ public class AspectConfiguration {
     private Map<String, Object> getParameters(ProceedingJoinPoint joinPoint) throws Exception {
         Object[] parameters = joinPoint.getArgs();
         String[] parameterNames = parameterNameDiscoverer
-            .getParameterNames(((MethodSignature) joinPoint.getSignature()).getMethod());
+                .getParameterNames(((MethodSignature) joinPoint.getSignature()).getMethod());
         if (parameterNames == null) {
             return new HashMap<>();
         }
@@ -159,7 +138,7 @@ public class AspectConfiguration {
                         field.setAccessible(true);
                     }
                     parameterMap.put(parameterNames[i] + "." + field.getName(),
-                        field.get(parameter));
+                            field.get(parameter));
                 }
             } else {
                 parameterMap.put(parameterNames[i], parameters[i]);
@@ -172,11 +151,11 @@ public class AspectConfiguration {
     private <T> T resourceCached(Callable<T> function, Integer key) {
         try {
             T result = function.call();
-            Object o = redisClient.get(RESOURCE_PERMISSION_PREFIX + key);
+            Object o = localCache.get(RESOURCE_PERMISSION_PREFIX + key);
             if (o != null) {
                 return (T) o;
             }
-            redisClient.setEx(RESOURCE_PERMISSION_PREFIX + key, result, 10, TimeUnit.MINUTES);
+            localCache.put(RESOURCE_PERMISSION_PREFIX + key, result, 10 * 60);
             return result;
         } catch (Exception e) {
             log.error("resourceCached error", e);

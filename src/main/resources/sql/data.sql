@@ -2,8 +2,7 @@ create schema if not exists `tmaestro-lite`;
 
 create table if not exists `tmaestro-lite`.app_info
 (
-    ID              int auto_increment comment '唯一ID;唯一ID'
-        primary key,
+    ID              int auto_increment comment '唯一ID;唯一ID' primary key,
     USER_ID         int           null comment '关联的用户id',
     ACCESS_TOKEN    varchar(255)  not null comment '关联的token',
     NODE_IDS        varchar(255)  null comment '关联的集群组',
@@ -13,13 +12,14 @@ create table if not exists `tmaestro-lite`.app_info
     CREATED_TIME    datetime      not null comment '创建时间;创建时间',
     UPDATED_TIME    datetime      null comment '更新时间;更新时间',
     STATUS          varchar(255)  not null comment '状态;状态',
-    APP_DEFAULT_JVM varchar(1024) null comment '集群jvm生效配置;集群jvm生效配置',
+    APP_DEFAULT_JVM varchar(1000) null comment '集群jvm生效配置;集群jvm生效配置',
     CLUSTER_NAME    varchar(255)  null comment 'k8s集群名',
     app_tag         varchar(255)  null comment '标注应用类型',
     namespace       varchar(100)  null,
     CLUSTER_ID      varchar(255)  null comment '集群ID',
+    SERVER_TYPE     varchar(255)  null comment '资源类型',
     constraint app_info_APP_NAME_ACCESS_TOKEN_uindex
-        unique (APP_NAME, ACCESS_TOKEN, namespace)
+    unique (APP_NAME, ACCESS_TOKEN, namespace)
 );
 --     comment '应用管理表';
 
@@ -86,9 +86,9 @@ create table if not exists `tmaestro-lite`.expert_knowledge
         primary key,
     GARBAGE_COLLECTOR varchar(128)  null comment '垃圾回收器种类',
     JDK_VERSION       varchar(128)  null comment 'jdk版本',
-    `DESC`            varchar(2048) null comment '问题描述',
+    `DESC`            varchar(1000) null comment '问题描述',
     PROBLEM_TYPE_SET  varchar(512)  null comment '问题类型集合',
-    EXPERT_JVM_PLANS  varchar(2048) null comment '调整方案',
+    EXPERT_JVM_PLANS  varchar(1000) null comment '调整方案',
     CREATED_TIME      datetime      null comment '创建时间',
     CREATED_BY        varchar(128)  null comment '创建人',
     UPDATED_TIME      datetime      null comment '更新时间'
@@ -104,10 +104,10 @@ create table if not exists `tmaestro-lite`.health_check_info
     CREATED_BY     varchar(255)  null comment '创建人',
     CREATED_TIME   datetime      null comment '创建时间',
     STATUS         varchar(255)  not null comment '状态:检查成功、检查失败',
-    PROBLEAM_POINT varchar(4000) not null comment '检查问题点',
+    PROBLEAM_POINT varchar(1000) not null comment '检查问题点',
     GRADE          varchar(255)  not null comment '分数',
     ENCHANGE_POINT varchar(255)  null comment '改变的点',
-    ALGO_PROBLEAM  varchar(4000) null
+    ALGO_PROBLEAM  varchar(1000) null
 );
 --     comment '健康检查'
 
@@ -131,7 +131,7 @@ create table if not exists `tmaestro-lite`.jvm_market_info
     ID           int auto_increment comment '主键ID'
         primary key,
     CREATED_TIME datetime      not null comment '创建时间',
-    JVM_CONFIG   varchar(2000) not null comment 'jvm配置',
+    JVM_CONFIG   varchar(1000) not null comment 'jvm配置',
     RECOMMEND    varchar(255)  null comment '简介',
     CREATED_BY   varchar(255)  null comment '创建人'
 );
@@ -170,9 +170,9 @@ create table if not exists `tmaestro-lite`.k8s_access_token_info
         primary key,
     CREATE_TIME       datetime      not null comment '创建时间',
     UPDATED_TIME      datetime      not null comment '修改时间',
-    ACCESS_TOKEN      varchar(9000) not null comment 'access;token',
+    ACCESS_TOKEN      varchar(1000) not null comment 'access;token',
     ACCESS_KEY_ID     varchar(128)  not null comment 'access;key id',
-    SECRET_ACCESS_KEY varchar(3000) not null comment 'Secret;Access Key',
+    SECRET_ACCESS_KEY varchar(1000) not null comment 'Secret;Access Key',
     CER               varchar(5120) not null comment '证书',
     CLUSTER_NAME      varchar(128)  not null comment '集群名称',
     REGION            varchar(1024) not null comment 'aws;region',
@@ -189,7 +189,7 @@ create table if not exists `tmaestro-lite`.meter_meta_info
     MODIFIED_TIME datetime      null,
     METER_NAME    varchar(100)  not null comment '注册的监控名称',
     METER_DOMAIN  varchar(200)  null comment '注册监控的domain',
-    METER_METRICS varchar(2048) null comment '监控指标信息',
+    METER_METRICS varchar(1000) null comment '监控指标信息',
     METER_ENABLE  varchar(20)   null,
     APP_ID        int           not null
 );
@@ -203,7 +203,7 @@ create table if not exists `tmaestro-lite`.node_info
     IP           varchar(255)  not null comment 'IP地址',
     STATUS       varchar(255)  null comment '状态;状态;包含：存活、失效',
     CREATED_TIME datetime      not null comment '创建时间',
-    NODE_TAGS    varchar(8192) null comment '标签',
+    NODE_TAGS    varchar(1000) null comment '标签',
     ACCESS_TOKEN varchar(255)  not null comment '关联的token',
     UPDATED_TIME datetime      null,
     constraint node_info_NODE_NAME_ACCESS_TOKEN_uindex
@@ -232,11 +232,11 @@ create table if not exists `tmaestro-lite`.pod_info
     IP              varchar(255)  null comment 'IP地址',
     STATUS          varchar(255)  null comment '状态;状态;包含：存活、失效',
     CREATED_TIME    datetime      not null comment '创建时间',
-    POD_JVM         varchar(4000) null comment '生效jvm配置',
-    ENV             varchar(4000) null comment '环境变量',
+    POD_JVM         varchar(1000) null comment '生效jvm配置',
+    ENV             varchar(1000) null comment '环境变量',
     POD_DEPLOY_TYPE varchar(255)  null comment 'pod部署类型',
     POD_TEMPLATE    varchar(255)  null comment 'pod基础模板信息;pod部署类型：4C8G',
-    POD_TAGS        varchar(4000) null comment '标签',
+    POD_TAGS        varchar(1000) null comment '标签',
     ACCESS_TOKEN    varchar(255)  not null comment '关联的token',
     CLUSTER_NAME    varchar(128)  null comment 'k8s集群名',
     K8S_NAMESPACE   varchar(512)  null comment 'k8s命名空间',
@@ -251,6 +251,7 @@ create table if not exists `tmaestro-lite`.pod_info
     D_HOSTNAME      varchar(200)  null,
     NODE_IP         varchar(100)  null,
     NODE_NAME       varchar(255)  null,
+    SERVER_TYPE     varchar(255)  null comment '资源类型',
     constraint pod_info_POD_NAME_ACCESS_TOKEN_uindex
         unique (POD_NAME, ACCESS_TOKEN)
 );
@@ -272,7 +273,7 @@ create table if not exists `tmaestro-lite`.risk_check_control
     STATUS        varchar(10)   null comment '任务执行状态(EXECETING,END)',
     CHECK_RESULT  varchar(10)   not null comment '风险检查结果',
     TRACE_ID      varchar(100)  null comment '任务唯一标识',
-    RISK_MSG      varchar(5000) null comment '风险详情',
+    RISK_MSG      varchar(1000) null comment '风险详情',
     CREATE_TIME   datetime      null comment '创建时间',
     riskBeginTime datetime      null,
     riskEndTime   datetime      null
@@ -287,11 +288,11 @@ create table if not exists `tmaestro-lite`.risk_check_task
         primary key,
     JOB_ID        int           null comment '对应risk_check_controller的主键',
     EXECUTE_TIME  datetime      not null comment '任务执行时间',
-    EXECUTE_PARAM varchar(5000) not null comment '任务ID列表',
+    EXECUTE_PARAM varchar(1000) not null comment '任务ID列表',
     TASK_STATUS   varchar(10)   null comment '任务执行状态(READY,INTERUPTE,END)',
     TASK_RESULT   varchar(10)   null comment '任务检查结果',
     TASK_TRACE_ID varchar(100)  null comment '任务唯一标识',
-    TASK_RISK_MSG varchar(5000) null comment '风险详情',
+    TASK_RISK_MSG varchar(1000) null comment '风险详情',
     CREATE_TIME   datetime      null comment '创建时间'
 );
 
@@ -369,10 +370,10 @@ create table if not exists `tmaestro-lite`.tune_param_info
     DECISION_ID        varchar(128)  null comment 'decision Id',
     UPDATE_STATUS      varchar(128)  null comment '更新参数的状态',
     ACCESS_TOKEN       varchar(256)  null comment 'acess token',
-    UPDATE_PARAMS      varchar(4096) null comment '更新的JVM参数，以JSON形式存储',
+    UPDATE_PARAMS      varchar(1000) null comment '更新的JVM参数，以JSON形式存储',
     OPERATOR           varchar(128)  null comment '操作员',
     CHANGED_TUNE_GROUP varchar(255)  null comment '修改的调参分组信息，json形式',
-    DEFAULT_PARAM      varchar(4096) null comment 'app默认启动参数',
+    DEFAULT_PARAM      varchar(1000) null comment 'app默认启动参数',
     VERSION            int           null,
     constraint tune_param_info_ID_uindex
         unique (ID)
@@ -407,7 +408,7 @@ create table if not exists `tmaestro-lite`.tune_pipeline_phase
     PIPELINE_BRANCH_ID int            null comment 'tune_pipeline主键id',
     UPDATED_TIME       datetime       not null comment '更新时间',
     CREATED_TIME       datetime       not null comment '创建时间',
-    CONTEXT            varchar(16000) null comment '上下文'
+    CONTEXT            varchar(1000) null comment '上下文'
 );
 --     comment '调参pipeline阶段';
 
@@ -424,8 +425,8 @@ create table if not exists `tmaestro-lite`.tune_plan
     PLAN_PARAM      varchar(255)  null comment '任务参数',
     CREATED_TIME    datetime      not null comment '创建时间',
     UPDATE_TIME     datetime      null comment '修改时间',
-    TUNE_EFFECT     varchar(2000) null,
-    PREDICT_EFFECT  varchar(2000) null comment '预期评估',
+    TUNE_EFFECT     varchar(1000) null,
+    PREDICT_EFFECT  varchar(1000) null comment '预期评估',
     TUNE_STATUS     varchar(255)  null
 );
 --     comment '调参计划';
@@ -446,8 +447,8 @@ create table if not exists `tmaestro-lite`.tune_pool_info
     UPDATED_BY             varchar(255)  null comment '更新人',
     EXPERIMENT_POOL_STATUS varchar(255)  not null comment '实验池状态',
     BATCH_POOL_STATUS      varchar(255)  not null comment '调参池状态',
-    EXPERIMENT_POOL_CONFIG varchar(2000) not null comment '实验池配置',
-    BATCH_POOL_CONFIG      varchar(2000) not null comment '调参池配置'
+    EXPERIMENT_POOL_CONFIG varchar(1000) not null comment '实验池配置',
+    BATCH_POOL_CONFIG      varchar(1000) not null comment '调参池配置'
 );
 --     comment '调参池管理表';
 
@@ -511,7 +512,7 @@ create table if not exists `tmaestro-lite`.tuning_param_task_info
     app                varchar(255)  null,
     optimization_type  varchar(255)  null,
     problem_type       varchar(510)  null,
-    param_distribution varchar(2000) null,
+    param_distribution varchar(1000) null,
     problem_id         varchar(255)  null,
     dt                 varchar(255)  null,
     write_time         datetime      null
@@ -676,3 +677,86 @@ create table if not exists `tmaestro-lite`.meter_metric_info
 -- comment '容器java进程jvm监控信息';
 create index if not exists meter_metric_info_appId_metricName_dt_index
     on `tmaestro-lite`.meter_metric_info (APP_ID, METRIC_NAME, DT);
+
+-----------------------------------jvm_monitor_metric ----------------------------------
+create table if not exists `tmaestro-lite`.jvm_monitor_metric (
+                                    id    int auto_increment comment '唯一ID;唯一ID' primary key,
+                                    cpuCount bigint,
+                                    systemCpuLoad double,
+                                    processCpuLoad double,
+                                    cluster VARCHAR(255),
+                                    period bigint,
+                                    pod VARCHAR(255),
+                                    dt bigint null comment '分区',
+                                    appId INTEGER,
+                                    app VARCHAR(255),
+                                    eden_used double,
+                                    eden_max double,
+                                    eden_capacity double,
+                                    eden_util double,
+                                    old_used double,
+                                    old_max double,
+                                    old_capacity double,
+                                    old_util double,
+                                    meta_util double,
+                                    meta_used double,
+                                    meta_max double,
+                                    meta_capacity double,
+                                    jvm_mem_util double,
+                                    jvm_mem_used double,
+                                    jvm_mem_max double,
+                                    jvm_mem_capacity double,
+                                    system_mem_util double,
+                                    system_mem_used double,
+                                    system_mem_max double,
+                                    system_mem_capacity double,
+                                    ygc_count bigint,
+                                    ygc_time double,
+                                    fgc_count bigint,
+                                    fgc_time double,
+                                    s0c double,
+                                    s1c double,
+                                    s0u double,
+                                    s1u double,
+                                    ec double,
+                                    eu double,
+                                    oc double,
+                                    ou double,
+                                    mc double,
+                                    mu double,
+                                    ccsc double,
+                                    ccsu double,
+                                    ygc INTEGER,
+                                    ygct double,
+                                    fgc INTEGER,
+                                    fgct double,
+                                    gct double,
+                                    ngcmn double,
+                                    ngcmx double,
+                                    ngc double,
+                                    ogcmn double,
+                                    ogcmx double,
+                                    ogc double,
+                                    mcmn double,
+                                    mcmx double,
+                                    ccsmn double,
+                                    ccsmx double,
+                                    codeCacheUsed bigint,
+                                    codeCacheMax bigint,
+                                    codeCacheUtil double
+);
+-----------------------------------COMMAND_INFO ----------------------------------
+create table if not exists  `tmaestro-lite`.command_info (
+    ID int auto_increment comment '主键ID' primary key,
+    SESSIONID varchar(128) not null COMMENT '会话ID',
+    RUNLE_ACTION varchar(256) not null COMMENT '执行类型',
+    RESULT_TYPE varchar(128) not null COMMENT '结果类型',
+    RESULT varchar(1000) null COMMENT '结果',
+    ACCESS_TOKEN varchar(255) null COMMENT '关联的token',
+    APP_NAME varchar(32) null  COMMENT '应用名',
+    UNION_CODE varchar(32) not null COMMENT '每个VM启动后,自动生成唯一标识,用来进行唯一关联',
+    CONTEXT varchar(1000) null COMMENT '执行上下文',
+    STATUS varchar(128) not null COMMENT '执行状态',
+    CREATED_TIME datetime not null COMMENT '创建时间',
+    UPDATED_TIME datetime null COMMENT '更新时间'
+);

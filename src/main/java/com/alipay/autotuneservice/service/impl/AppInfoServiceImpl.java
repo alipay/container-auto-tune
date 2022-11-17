@@ -17,19 +17,10 @@ import com.alipay.autotuneservice.dao.jooq.tables.records.ConfigInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.K8sAccessTokenInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.grpc.GrpcCommon;
-import com.alipay.autotuneservice.model.common.AppEnum;
-import com.alipay.autotuneservice.model.common.AppInfo;
-import com.alipay.autotuneservice.model.common.AppInstallInfo;
-import com.alipay.autotuneservice.model.common.AppModel;
-import com.alipay.autotuneservice.model.common.AppStatus;
-import com.alipay.autotuneservice.model.common.AppTag;
-import com.alipay.autotuneservice.model.common.PodAttach;
-import com.alipay.autotuneservice.model.common.PodAttachStatus;
+import com.alipay.autotuneservice.model.common.*;
+import com.alipay.autotuneservice.model.pipeline.Status;
 import com.alipay.autotuneservice.model.tune.TunePlan;
-import com.alipay.autotuneservice.service.AgentInvokeService;
-import com.alipay.autotuneservice.service.AppInfoService;
-import com.alipay.autotuneservice.service.ConfigInfoService;
-import com.alipay.autotuneservice.service.PodAttachService;
+import com.alipay.autotuneservice.service.*;
 import com.alipay.autotuneservice.util.ConvertUtils;
 import com.alipay.autotuneservice.util.DateUtils;
 import com.alipay.autotuneservice.util.ObjectUtil;
@@ -44,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -71,6 +63,9 @@ public class AppInfoServiceImpl implements AppInfoService {
 
     @Autowired
     private PodInfo podInfo;
+
+    @Autowired
+    private PodService podService;
 
     @Autowired
     private TunePlanRepository tunePlanRepository;
@@ -506,6 +501,48 @@ public class AppInfoServiceImpl implements AppInfoService {
             }
         } catch (Exception e) {
             log.error("updateAppTime occurs an error appId:{}", appId);
+        }
+    }
+
+    @Override
+    public Integer checkAppName(String appName, String namespace, String accessToken, ServerType serverType) {
+        AppInfoRecord appInfoRecord = appInfoRepository.findAppModel(accessToken, namespace, appName);
+        if (appInfoRecord == null || appInfoRecord.getId() == null) {
+            //进行insert
+            AppInfoRecord record = new AppInfoRecord();
+            record.setAccessToken(accessToken);
+            record.setAppName(appName);
+            record.setNamespace(namespace);
+            record.setStatus(AppStatus.ALIVE.name());
+            record.setCreatedTime(DateUtils.now());
+            record.setServerType(serverType.name());
+            return appInfoRepository.insetAppInfo(record);
+        }
+        return appInfoRecord.getId();
+    }
+
+    @Override
+    public void checkVm(GrpcCommon grpcCommon) {
+        PodInfoRecord podInfoRecord = podInfo.getByPodAndAT(grpcCommon.getHostname(), grpcCommon.getAccessToken());
+        if (podInfoRecord != null) {
+            if (!StringUtils.equals(podInfoRecord.getPodStatus(), PodStatus.ALIVE.name())) {
+                podService.updatePodStatue(podInfoRecord.getId(), PodStatus.ALIVE);
+            }
+            return;
+        }
+        if (ServerType.VM == grpcCommon.getServerType()) {
+            PodInfoRecord record = new PodInfoRecord();
+            record.setAppId(grpcCommon.getAppId());
+            record.setPodName(grpcCommon.getHostname());
+            record.setIp(grpcCommon.getPodIp());
+            record.setStatus(Status.RUNNING.name());
+            record.setAccessToken(grpcCommon.getAccessToken());
+            record.setK8sNamespace(grpcCommon.getNamespace());
+            record.setCreatedTime(LocalDateTime.now());
+            record.setPodStatus(PodStatus.ALIVE.name());
+            record.setServerType(grpcCommon.getServerType().name());
+            record.setAgentInstall(1);
+            podInfo.insertPodInfo(record);
         }
     }
 }

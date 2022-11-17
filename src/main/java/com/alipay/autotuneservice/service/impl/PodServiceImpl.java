@@ -13,13 +13,9 @@ import com.alipay.autotuneservice.dao.K8sAccessTokenInfo;
 import com.alipay.autotuneservice.dao.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.JvmMarketInfoRecord;
-import com.alipay.autotuneservice.dao.jooq.tables.records.K8sAccessTokenInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
-import com.alipay.autotuneservice.dynamodb.repository.ContainerProcessInfoService;
 import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
-import com.alipay.autotuneservice.infrastructure.saas.cloudsvc.k8s.K8sClient;
-import com.alipay.autotuneservice.infrastructure.saas.cloudsvc.k8s.K8sClient.Builder;
 import com.alipay.autotuneservice.model.common.PodStatus;
 import com.alipay.autotuneservice.model.tunepool.PoolType;
 import com.alipay.autotuneservice.service.AgentInvokeService;
@@ -30,7 +26,6 @@ import com.alipay.autotuneservice.util.ConvertUtils;
 import com.alipay.autotuneservice.util.DateUtils;
 import com.alipay.autotuneservice.util.ObjectUtil;
 import com.alipay.autotuneservice.util.UserUtil;
-import com.google.common.cache.Cache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -58,23 +53,19 @@ public class PodServiceImpl implements PodService {
     private static final String DATE_CMD    = "date -R";
 
     @Autowired
-    private AppInfoRepository              appInfoRepository;
+    private AppInfoRepository  appInfoRepository;
     @Autowired
-    private K8sAccessTokenInfo             k8sAccessTokenInfo;
+    private K8sAccessTokenInfo k8sAccessTokenInfo;
     @Autowired
-    private CounterService                 counterService;
+    private CounterService     counterService;
     @Autowired
-    private AgentInvokeService             agentInvokeService;
+    private AgentInvokeService agentInvokeService;
     @Autowired
-    private PodInfo                        podInfo;
+    private PodInfo            podInfo;
     @Autowired
-    private JvmMarketInfo               jvmMarketInfo;
+    private JvmMarketInfo      jvmMarketInfo;
     @Autowired
-    private ContainerProcessInfoService cProcessInfoRepository;
-    @Autowired
-    private TwatchInfoService           twatchInfoRepository;
-    @Autowired
-    private Cache<String, Object>          k8sCache;
+    private TwatchInfoService  twatchInfoRepository;
 
     @Override
     public Integer getAppPodNum(Integer appId) {
@@ -98,12 +89,12 @@ public class PodServiceImpl implements PodService {
             AtomicInteger count = new AtomicInteger();
             podInfoRecordList.stream().filter(item -> StringUtils.isNotEmpty(item.getPodJvm()) && item.getPodJvm().contains(JVMMARKETID))
                     .map(PodInfoRecord::getPodJvm).forEach(item2 -> {
-                String tempJvmMarket = item2.substring(item2.indexOf(JVMMARKETID));
-                tempJvmMarket.substring(12, tempJvmMarket.indexOf(" "));
-                if (StringUtils.equals(tempJvmMarket, jvmMarketId)) {
-                    count.set(count.get() + 1);
-                }
-            });
+                        String tempJvmMarket = item2.substring(item2.indexOf(JVMMARKETID));
+                        tempJvmMarket.substring(12, tempJvmMarket.indexOf(" "));
+                        if (StringUtils.equals(tempJvmMarket, jvmMarketId)) {
+                            count.set(count.get() + 1);
+                        }
+                    });
             return count.get();
         } catch (Exception e) {
             return -1;
@@ -113,25 +104,7 @@ public class PodServiceImpl implements PodService {
 
     @Override
     public Integer getAppRunningPodNum(Integer appId) {
-        K8sClient k8sClient = null;
-        try {
-            AppInfoRecord appInfoRecord = appInfoRepository.getById(appId);
-            k8sClient = createEksClient(appId);
-            int count = (int) k8sClient.listPods().getItems().stream().filter(
-                    item -> StringUtils.equals(convertAppName(item.getMetadata().getName()), appInfoRecord.getAppName())
-                            &&
-                            StringUtils.equals(item.getStatus().getPhase(), "Running"))
-                    .count();
-            log.info("PodServiceImpl#getAppRunningPodNum runningPodNum is: {}", count);
-            return count;
-        } catch (Exception e) {
-            log.warn("PodServiceImpl#getAppRunningPodNum 执行过程抛出异常 e:{}" + e.getMessage());
-            return -1;
-        } finally {
-            if (k8sClient != null) {
-                k8sClient.close();
-            }
-        }
+        return -1;
     }
 
     @Override
@@ -211,7 +184,7 @@ public class PodServiceImpl implements PodService {
                     break;
                 case BATCH:
                     podInfoRecords = podInfoRecords.stream().filter(
-                            podRecord -> !StringUtils.contains(podRecord.getPodJvm(), UserUtil.getTuneJvmConfig(jvmMarketId)))
+                                    podRecord -> !StringUtils.contains(podRecord.getPodJvm(), UserUtil.getTuneJvmConfig(jvmMarketId)))
                             .collect(Collectors.toList());
                     targetPods.addAll(podInfoRecords);
                     break;
@@ -223,10 +196,6 @@ public class PodServiceImpl implements PodService {
                         String.format("delete num is error,please check-->targetNum=[%s],num=[%s]", targetPods.size(), num));
             }
             targetPods = targetPods.subList(0, num);
-            targetPods.forEach(podInfoRecord -> {
-                //删除
-                deletePod(appId, podInfoRecord, doChangeCallback);
-            });
             //函数回调
             deletePods.accept(targetPods.stream().map(PodInfoRecord::getPodName).collect(Collectors.toList()));
             return callBackFunc.apply(targetPods);
@@ -331,7 +300,7 @@ public class PodServiceImpl implements PodService {
     public List<PodProcessInfo> getPodJavaProcess(String podName) {
         String res = agentInvokeService.getProcessByPod(InvokeType.SYNC, podName);
         log.info("getPodProcess res={} for podName={}", res, podName);
-        return ConvertUtils.convert2PodProcessInfoListV2(res);
+        return Lists.newArrayList();
     }
 
     /**
@@ -348,51 +317,6 @@ public class PodServiceImpl implements PodService {
         }
     }
 
-    private K8sClient createEksClient(Integer appId) {
-        if (appId == null) {
-            log.info("PodServiceImpl#createEksClient appId is null");
-            return null;
-        }
-        AppInfoRecord appInfoRecord = appInfoRepository.getById(appId);
-        if (appInfoRecord == null) {
-            log.info("PodServiceImpl#createEksClient 获取到appInfoRecord is null");
-            return null;
-        }
-        if (StringUtils.isEmpty(appInfoRecord.getAccessToken()) || StringUtils.isEmpty(appInfoRecord.getClusterName()) || StringUtils
-                .isEmpty(appInfoRecord.getAppName())) {
-            log.info("PodServiceImpl#createEksClient 从appInfoRecord未获取到相应的accessToken、clusterName或者是appName appInfoRecord: {}",
-                    appInfoRecord);
-            return null;
-        }
-        try {
-            K8sAccessTokenInfoRecord k8AccessTokenRecord = k8sAccessTokenInfo.selectByTokenAndCusterName(appInfoRecord.getAccessToken(),
-                    appInfoRecord.getClusterName());
-            try {
-                //判断是阿里云还是本地集群
-                if (k8AccessTokenRecord != null && !StringUtils.equals(k8AccessTokenRecord.getAccessToken(), "IOeiob2AI9n_test")) {
-                    log.info("AccessKeyId is: {}, SecretAccessKey isEmpty: {}, Cer isEmpty: {}, EndPoint is: {}, ClusterName is: {}",
-                            k8AccessTokenRecord.getAccessKeyId(), StringUtils.isEmpty(k8AccessTokenRecord.getSecretAccessKey()),
-                            StringUtils.isEmpty(k8AccessTokenRecord.getCer()),
-                            k8AccessTokenRecord.getEndpoint(), k8AccessTokenRecord.getClusterName());
-                    return K8sClient.Builder.builder()
-                            .withAccessKey(k8AccessTokenRecord.getAccessKeyId())
-                            .withSecretKey(k8AccessTokenRecord.getSecretAccessKey())
-                            .withCaStr(k8AccessTokenRecord.getCer())
-                            .withEndpoint(k8AccessTokenRecord.getEndpoint())
-                            .withClusterName(k8AccessTokenRecord.getClusterName())
-                            .build();
-                }
-                return Builder.builder().withKubeConfigPath("/.kube/config").build();
-            } catch (Exception e) {
-                log.error("createEksClient is error", e);
-                return null;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("createEksClient is error", e);
-        }
-
-    }
-
     private List<PodInfoRecord> filterRecord(List<PodInfoRecord> records, Function<PodInfoRecord, Boolean> func) {
         return records.stream().filter(func::apply).collect(Collectors.toList());
     }
@@ -403,8 +327,8 @@ public class PodServiceImpl implements PodService {
         //随机取一个jvm参数的pod，进行删除
         List<PodInfoRecord> podInfoRecords = podInfo.getByAppId(appId);
         podInfoRecords = podInfoRecords.stream().filter(r ->
-                StringUtils.contains(r.getPodJvm(), UserUtil.getTuneJvmConfig(jvmMarketId))
-                        || StringUtils.contains(r.getPodJvm(), UserUtil.getTuneJvmConfig(null)))
+                        StringUtils.contains(r.getPodJvm(), UserUtil.getTuneJvmConfig(jvmMarketId))
+                                || StringUtils.contains(r.getPodJvm(), UserUtil.getTuneJvmConfig(null)))
                 .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(podInfoRecords)) {
             return Boolean.TRUE;
@@ -412,28 +336,6 @@ public class PodServiceImpl implements PodService {
         PodInfoRecord record = podInfoRecords.get(0);
         counterService.reset(appId, 0, "");
         //删除
-        deletePod(appId, record, doChangeCallback);
         return callBackFunc.apply(ImmutableList.of(record));
-    }
-
-    private void deletePod(Integer appId, PodInfoRecord record, BiConsumer<PodInfoRecord, String> doChangeCallback) {
-        String errorMsg = null;
-        K8sClient k8sClient = null;
-        try {
-            k8sClient = createEksClient(appId);
-            if (k8sClient == null) {
-                log.warn("PodServiceImpl#changePod k8sClient is null");
-                return;
-            }
-            //执行删除
-            k8sClient.deletePod(record.getK8sNamespace(), record.getPodName());
-        } catch (Exception ex) {
-            errorMsg = ex.getMessage();
-        } finally {
-            doChangeCallback.accept(record, errorMsg);
-            if (k8sClient != null) {
-                k8sClient.close();
-            }
-        }
     }
 }

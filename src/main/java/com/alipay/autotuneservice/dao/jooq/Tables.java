@@ -7,6 +7,7 @@ package com.alipay.autotuneservice.dao.jooq;
 import com.alipay.autotuneservice.dao.jooq.tables.AppInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.AppLog;
 import com.alipay.autotuneservice.dao.jooq.tables.BaseLine;
+import com.alipay.autotuneservice.dao.jooq.tables.CommandInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ConfigInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ContainerProcessInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ContainerStatistics;
@@ -14,6 +15,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.ExpertKnowledge;
 import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.HelpInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMarketInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetric;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmOptsConfig;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
@@ -65,6 +67,11 @@ public class Tables {
     public static final BaseLine BASE_LINE = BaseLine.BASE_LINE;
 
     /**
+     * The table <code>TMAESTRO-LITE.COMMAND_INFO</code>.
+     */
+    public static final CommandInfo COMMAND_INFO = CommandInfo.COMMAND_INFO;
+
+    /**
      * The table <code>TMAESTRO-LITE.CONFIG_INFO</code>.
      */
     public static final ConfigInfo CONFIG_INFO = ConfigInfo.CONFIG_INFO;
@@ -98,6 +105,11 @@ public class Tables {
      * The table <code>TMAESTRO-LITE.JVM_MARKET_INFO</code>.
      */
     public static final JvmMarketInfo JVM_MARKET_INFO = JvmMarketInfo.JVM_MARKET_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.JVM_MONITOR_METRIC</code>.
+     */
+    public static final JvmMonitorMetric JVM_MONITOR_METRIC = JvmMonitorMetric.JVM_MONITOR_METRIC;
 
     /**
      * The table <code>TMAESTRO-LITE.JVM_MONITOR_METRIC_DATA</code>.

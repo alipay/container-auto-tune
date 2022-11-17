@@ -30,13 +30,10 @@ import com.alipay.autotuneservice.model.tunepool.MetaData;
 import com.alipay.autotuneservice.model.tunepool.TuneEntity;
 import com.alipay.autotuneservice.service.ConfigInfoService;
 import com.alipay.autotuneservice.service.TuneParamService;
-import com.alipay.autotuneservice.service.notification.EmailModelService;
-import com.alipay.autotuneservice.service.notification.EmailService;
 import com.alipay.autotuneservice.service.pipeline.TunePipelineService;
 import com.alipay.autotuneservice.tunepool.TuneProcessor;
 import com.alipay.autotuneservice.tunepool.TuneSource;
 import com.alipay.autotuneservice.util.ObjectUtil;
-import com.alipay.autotuneservice.util.SystemUtil;
 import com.alipay.autotuneservice.util.TuneParamUtil;
 import com.alipay.autotuneservice.util.UserUtil;
 import com.google.common.base.Preconditions;
@@ -72,8 +69,6 @@ public class TuneParamServiceImpl implements TuneParamService {
     private TuneParamInfoRepository tuneParamInfoRepository;
     @Autowired
     private TunePipelineService     tunePipelineService;
-    @Autowired
-    private EmailModelService       emailService;
     @Autowired
     private TunePipelineRepository  tunePipelineRepository;
     @Autowired

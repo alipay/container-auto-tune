@@ -5,13 +5,9 @@
 package com.alipay.autotuneservice.util;
 
 
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.AbsLockAction;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.google.common.base.Preconditions;
-import org.redisson.api.RLock;
 
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author huangkaifei
@@ -40,24 +36,5 @@ public final class ObjectUtil {
 
     public static String generateUUID() {
         return UUID.randomUUID().toString().replace("-", "");
-    }
-
-    @Deprecated
-    public static void tryLock(RedisClient redisClient, String key, int waitTime, AbsLockAction lockAction) throws InterruptedException {
-        RLock lock = redisClient.getLock(key);
-        boolean tryLock = lock.tryLock((long) waitTime, TimeUnit.SECONDS);
-        if (tryLock) {
-            try {
-                lockAction.onAcquire(key);
-                lockAction.doInLock(key);
-            } finally {
-                if (lock.isLocked() && lock.isHeldByCurrentThread()) {
-                    lock.unlock();
-                    lockAction.onExit(key);
-                }
-            }
-        } else {
-            lockAction.tryLockFail(key);
-        }
     }
 }

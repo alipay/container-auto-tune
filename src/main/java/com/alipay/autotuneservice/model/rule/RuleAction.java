@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +16,9 @@
  */
 package com.alipay.autotuneservice.model.rule;
 
-import com.alipay.autotuneservice.grpc.handler.ActionParam;
 import com.alipay.autotuneservice.model.report.ReportType;
-
-import java.util.function.BiConsumer;
+import com.alipay.autotuneservice.model.report.ResultType;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author dutianze
@@ -30,40 +29,63 @@ public enum RuleAction {
     /**
      * java garbage collector
      */
-    GC_DUMP(ReportType.GC, "com.auto.tune.core.step.impl.DumpGCLogStep", (r1, r2) -> {
-
-    }),
+    GC_DUMP(ReportType.GC, ResultType.STREAM, "com.auto.tune.core.step.impl.action.DumpGCLogStep"),
 
     /**
      * java thread stack traces
      */
-    THREAD_DUMP(ReportType.THREAD, "com.auto.tune.core.step.impl.DumpThreadStep"),
+    THREAD_DUMP(ReportType.THREAD, ResultType.STREAM, "com.auto.tune.core.step.impl.action.DumpThreadStep"),
 
     /**
      * java shared object memory maps
      */
-    HEAP_DUMP(ReportType.HEAP, "com.auto.tune.core.step.impl.DumpHeapStep"),
+    HEAP_DUMP(ReportType.HEAP, ResultType.STREAM, "com.auto.tune.core.step.impl.action.DumpHeapStep"),
 
     /**
      * 更新agent配置、环境变量
      */
-    UPDATE_CONFIG(ReportType.UNKNOWN, "com.auto.tune.core.step.impl.UpdateConfigStep"),
-    ;
+    ENV_CONFIG_STEP(ReportType.UNKNOWN, ResultType.BOOLEAN, "com.auto.tune.core.step.impl.EnvConfigStep"),
 
-    private final ReportType                         reportType;
-    private final String                             stepClassName;
-    private final BiConsumer<ActionParam, RuleParam> consumer;
+    /**
+     * 线程操作指令
+     */
+    THREAD_OPERATION(ReportType.THREAD, ResultType.STRING, "com.auto.tune.core.step.impl.action.ThreadStep"),
 
-    RuleAction(ReportType reportType, String stepClassName) {
-        this(reportType, stepClassName, (a, r) -> {
-        });
+    /**
+     * GC操作指令
+     */
+    GC_OPERATION(ReportType.GC, ResultType.STRING, "com.auto.tune.core.step.impl.action.GCStep"),
+
+    /**
+     * java shared object memory maps
+     */
+    JVM_PROFILER(ReportType.HEAP, ResultType.STREAM, "com.auto.tune.core.step.impl.action.JvmProfilerStep"),
+
+    /**
+     * java garbage collector
+     */
+    UNKNOWN(ReportType.UNKNOWN, ResultType.STRING, "");
+
+    private final ReportType reportType;
+    private final ResultType resultType;
+    private final String     stepClassName;
+
+    RuleAction(ReportType reportType, ResultType resultType, String stepClassName) {
+        this.reportType = reportType;
+        this.resultType = resultType;
+        this.stepClassName = stepClassName;
     }
 
-    RuleAction(ReportType reportType, String stepClassName,
-               BiConsumer<ActionParam, RuleParam> consumer) {
-        this.reportType = reportType;
-        this.stepClassName = stepClassName;
-        this.consumer = consumer;
+    public static RuleAction valueOfType(String actionName) {
+        if (StringUtils.isBlank(actionName)) {
+            return RuleAction.UNKNOWN;
+        }
+        for (RuleAction ruleAction : RuleAction.values()) {
+            if (ruleAction.name().equals(actionName)) {
+                return ruleAction;
+            }
+        }
+        return RuleAction.UNKNOWN;
     }
 
     public ReportType getReportType() {
@@ -74,11 +96,7 @@ public enum RuleAction {
         return stepClassName;
     }
 
-    public BiConsumer<ActionParam, RuleParam> getConsumer() {
-        return consumer;
-    }
-
-    public void setAndCalcParams(ActionParam actionParam, RuleParam ruleParam) {
-        this.consumer.accept(actionParam, ruleParam);
+    public ResultType getResultType() {
+        return resultType;
     }
 }

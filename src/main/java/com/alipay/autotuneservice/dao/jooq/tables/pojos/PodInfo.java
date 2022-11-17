@@ -40,6 +40,7 @@ public class PodInfo implements Serializable {
     private String        dHostname;
     private String        nodeIp;
     private String        nodeName;
+    private String        serverType;
 
     public PodInfo() {}
 
@@ -68,6 +69,7 @@ public class PodInfo implements Serializable {
         this.dHostname = value.dHostname;
         this.nodeIp = value.nodeIp;
         this.nodeName = value.nodeName;
+        this.serverType = value.serverType;
     }
 
     public PodInfo(
@@ -94,7 +96,8 @@ public class PodInfo implements Serializable {
         Integer       agentInstall,
         String        dHostname,
         String        nodeIp,
-        String        nodeName
+        String        nodeName,
+        String        serverType
     ) {
         this.id = id;
         this.appId = appId;
@@ -120,6 +123,7 @@ public class PodInfo implements Serializable {
         this.dHostname = dHostname;
         this.nodeIp = nodeIp;
         this.nodeName = nodeName;
+        this.serverType = serverType;
     }
 
     /**
@@ -486,6 +490,21 @@ public class PodInfo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>. 资源类型
+     */
+    public String getServerType() {
+        return this.serverType;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>. 资源类型
+     */
+    public PodInfo setServerType(String serverType) {
+        this.serverType = serverType;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("PodInfo (");
@@ -514,6 +533,7 @@ public class PodInfo implements Serializable {
         sb.append(", ").append(dHostname);
         sb.append(", ").append(nodeIp);
         sb.append(", ").append(nodeName);
+        sb.append(", ").append(serverType);
 
         sb.append(")");
         return sb.toString();

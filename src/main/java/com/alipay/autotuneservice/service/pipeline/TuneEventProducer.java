@@ -5,7 +5,6 @@
 package com.alipay.autotuneservice.service.pipeline;
 
 import com.alipay.autotuneservice.dao.TunePipelineRepository;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.message.TuneMessageBroker;
 import com.alipay.autotuneservice.message.TuneMessageEvent;
 import com.alipay.autotuneservice.message.TuneMessageEventListener;
@@ -26,11 +25,9 @@ import org.springframework.stereotype.Component;
 public class TuneEventProducer implements InitializingBean {
 
     @Autowired
-    private TuneFlowService        tuneFlowService;
+    private TuneFlowService          tuneFlowService;
     @Autowired
-    private TunePipelineRepository pipelineRepository;
-    @Autowired
-    private RedisClient            redisClient;
+    private TunePipelineRepository   pipelineRepository;
     @Autowired
     private TuneMessageBroker        messageBroker;
     @Autowired
@@ -65,29 +62,5 @@ public class TuneEventProducer implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         tuneMessageListener.subscribe(event -> processEvent((TuneEvent) event.getTuneEvent()));
-        //redisClient.subscribe(event -> {
-        //    try {
-        //        log.info("TuneEventProducer consumer, event:{}", event);
-        //        ObjectUtil.tryLock(redisClient, CONSUMER_KEY + event.getPipelineId() + event.getEventType().name(), 0, new AbsLockAction() {
-        //            @Override
-        //            public void doInLock(String resourceName) {
-        //                try {
-        //                    processEvent(event);
-        //                } catch (Exception e) {
-        //                    log.error("TuneEventProducer processEvent error", e);
-        //                }
-        //
-        //            }
-        //
-        //            @Override
-        //            public void tryLockFail(String resourceName) {
-        //                log.info("TuneEventProducer tryLockFail, event:{}", event);
-        //            }
-        //        });
-        //    } catch (Exception e) {
-        //        log.error("TuneEventProducer consumer error", e);
-        //    }
-        //
-        //}, TuneEvent.class);
     }
 }

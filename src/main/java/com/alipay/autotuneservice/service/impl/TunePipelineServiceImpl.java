@@ -20,7 +20,6 @@ import com.alipay.autotuneservice.model.pipeline.TuneStage;
 import com.alipay.autotuneservice.model.tune.TuneActionStatus;
 import com.alipay.autotuneservice.model.tune.TunePlan;
 import com.alipay.autotuneservice.model.tune.TunePlanStatus;
-import com.alipay.autotuneservice.service.notification.EmailModelService;
 import com.alipay.autotuneservice.service.pipeline.TunePipelineService;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -50,8 +49,6 @@ public class TunePipelineServiceImpl implements TunePipelineService {
     private TunePlanRepository           tunePlanRepository;
     @Autowired
     private TuneParamTrialDataRepository repository;
-    @Autowired
-    private EmailModelService            emailModelService;
 
     @Override
     public TunePipeline createPipeline(TuneContext context) {
@@ -162,7 +159,6 @@ public class TunePipelineServiceImpl implements TunePipelineService {
         tunePipelineRepository.saveWithTransaction(aliveTunePipelines.toArray(new TunePipeline[0]));
         tunePlanRepository.updateTuneStatusById(tunePipeline.getTunePlanId(), TunePlanStatus.CANCEL);
         repository.updateTaskStatus(pipelineId);
-        emailModelService.tuneCancelEmail(pipelineId, tunePipeline.getAppId());
         return true;
     }
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,12 +17,9 @@
 package com.alipay.autotuneservice.service.impl;
 
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
-import com.alipay.autotuneservice.dynamodb.bean.HealthCheckData;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
 import com.alipay.autotuneservice.dynamodb.repository.ContainerStatisticsService;
-import com.alipay.autotuneservice.dynamodb.repository.HealthCheckDataRepository;
-import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataService;
 import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
 import com.alipay.autotuneservice.service.ProxyService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,17 +37,11 @@ public class ProxyServiceImpl implements ProxyService {
 
     private final TwatchInfoService           twatchInfoRepository;
     private final ContainerStatisticsService  statisticsRepository;
-    private final JvmMonitorMetricDataService jvmMetricRepository;
-    private final HealthCheckDataRepository     healthCheckDataRepository;
 
     public ProxyServiceImpl(TwatchInfoService twatchInfoRepository,
-                            ContainerStatisticsService statisticsRepository,
-                            JvmMonitorMetricDataService jvmMetricRepository,
-                            HealthCheckDataRepository healthCheckDataRepository) {
+                            ContainerStatisticsService statisticsRepository) {
         this.twatchInfoRepository = twatchInfoRepository;
         this.statisticsRepository = statisticsRepository;
-        this.jvmMetricRepository = jvmMetricRepository;
-        this.healthCheckDataRepository = healthCheckDataRepository;
     }
 
     @Override
@@ -62,20 +53,4 @@ public class ProxyServiceImpl implements ProxyService {
     public List<ContainerStatistics> findCStatistic(String containerId, long start, long end) {
         return this.statisticsRepository.queryContainerStats(containerId, start, end);
     }
-
-    @Override
-    public List<JvmMonitorMetricData> findJvmMonMetricRange(String podName, Long start, Long end) {
-        return this.jvmMetricRepository.queryByPodName(podName, start, end);
-    }
-
-    @Override
-    public List<HealthCheckData> getJvmProblemPerDay(String dt) {
-        return this.healthCheckDataRepository.getJvmProblemPerDay(dt);
-    }
-
-    @Override
-    public List<JvmMonitorMetricData> findJvmMonMetricDay(String podName, long dt) {
-        return this.jvmMetricRepository.queryByPodNameAndDt(podName, dt);
-    }
-
 }

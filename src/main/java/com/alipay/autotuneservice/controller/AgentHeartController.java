@@ -20,7 +20,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.autotuneservice.agent.twatch.hearbeat.HeartBeatResponse;
 import com.alipay.autotuneservice.agent.twatch.model.AgentActionRequest;
-import com.alipay.autotuneservice.agent.twatch.monitor.ContainerMetricRunner;
 import com.alipay.autotuneservice.configuration.NoLogin;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
 import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
@@ -65,8 +64,6 @@ public class AgentHeartController {
     private AgentHeartService     agentHeartService;
     @Autowired
     private AgentInvokeService    agentInvokeService;
-    @Autowired
-    private ContainerMetricRunner containerMetricRunner;
     @Autowired
     private CommandService        commandService;
     @Autowired
@@ -160,7 +157,6 @@ public class AgentHeartController {
     public ServiceBaseResult<Boolean> boundContainerMetric(@RequestBody ContainerMetricRequest request) {
         try {
             Preconditions.checkArgument(request != null, "request不能为空.");
-            containerMetricRunner.dispatchContainerMetric(request);
             return ServiceBaseResult.successResult();
         } catch (Exception e) {
             log.error("boundContainerMetric occurs an error.", e);

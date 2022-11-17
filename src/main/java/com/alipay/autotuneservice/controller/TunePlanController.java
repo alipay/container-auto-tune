@@ -4,6 +4,7 @@
  */
 package com.alipay.autotuneservice.controller;
 
+import com.alipay.autotuneservice.base.cache.LocalCache;
 import com.alipay.autotuneservice.configuration.NoLogin;
 import com.alipay.autotuneservice.configuration.ResourcePermission;
 import com.alipay.autotuneservice.configuration.ResourcePermission.ResourceType;
@@ -16,7 +17,6 @@ import com.alipay.autotuneservice.controller.model.tuneplan.TunePlanActionEnum;
 import com.alipay.autotuneservice.dao.HealthCheckInfo;
 import com.alipay.autotuneservice.dao.TunePlanRepository;
 import com.alipay.autotuneservice.dao.jooq.tables.records.HealthCheckInfoRecord;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.ResultCode;
 import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.alipay.autotuneservice.model.common.EffectTypeEnum;
@@ -61,17 +61,17 @@ import java.util.stream.Stream;
 public class TunePlanController {
 
     @Autowired
-    private HealthCheckInfo     healthCheckInfo;
+    private HealthCheckInfo            healthCheckInfo;
     @Autowired
-    private TunePlanRepository  repository;
+    private TunePlanRepository         repository;
     @Autowired
-    private TuneInvokeService   tuneInvokeService;
+    private TuneInvokeService          tuneInvokeService;
     @Autowired
-    private TunePlanService     tunePlanService;
+    private TunePlanService            tunePlanService;
     @Autowired
-    private TuneEvaluateService tuneEvaluateService;
+    private TuneEvaluateService        tuneEvaluateService;
     @Autowired
-    private RedisClient         redisClient;
+    private LocalCache<Object, Object> localCache;
 
     private static final String SUBMIT_PLAN_LOCK_KEY = "TMASTER_SUBMIT_PLAN_LOCK_";
 
@@ -81,12 +81,6 @@ public class TunePlanController {
                                                      @RequestParam TuneActionStatus actionStatus) {
         return ServiceBaseResult.invoker()
                 .paramCheck(() -> Preconditions.checkArgument(StringUtils.isNotBlank(planName)))
-                .paramCheck(() -> {
-                    boolean acquireLock = redisClient.setNx(SUBMIT_PLAN_LOCK_KEY + healthCheckId, "lock", 5, TimeUnit.SECONDS);
-                    if (!acquireLock) {
-                        throw new ServerException(ResultCode.SUBMIT_PLAN_TOO_FAST);
-                    }
-                })
                 .makeResult(() -> {
                     HealthCheckInfoRecord healthCheckInfoRecord = healthCheckInfo.selectById(healthCheckId);
                     if (healthCheckInfoRecord == null) {
@@ -123,12 +117,6 @@ public class TunePlanController {
                                                         @RequestParam Double ratio) {
         return ServiceBaseResult.invoker()
                 .paramCheck(() -> Preconditions.checkArgument(StringUtils.isNotBlank(planName)))
-                .paramCheck(() -> {
-                    boolean acquireLock = redisClient.setNx(SUBMIT_PLAN_LOCK_KEY + appId, "lock", 5, TimeUnit.SECONDS);
-                    if (!acquireLock) {
-                        throw new ServerException(ResultCode.SUBMIT_PLAN_TOO_FAST);
-                    }
-                })
                 .makeResult(() -> {
                     // check duplicate plan
                     log.info("submitJvmTunePlan planName:{}, appId:{}, jvm:{}, ratio:{}", planName, appId, jvm, ratio);
@@ -342,8 +330,8 @@ public class TunePlanController {
                                                            @RequestParam(value = "startTime", required = false) Long startTime,
                                                            @RequestParam(value = "endTime", required = false) Long endTime) {
         return ServiceBaseResult.invoker().paramCheck(() -> {
-            ObjectUtil.checkIntegerPositive(appId);
-        })
+                    ObjectUtil.checkIntegerPositive(appId);
+                })
                 .makeResult(() -> {
                     log.info("listTunePlan enter. appId={}, status={}, planName={}, startTime={}, endTime={}", appId, status, planName,
                             startTime, endTime);

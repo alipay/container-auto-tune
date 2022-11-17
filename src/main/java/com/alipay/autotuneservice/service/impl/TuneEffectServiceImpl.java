@@ -17,7 +17,6 @@ import com.alipay.autotuneservice.dao.TuneParamTrialDataRepository;
 import com.alipay.autotuneservice.dao.TunePipelineRepository;
 import com.alipay.autotuneservice.dao.TunePlanRepository;
 import com.alipay.autotuneservice.dao.TuningParamTaskData;
-import com.alipay.autotuneservice.dao.jooq.tables.records.HealthCheckInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TuneLogInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TuningParamTaskDataRecord;
@@ -25,7 +24,6 @@ import com.alipay.autotuneservice.dao.jooq.tables.records.TuningParamTrialDataRe
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dynamodb.repository.ContainerStatisticsService;
-import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataService;
 import com.alipay.autotuneservice.model.common.AppInfo;
 import com.alipay.autotuneservice.model.common.AppTag;
 import com.alipay.autotuneservice.model.common.EffectTypeEnum;
@@ -38,7 +36,6 @@ import com.alipay.autotuneservice.model.tune.TunePlan;
 import com.alipay.autotuneservice.model.tune.TuneTaskStatus;
 import com.alipay.autotuneservice.model.tune.trail.TrailTuneContext;
 import com.alipay.autotuneservice.model.tune.trail.TrialTuneMetric;
-import com.alipay.autotuneservice.service.AppHealthCheckService;
 import com.alipay.autotuneservice.service.AppInfoService;
 import com.alipay.autotuneservice.service.TuneEffectService;
 import com.alipay.autotuneservice.util.DateUtils;
@@ -75,7 +72,7 @@ import static com.alipay.autotuneservice.model.common.TuneStatus.WORSEN;
 public class TuneEffectServiceImpl implements TuneEffectService {
 
     private final static Double CHECK_RATE = 1.0 / 6;
-    private final static String EFFECT = "effect";
+    private final static String EFFECT     = "effect";
 
     @Autowired
     private HealthCheckInfo healthCheckInfo;
@@ -85,8 +82,6 @@ public class TuneEffectServiceImpl implements TuneEffectService {
 
     @Autowired
     private PodInfo                     podInfo;
-    @Autowired
-    private JvmMonitorMetricDataService jvmMetricRepository;
 
     @Autowired
     private ContainerStatisticsService repository;
@@ -108,9 +103,6 @@ public class TuneEffectServiceImpl implements TuneEffectService {
 
     @Autowired
     private AppInfoRepository appInfoRepository;
-
-    @Autowired
-    private AppHealthCheckService appHealthCheckService;
 
     /**
      * 调优效果展示
@@ -338,22 +330,6 @@ public class TuneEffectServiceImpl implements TuneEffectService {
         AtomicReference<Double> fgcTime = new AtomicReference<>(0.0);
         AtomicReference<Double> ygcTime = new AtomicReference<>(0.0);
         AtomicReference<Double> ygcCount = new AtomicReference<>(0.0);
-        podList.forEach(pod -> {
-            List<JvmMonitorMetricData> metaData = jvmMetricRepository.getPodJvmMetric(pod, start, end);
-            AtomicReference<Double> heap = new AtomicReference<>(0.0);
-            if (CollectionUtils.isNotEmpty(metaData)) {
-                metaData.forEach(item -> {
-                            heap.set(Math.max(heap.get(), item.getHeapUsed()));
-                            fgcCount.set(item.getFgc_count() + fgcCount.get());
-                            fgcTime.set(item.getFgc_time() + fgcTime.get());
-                            ygcCount.set(item.getYgc_count() + ygcCount.get());
-                            ygcTime.set(item.getYgc_time() + ygcTime.get());
-                        }
-                );
-            }
-            heapSum.set(heapSum.get() + heap.get());
-        });
-
         double cpu = podList.parallelStream().mapToDouble(pod -> repository.queryContainerStatsByPodName(pod, start, end).stream().
                 mapToDouble(ContainerStatistics::getUsedCpuCores).max().orElse(0.0)).sum();
         return StringUtils.equals("process", tuneType) ? buildProcessMetric(heapSum.get(), fgcCount.get(), fgcTime.get(),
@@ -426,24 +402,7 @@ public class TuneEffectServiceImpl implements TuneEffectService {
      * 构建评估效果分数  优化个数 * 1/6 * (100-健康检查分数）+健康检查分数
      */
     private TuneEffectVO buildGrade(List<EffectTypeVO> typeVOS, Integer healthId, Integer pipelineId, Integer appId) {
-        int healthScore = 0;
-        if (isGray(pipelineId)) {
-            try{
-                healthScore = appHealthCheckService.getHealthScore(appId);
-            }catch (Exception e){
-                healthScore = 85;
-            }
-
-        }
-        if (!isGray(pipelineId)) {
-            HealthCheckInfoRecord record = healthCheckInfo.selectById(healthId);
-            healthScore = record == null ? appHealthCheckService.getHealthScore(appId) : Integer.parseInt(record.getGrade());
-        }
-        //根据问题选项
-        long optimizationCount = typeVOS.stream().filter(type -> type.getReduce() > 0.0).count();
-        double score = optimizationCount * CHECK_RATE * (100 - healthScore) + healthScore;
-        int baseHealthScore = healthScore == 0 ? 1 : healthScore;
-        return new TuneEffectVO((int) score, (score - healthScore) / baseHealthScore);
+        return new TuneEffectVO();
     }
 
     private void getTimePipeline(Integer pipelineId, List<TuneTestTimePipeVO.TimeDetail> timePipeline) {
@@ -507,15 +466,7 @@ public class TuneEffectServiceImpl implements TuneEffectService {
         int podNums = podList.size();
         tuneEffectVO.setPodNum(podNums);
         tuneEffectVO.setCurrentPodNum(podNums);
-        //2.单项提升 包含单项类型、参照检查结果、观察结果、提升比例、调优状态、恶化原因
-        List<EffectTypeVO> typeVOS = buildPredictEffectTypeVOs(podInfoRecords, trailTuneContext);
-        if (CollectionUtils.isEmpty(typeVOS)) {
-            log.info("buildPredictTuneEffect - can not get typeVOS for tuneContext={}", JSON.toJSONString(trailTuneContext));
-            return null;
-        }
-        tuneEffectVO.setTuneResultVOList(typeVOS);
         //3.调优收益 从数据库中获取相应的pod
-        calIncomes(tunePlan, tuneEffectVO, podInfoRecords, typeVOS, pipelineId);
         // 将预期结果保存
         tunePlanRepository.updatePredictEffect(tunePlan.getId(), JSON.toJSONString(tuneEffectVO));
         return tuneEffectVO;
@@ -531,62 +482,6 @@ public class TuneEffectServiceImpl implements TuneEffectService {
         TrailTuneContext result = TrailTuneContext.convert(trialData);
         log.info("getTrailTuneContext - pipelineId={}, result={}", pipelineId, JSON.toJSONString(result));
         return result;
-    }
-
-    private List<EffectTypeVO> buildPredictEffectTypeVOs(List<PodInfoRecord> podInfoRecords, TrailTuneContext trailTuneContext) {
-        if (Objects.isNull(trailTuneContext)) {
-            return Lists.newArrayList();
-        }
-        String referPod = trailTuneContext.getReferPod();
-        String trialPod = trailTuneContext.getTrialPod();
-        if (StringUtils.isEmpty(referPod) || StringUtils.isEmpty(trialPod)) {
-            log.warn("buildPredictEffectTypeVOs referPod or trialPod is empty.");
-            return Lists.newArrayList();
-        }
-        long startTime = trailTuneContext.getStartTime();
-        long endTime = trailTuneContext.getEndTime();
-        long referStartTime = startTime - (endTime - startTime);
-
-        log.info("buildPredictEffectTypeVOs start.  referPod={}, trialPod={}, referStartTime={}, startTime={}, endTime={}", referPod,
-                trialPod, referStartTime, startTime, endTime);
-
-
-        // mem
-        List<EffectTypeVO> effectTypeVOS = new ArrayList<>();
-        List<JvmMonitorMetricData> referPodJvmMetric = jvmMetricRepository.getPodJvmMetric(referPod, referStartTime, startTime);
-        double heapMax4Refer = 50;
-        double heapMax4Trial = 50;
-        if (CollectionUtils.isNotEmpty(referPodJvmMetric)) {
-            heapMax4Refer = referPodJvmMetric.stream().map(JvmMonitorMetricData::getHeapUsed).max(Double::compare).orElse(0d);
-        }
-        List<JvmMonitorMetricData> trialPodJvmMetric = jvmMetricRepository.getPodJvmMetric(trialPod, startTime, endTime);
-        if (CollectionUtils.isNotEmpty(trialPodJvmMetric)) {
-            heapMax4Trial = trialPodJvmMetric.stream().map(JvmMonitorMetricData::getHeapUsed).max(Double::compare).orElse(0d);
-        }
-        effectTypeVOS.add(buildPredictEffectTypeV0(EffectTypeEnum.MEM, heapMax4Refer, heapMax4Trial));
-        TrialTuneMetric referMetricFromAlgo = trailTuneContext.getReferMetricFromAlgo();
-        TrialTuneMetric trialMetricFromAlgo = trailTuneContext.getTrialMetricFromAlgo();
-        // refer
-        long fgcCountMax4Refer = Math.round(referMetricFromAlgo.getFgc_count());
-        double fgcTimeMax4Refer = Math.round(referMetricFromAlgo.getFgc_time());
-        long ygcCountMax4Refer = Math.round(referMetricFromAlgo.getYgc_count());
-        double  ygcTimeMax4Refer = Math.round(referMetricFromAlgo.getYgc_time());
-        // trail
-        long fgcCountMax4Trial = Math.round(trialMetricFromAlgo.getFgc_count());
-        double fgcTimeMax4Trial = Math.round(trialMetricFromAlgo.getFgc_time());
-        long ygcCountMax4Trial = Math.round(trialMetricFromAlgo.getYgc_count());
-        double ygcTimeMax4Trial = Math.round(trialMetricFromAlgo.getYgc_time());
-        effectTypeVOS.add(buildPredictEffectTypeV0(EffectTypeEnum.FGC_COUNT, fgcCountMax4Refer, fgcCountMax4Trial));
-        effectTypeVOS.add(buildPredictEffectTypeV0(EffectTypeEnum.YGC_COUNT, ygcCountMax4Refer, ygcCountMax4Trial));
-        // cpu
-        double cpu4Refer = repository.queryContainerStatsByPodName(referPod, referStartTime, endTime).stream().mapToDouble(
-                ContainerStatistics::getUsedCpuCores).max().orElse(0.0);
-        double cpu4Trial = repository.queryContainerStatsByPodName(trialPod, startTime, endTime).stream().mapToDouble(
-                ContainerStatistics::getUsedCpuCores).max().orElse(0.0);
-        effectTypeVOS.add(buildPredictEffectTypeV0(EffectTypeEnum.CPU, cpu4Refer, cpu4Trial));
-        effectTypeVOS.add(buildPredictEffectTypeV0(EffectTypeEnum.FGC_TIME, fgcTimeMax4Refer, fgcTimeMax4Trial));
-        effectTypeVOS.add(buildPredictEffectTypeV0(EffectTypeEnum.YGC_TIME, ygcTimeMax4Refer, ygcTimeMax4Trial));
-        return effectTypeVOS;
     }
 
     private EffectTypeVO buildPredictEffectTypeV0(EffectTypeEnum effectTypeEnum, double refer, double trail) {

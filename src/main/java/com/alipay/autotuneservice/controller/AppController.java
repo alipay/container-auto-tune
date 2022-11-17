@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@ import com.alipay.autotuneservice.controller.model.AppVO;
 import com.alipay.autotuneservice.controller.model.ClusterVO;
 import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.alipay.autotuneservice.service.AppInfoService;
-import com.alipay.autotuneservice.service.notification.EmailService;
 import com.alipay.autotuneservice.util.UserUtil;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,9 +48,6 @@ public class AppController {
     @Autowired
     private AppInfoService appInfoService;
 
-    @Autowired
-    private EmailService   emailService;
-
     /**
      * 根据token 和应用相似名称查询
      *
@@ -65,7 +60,7 @@ public class AppController {
                 .makeResult(() -> {
                     log.info("appList enter");
                     String accessToken = UserUtil.getAccessToken();
-                    log.info("accesstokrn is:{}",accessToken);
+                    log.info("accesstokrn is:{}", accessToken);
                     return appInfoService.appList(accessToken, appName);
                 });
     }

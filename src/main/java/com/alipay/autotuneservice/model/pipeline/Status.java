@@ -16,7 +16,6 @@
  */
 package com.alipay.autotuneservice.model.pipeline;
 
-import com.amazonaws.services.kms.model.UnsupportedOperationException;
 import org.apache.commons.lang3.StringUtils;
 
 /**

@@ -7,6 +7,7 @@ package com.alipay.autotuneservice.dao.jooq;
 import com.alipay.autotuneservice.dao.jooq.tables.AppInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.AppLog;
 import com.alipay.autotuneservice.dao.jooq.tables.BaseLine;
+import com.alipay.autotuneservice.dao.jooq.tables.CommandInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ConfigInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ContainerProcessInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ContainerStatistics;
@@ -14,6 +15,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.ExpertKnowledge;
 import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.HelpInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMarketInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetric;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmOptsConfig;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
@@ -79,6 +81,11 @@ public class TmaestroLite extends SchemaImpl {
     public final BaseLine BASE_LINE = BaseLine.BASE_LINE;
 
     /**
+     * The table <code>TMAESTRO-LITE.COMMAND_INFO</code>.
+     */
+    public final CommandInfo COMMAND_INFO = CommandInfo.COMMAND_INFO;
+
+    /**
      * The table <code>TMAESTRO-LITE.CONFIG_INFO</code>.
      */
     public final ConfigInfo CONFIG_INFO = ConfigInfo.CONFIG_INFO;
@@ -112,6 +119,11 @@ public class TmaestroLite extends SchemaImpl {
      * The table <code>TMAESTRO-LITE.JVM_MARKET_INFO</code>.
      */
     public final JvmMarketInfo JVM_MARKET_INFO = JvmMarketInfo.JVM_MARKET_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.JVM_MONITOR_METRIC</code>.
+     */
+    public final JvmMonitorMetric JVM_MONITOR_METRIC = JvmMonitorMetric.JVM_MONITOR_METRIC;
 
     /**
      * The table <code>TMAESTRO-LITE.JVM_MONITOR_METRIC_DATA</code>.
@@ -267,6 +279,7 @@ public class TmaestroLite extends SchemaImpl {
             AppInfo.APP_INFO,
             AppLog.APP_LOG,
             BaseLine.BASE_LINE,
+            CommandInfo.COMMAND_INFO,
             ConfigInfo.CONFIG_INFO,
             ContainerProcessInfo.CONTAINER_PROCESS_INFO,
             ContainerStatistics.CONTAINER_STATISTICS,
@@ -274,6 +287,7 @@ public class TmaestroLite extends SchemaImpl {
             HealthCheckInfo.HEALTH_CHECK_INFO,
             HelpInfo.HELP_INFO,
             JvmMarketInfo.JVM_MARKET_INFO,
+            JvmMonitorMetric.JVM_MONITOR_METRIC,
             JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA,
             JvmOptsConfig.JVM_OPTS_CONFIG,
             JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM,

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,10 +26,10 @@ import com.alipay.autotuneservice.agent.twatch.core.CallMethodType;
 import com.alipay.autotuneservice.agent.twatch.core.CallMethodType.POD;
 import com.alipay.autotuneservice.agent.twatch.model.ExecCmdResult;
 import com.alipay.autotuneservice.agent.twatch.model.PodHealthIndexEnum;
+import com.alipay.autotuneservice.base.cache.LocalCache;
 import com.alipay.autotuneservice.dynamodb.bean.TwatchInfoDo;
 import com.alipay.autotuneservice.dynamodb.repository.ContainerProcessInfoService;
 import com.alipay.autotuneservice.dynamodb.repository.TwatchInfoService;
-import com.alipay.autotuneservice.infrastructure.saas.common.cache.RedisClient;
 import com.alipay.autotuneservice.model.statistics.StatisticsResponse;
 import com.alipay.autotuneservice.service.AgentInvokeService;
 import com.alipay.autotuneservice.util.AgentConstant;
@@ -66,7 +66,7 @@ import static com.alipay.autotuneservice.agent.twatch.constants.TwatchCmdConstan
 public class AgentInvokeServiceImpl implements AgentInvokeService {
 
     @Autowired
-    private RedisClient                    redisClient;
+    private LocalCache<Object, Object>  localCache;
     @Autowired
     private DoInvokeRunner              doInvokeRunner;
     @Autowired
@@ -95,7 +95,7 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
 
     @Override
     public Object getAsyncActionResult(String sessionId) {
-        return redisClient.get(AgentConstant.generateCallBackKey(sessionId), Object.class);
+        return localCache.get(AgentConstant.generateCallBackKey(sessionId));
     }
 
     @Override
@@ -106,8 +106,8 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
             return "not found by podName=" + podName;
         }
         String sessionId = new AgentCallInvoke.BuildInvoke(CallMethodType.POD.GET_ENV)
-            .args(CallMethodType.POD.GET_ENV.CONTAINERID.key(), infoDos.get(0).getContainerId())
-            .build().fire();
+                .args(CallMethodType.POD.GET_ENV.CONTAINERID.key(), infoDos.get(0).getContainerId())
+                .build().fire();
         if (InvokeType.ASYNC == type) {
             return sessionId;
         }
@@ -128,8 +128,8 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
             return "";
         }
         String sessionId = new AgentCallInvoke.BuildInvoke(POD.EXEC_CMD)
-            .args(CallMethodType.POD.EXEC_CMD.CONTAINERID.key(), infoDos.get(0).getContainerId())
-            .args(POD.EXEC_CMD.CMDNAME.key(), cmd).build().fire();
+                .args(CallMethodType.POD.EXEC_CMD.CONTAINERID.key(), infoDos.get(0).getContainerId())
+                .args(POD.EXEC_CMD.CMDNAME.key(), cmd).build().fire();
         log.info("sessionId={}", sessionId);
         if (InvokeType.ASYNC == type) {
             return sessionId;
@@ -142,7 +142,7 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
         ExecCmdResult<String> execCmdResult = new ExecCmdResult<>();
         if (StringUtils.isBlank(podName) || StringUtils.isBlank(cmd)) {
             return execCmdResult.setData(String.format("podName=%s or cmd=%s is invalid.", podName,
-                cmd));
+                    cmd));
         }
         // TODO 增加执行白名单判断,白名单里应只含包含查询类操作
         List<TwatchInfoDo> infoDos = doInvokeRunner.findInfoByPod(podName);
@@ -151,8 +151,8 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
             return execCmdResult;
         }
         String sessionId = new AgentCallInvoke.BuildInvoke(POD.EXEC_CMD)
-            .args(CallMethodType.POD.EXEC_CMD.CONTAINERID.key(), infoDos.get(0).getContainerId())
-            .args(POD.EXEC_CMD.CMDNAME.key(), cmd).build().fire();
+                .args(CallMethodType.POD.EXEC_CMD.CONTAINERID.key(), infoDos.get(0).getContainerId())
+                .args(POD.EXEC_CMD.CMDNAME.key(), cmd).build().fire();
         log.info("execCmdV1, podName={}, sessionId={}", podName, sessionId);
         if (InvokeType.ASYNC == type) {
             return execCmdResult.setSuccess(true).setData(sessionId);
@@ -174,7 +174,7 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
         }
         log.info("execStats start. containerId={}", containerId);
         String sessionId = new AgentCallInvoke.BuildInvoke(POD.EXEC_STATS)
-            .args(CallMethodType.PROCESS.LIST.CONTAINERID.key(), containerId).build().fire();
+                .args(CallMethodType.PROCESS.LIST.CONTAINERID.key(), containerId).build().fire();
         if (InvokeType.ASYNC == type) {
             return sessionId;
         }
@@ -203,7 +203,7 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
 
     @Override
     public Map<String, String> getAllPodHealthIndexes(String podName) {
-        Map<String, String> map = redisClient.get(PodHealthIndexEnum.generatePodHealthIndexKey(podName), Map.class);
+        Map<String, String> map = (Map<String, String>) localCache.get(PodHealthIndexEnum.generatePodHealthIndexKey(podName));
         if (MapUtils.isNotEmpty(map)) {
             return map;
         }
@@ -215,18 +215,18 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
         String response = JSON.parseObject(execCmdResult.getData(), new TypeReference<String>() {});
         log.info("getPodHealthIndex podName={}, result={}", podName, response);
         Map<String, String> podIndexValue = Arrays.asList(response.split("\n")).stream().map(item -> {
-            try {
-                String decodeItem = new String(Base64.getDecoder().decode(item));
-                PodHealthIndexEnum healthIndexEnum = PodHealthIndexEnum.findIndex(decodeItem);
-                return healthIndexEnum.getParseFunc().apply(decodeItem);
-            } catch (Exception e) {
-                return Lists.newArrayList();
-            }
-        })
+                    try {
+                        String decodeItem = new String(Base64.getDecoder().decode(item));
+                        PodHealthIndexEnum healthIndexEnum = PodHealthIndexEnum.findIndex(decodeItem);
+                        return healthIndexEnum.getParseFunc().apply(decodeItem);
+                    } catch (Exception e) {
+                        return Lists.newArrayList();
+                    }
+                })
                 .filter(item -> CollectionUtils.isNotEmpty(item) && item.size() >= 2)
                 .collect(Collectors.toMap(item -> (String) item.get(0), item -> (String) item.get(1), (e, u) -> e));
         if (MapUtils.isNotEmpty(podIndexValue)) {
-            redisClient.setNx(PodHealthIndexEnum.generatePodHealthIndexKey(podName), podIndexValue, 30, TimeUnit.MINUTES);
+            localCache.put(PodHealthIndexEnum.generatePodHealthIndexKey(podName), podIndexValue, 30 * 60);
         }
         return podIndexValue;
     }
@@ -245,8 +245,8 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
                 return null;
             }
             String sessionId = new AgentCallInvoke.BuildInvoke(POD.EXEC_STATS)
-                .args(CallMethodType.PROCESS.LIST.CONTAINERID.key(),
-                    infoDos.get(0).getContainerId()).build().fire();
+                    .args(CallMethodType.PROCESS.LIST.CONTAINERID.key(),
+                            infoDos.get(0).getContainerId()).build().fire();
             String response = getSyncActionResult(sessionId);
             String s = response.replaceAll("\\\\", "");
             log.info("getPodStats response={}", s);
@@ -264,21 +264,21 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
             return "listProcess input podName or containId is empty.";
         }
         String key = buildListProcessUUID(podName);
-        if (redisClient.get(key) != null) {
-            String result = redisClient.get(buildListProcessUUID(podName), String.class);
+        if (localCache.get(key) != null) {
+            String result = (String) localCache.get(buildListProcessUUID(podName));
             log.info("listProcess - get pod={} process={} from cache", podName, result);
             return result;
         }
         log.info("listProcess start. podName={}, containerId={}", podName, containerId);
         String sessionId = new AgentCallInvoke.BuildInvoke(CallMethodType.PROCESS.LIST)
-            .args(CallMethodType.PROCESS.LIST.CONTAINERID.key(), containerId).build().fire();
+                .args(CallMethodType.PROCESS.LIST.CONTAINERID.key(), containerId).build().fire();
         if (InvokeType.ASYNC == type) {
             return sessionId;
         }
         String result = getSyncActionResult(sessionId);
         log.info("listProcess end. sessionId={}, podName={}, res={}", sessionId, podName, result);
         if (StringUtils.isNotBlank(result)) {
-            redisClient.setEx(key, result, 3, TimeUnit.MINUTES);
+            localCache.put(key, result, 3 * 60);
         }
         return result;
     }
@@ -299,13 +299,14 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
             return "";
         }
         log.info("getProcessByPod for podName={}, containers={}", podName,
-            JSON.toJSONString(infoByPod));
+                JSON.toJSONString(infoByPod));
         String containerId = infoByPod.get(0).getContainerId();
         return listProcess(type, podName, containerId);
     }
 
     public static enum InvokeType {
-        SYNC, ASYNC;
+        SYNC,
+        ASYNC;
     }
 
     private String getContainerByPod(String podName) {
@@ -317,7 +318,7 @@ public class AgentInvokeServiceImpl implements AgentInvokeService {
             return "";
         }
         log.info("getContainerByPod for podName={}, containers={}", podName,
-            JSON.toJSONString(infoByPod));
+                JSON.toJSONString(infoByPod));
         return infoByPod.get(0).getContainerId();
     }
 }

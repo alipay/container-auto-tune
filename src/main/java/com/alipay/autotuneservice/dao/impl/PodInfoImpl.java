@@ -50,6 +50,8 @@ public class PodInfoImpl extends BaseDao implements PodInfo {
                 .set(Tables.POD_INFO.D_HOSTNAME, record.getDHostname())
                 .set(Tables.POD_INFO.NODE_IP, record.getNodeIp())
                 .set(Tables.POD_INFO.NODE_NAME, record.getNodeName())
+                .set(Tables.POD_INFO.SERVER_TYPE, record.getServerType())
+                .set(Tables.POD_INFO.AGENT_INSTALL, record.getAgentInstall())
                 .onDuplicateKeyUpdate()
                 .set(Tables.POD_INFO.NODE_ID, record.getNodeId())
                 .set(Tables.POD_INFO.POD_STATUS, record.getPodStatus())
@@ -60,7 +62,7 @@ public class PodInfoImpl extends BaseDao implements PodInfo {
                 .set(Tables.POD_INFO.NODE_IP, record.getNodeIp())
                 .set(Tables.POD_INFO.NODE_NAME, record.getNodeName())
                 .returning()
-                .fetch();
+                .fetchOne();
     }
 
     @Override
@@ -78,6 +80,16 @@ public class PodInfoImpl extends BaseDao implements PodInfo {
         return mDSLContext.select()
                 .from(Tables.POD_INFO)
                 .where(Tables.POD_INFO.APP_ID.eq(appId))
+                .orderBy(Tables.POD_INFO.CREATED_TIME.asc())
+                .fetchInto(PodInfoRecord.class);
+    }
+
+    @Override
+    public List<PodInfoRecord> getAllAlivePodsByType(String serverType) {
+        return mDSLContext.select()
+                .from(Tables.POD_INFO)
+                .where(Tables.POD_INFO.SERVER_TYPE.eq(serverType))
+                .and(Tables.POD_INFO.POD_STATUS.eq("ALIVE"))
                 .orderBy(Tables.POD_INFO.CREATED_TIME.asc())
                 .fetchInto(PodInfoRecord.class);
     }

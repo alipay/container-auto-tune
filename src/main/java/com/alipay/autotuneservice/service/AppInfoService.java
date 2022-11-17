@@ -8,10 +8,7 @@ import com.alipay.autotuneservice.controller.model.AppVO;
 import com.alipay.autotuneservice.controller.model.ClusterVO;
 import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
 import com.alipay.autotuneservice.grpc.GrpcCommon;
-import com.alipay.autotuneservice.model.common.AppInstallInfo;
-import com.alipay.autotuneservice.model.common.AppModel;
-import com.alipay.autotuneservice.model.common.AppStatus;
-import com.alipay.autotuneservice.model.common.AppTag;
+import com.alipay.autotuneservice.model.common.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -89,7 +86,24 @@ public interface AppInfoService {
 
     /**
      * 根据appId更新时间
+     *
      * @param appId
      */
-    void  updateAppTime(Integer appId);
+    void updateAppTime(Integer appId);
+
+    /**
+     * 检查应用信息
+     *
+     * @param appName
+     * @param namespace
+     * @param accessToken
+     */
+    Integer checkAppName(String appName, String namespace, String accessToken, ServerType serverType);
+
+    /**
+     * 检查VM信息
+     *
+     * @param grpcCommon
+     */
+    void checkVm(GrpcCommon grpcCommon);
 }

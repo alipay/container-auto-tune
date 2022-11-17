@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,6 @@ import com.alipay.autotuneservice.dao.JvmTuningRiskCenterRepository;
 import com.alipay.autotuneservice.dao.jooq.tables.pojos.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.pojos.RiskCheckTask;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
-import com.alipay.autotuneservice.dynamodb.repository.JvmMonitorMetricDataService;
 import com.alipay.autotuneservice.service.riskcheck.entity.CheckType;
 import com.alipay.autotuneservice.service.riskcheck.entity.MConsumer;
 import com.alipay.autotuneservice.service.riskcheck.entity.RiskCheckEnum;
@@ -52,10 +51,7 @@ import java.util.stream.Collectors;
 public class RiskCheckHandler {
 
     @Autowired
-    private JvmTuningRiskCenterRepository  jvmTuningRiskCenterRepository;
-
-    @Autowired
-    private JvmMonitorMetricDataService jvmMetricRepository;
+    private JvmTuningRiskCenterRepository jvmTuningRiskCenterRepository;
 
     public RiskCheckEnum executeRiskCheck(RiskCheckTask riskCheckTask, MConsumer<RiskCheckEnum, RiskCollector, RiskTaskStatus> callBack) {
         log.info(LogUtil.scureLogFormat("executeRiskCheck start"));
@@ -64,12 +60,6 @@ public class RiskCheckHandler {
             RiskCheckParam param = JSON.parseObject(riskCheckTask.getExecuteParam(), new TypeReference<RiskCheckParam>() {
             });
             Set<CheckType> checkTypes = param.getCheckTypes();
-            Map<String, JvmMonitorMetricData> currentMonitor = findPodsMetric(param.getPodnames());
-            if (CollectionUtils.isEmpty(currentMonitor)) {
-                callBack.apply(RiskCheckEnum.UNKNOW, new RiskCollector("获取不到pod监控数据"), RiskTaskStatus.END);
-                log.info("获取不到pod监控数据 结束评估 置为UNKNOW");
-                return RiskCheckEnum.UNKNOW;
-            }
             Map<String, JvmTuningRiskCenter> reference = jvmTuningRiskCenterRepository.find(param.getAppID(), checkTypes);
             if (CollectionUtils.isEmpty(reference)) {
                 callBack.apply(RiskCheckEnum.UNKNOW, new RiskCollector("算法画像为空"), RiskTaskStatus.END);
@@ -79,17 +69,9 @@ public class RiskCheckHandler {
             //存放每台pod的决策结果<podName,result>
             Map<String, RiskCheckEnum> pod_check_result = new HashMap<>();
             RiskCollector riskCollector = new RiskCollector(param.getCheckTypes());
-            currentMonitor.entrySet().stream().forEach(entry -> {
-                RiskCheckEnum pod_result = checkSinglePod(new ArrayList<>(checkTypes), reference, entry.getValue(), riskCollector::collector);
-                if (pod_result.existRisk()) {
-                    riskCollector.collector(entry.getKey());
-                }
-                pod_check_result.put(entry.getKey(), pod_result);
-                log.info(LogUtil.scureLogFormat("checkSinglePod end %s - %s", entry.getKey(), pod_result));
-            });
             log.info(LogUtil.scureLogFormat("executeRiskCheck end,detail %s", JSON.toJSONString(pod_check_result)));
             RiskCheckEnum result = summarizeResult(Lists.newArrayList(pod_check_result.values()));
-            if (RiskCheckEnum.UNKNOW == result){
+            if (RiskCheckEnum.UNKNOW == result) {
                 callBack.apply(result, new RiskCollector("获取不到pod监控数据"), RiskTaskStatus.END);
                 return result;
             }
@@ -108,7 +90,7 @@ public class RiskCheckHandler {
      * @param checkTypes      检查指标集合
      * @param reference       指标画像
      * @param pod_metricData  pod当前监控
-     * @param risk_collection 存放风险详情
+     * @param callback
      * @return
      */
     private RiskCheckEnum checkSinglePod(List<CheckType> checkTypes,
@@ -116,8 +98,8 @@ public class RiskCheckHandler {
                                          JvmMonitorMetricData pod_metricData,
                                          BiConsumer<CheckType, RiskCheckEnum> callback) {
         Map<String, String> pod_monitor = JSONObject.parseObject(JSON.toJSONString(pod_metricData),
-            new TypeReference<Map<String, String>>() {
-            });
+                new TypeReference<Map<String, String>>() {
+                });
         if (StringUtils.isEmpty(pod_metricData.getPod()) || CollectionUtils.isEmpty(pod_monitor)) {
             return RiskCheckEnum.UNKNOW;
         }
@@ -128,19 +110,19 @@ public class RiskCheckHandler {
             Double pod_current_value = Double.valueOf(pod_monitor.get(checkType.getDesc()));
             if (null == pod_reference || StringUtils.isEmpty(pod_monitor.get(checkType.getDesc()))) {
                 log.info(LogUtil.scureLogFormat("checkSinglePod %s - %s",
-                    JSON.toJSONString(pod_reference), pod_current_value));
+                        JSON.toJSONString(pod_reference), pod_current_value));
                 return RiskCheckEnum.UNKNOW;
             }
             if (pod_current_value.compareTo(pod_reference.getLowline()) < 0) {
                 log.info(LogUtil.scureLogFormat("checkSinglePod lowrisk %s - %s - [%s]",
-                    checkType.getDesc(), pod_current_value, JSON.toJSONString(pod_reference)));
+                        checkType.getDesc(), pod_current_value, JSON.toJSONString(pod_reference)));
                 result.add(RiskCheckEnum.LOW_RISK);
                 callback.accept(checkType, RiskCheckEnum.LOW_RISK);
                 continue;
             }
             if (pod_current_value.compareTo(pod_reference.getUpline()) > 0) {
                 log.info(LogUtil.scureLogFormat("checkSinglePod highrisk %s - %s - [%s]",
-                    checkType.getDesc(), pod_current_value, JSON.toJSONString(pod_reference)));
+                        checkType.getDesc(), pod_current_value, JSON.toJSONString(pod_reference)));
                 result.add(RiskCheckEnum.HIGH_RISK);
                 callback.accept(checkType, RiskCheckEnum.HIGH_RISK);
             }
@@ -179,19 +161,5 @@ public class RiskCheckHandler {
             return RiskCheckEnum.UNKNOW;
         }
         return RiskCheckEnum.NORMAL;
-    }
-
-    /**
-     * @return key   - podname
-     * value - JvmMonitorMetricData
-     */
-    private Map<String, JvmMonitorMetricData> findPodsMetric(List<String> pods) {
-        try {
-            log.info(LogUtil.scureLogFormat("findPodsMetric 开始 获取pod监控数据 %s",pods));
-            return pods.parallelStream().collect(Collectors.toMap(pod -> pod, jvmMetricRepository::getPodLatestOneMinuteJvmMetric, (k1, k2) -> k1, ConcurrentHashMap::new));
-        } catch (Exception e) {
-            log.error(LogUtil.scureLogFormat("findPodsMetric error"), e);
-            return null;
-        }
     }
 }

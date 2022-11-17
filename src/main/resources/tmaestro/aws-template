@@ -1,1 +1,0 @@
-aws-nosql=com.alipay.autotuneservice.multiCloudAdapter.impl.DynamodbImpl

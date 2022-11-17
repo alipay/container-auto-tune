@@ -15,7 +15,6 @@ import com.alipay.autotuneservice.model.tune.TunePlan;
 import com.alipay.autotuneservice.model.tune.TuneTaskStatus;
 import com.alipay.autotuneservice.service.AppInfoService;
 import com.alipay.autotuneservice.service.TuneInvokeService;
-import com.alipay.autotuneservice.service.notification.EmailModelService;
 import com.alipay.autotuneservice.service.pipeline.TunePipelineService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +41,7 @@ public class TuneInvokeServiceImpl implements TuneInvokeService {
     @Autowired
     private AppInfoService      appInfoService;
     @Autowired
-    private EmailModelService emailModelService;
-    @Autowired
-    private JvmMarketInfo jvmMarketInfo;
+    private JvmMarketInfo       jvmMarketInfo;
 
     @Override
     public Integer submitTunePlan(Integer tunePlanId) {
@@ -61,7 +58,6 @@ public class TuneInvokeServiceImpl implements TuneInvokeService {
             TunePipeline tunePipeline = tunePipelineService.createPipeline(tuneContext);
             //创建算法交互设计
             initTaskData(tunePipeline.getId(), tuneContext.getAppId());
-            emailModelService.tuneSubmitEmail(tunePipeline.getId(), tuneContext.getAppId());
             return tunePipeline.getId();
         } catch (Exception e) {
             log.error(String.format("submitTunePlan is error-->[%s]", e.getMessage()), e);
@@ -70,7 +66,7 @@ public class TuneInvokeServiceImpl implements TuneInvokeService {
     }
 
     @Override
-    public Integer submitJvm(Integer tunePlanId, String jvmParam, Double grayRatio ) {
+    public Integer submitJvm(Integer tunePlanId, String jvmParam, Double grayRatio) {
         try {
             TunePlan tunePlan = tunePlanInfo.findRunningTunePlanById(tunePlanId);
             if (tunePlan == null) {
@@ -78,12 +74,11 @@ public class TuneInvokeServiceImpl implements TuneInvokeService {
             }
             //下发任务
             //创建pipeline
-            String temp  = jvmParam.replaceAll("nbsp;"," ").replaceAll("&amp;","");
+            String temp = jvmParam.replaceAll("nbsp;", " ").replaceAll("&amp;", "");
             TuneContext tuneContext = new TuneContext(tunePlan.getAccessToken(), tunePlan.getAppId(), temp, grayRatio);
             tuneContext.setTunePlanId(tunePlanId);
             TunePipeline tunePipeline = tunePipelineService.createPipeline(tuneContext);
             jvmMarketInfo.getOrInsertJvmByCMD(temp, tunePipeline.getAppId(), tunePipeline.getPipelineId());
-            emailModelService.tuneSubmitEmail(tunePipeline.getId(), tuneContext.getAppId());
             return tunePipeline.getId();
         } catch (Exception e) {
             log.error(String.format("submitTunePlan is error-->[%s]", e.getMessage()), e);

@@ -67,7 +67,7 @@ public class K8sAccessTokenInfo extends TableImpl<K8sAccessTokenInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.ACCESS_TOKEN</code>. access;token
      */
-    public final TableField<K8sAccessTokenInfoRecord, String> ACCESS_TOKEN = createField(DSL.name("ACCESS_TOKEN"), SQLDataType.VARCHAR(9000).nullable(false), this, "access;token");
+    public final TableField<K8sAccessTokenInfoRecord, String> ACCESS_TOKEN = createField(DSL.name("ACCESS_TOKEN"), SQLDataType.VARCHAR(1000).nullable(false), this, "access;token");
 
     /**
      * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.ACCESS_KEY_ID</code>. access;key id
@@ -77,7 +77,7 @@ public class K8sAccessTokenInfo extends TableImpl<K8sAccessTokenInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.SECRET_ACCESS_KEY</code>. Secret;Access Key
      */
-    public final TableField<K8sAccessTokenInfoRecord, String> SECRET_ACCESS_KEY = createField(DSL.name("SECRET_ACCESS_KEY"), SQLDataType.VARCHAR(3000).nullable(false), this, "Secret;Access Key");
+    public final TableField<K8sAccessTokenInfoRecord, String> SECRET_ACCESS_KEY = createField(DSL.name("SECRET_ACCESS_KEY"), SQLDataType.VARCHAR(1000).nullable(false), this, "Secret;Access Key");
 
     /**
      * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CER</code>. 证书
