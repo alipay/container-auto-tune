@@ -28,14 +28,14 @@ import java.util.List;
  */
 public class JvmMetricServerRepositoryTest {
 
-    private JvmMonitorMetricDataService repository = new JvmMonitorMetricDataService();
-
-    @Test
-    public void getJvmMetric1() {
-        String podName = "xx";
-        long dt = 0L;
-        List<JvmMonitorMetricData> jvmMonitorMetricData = repository.queryByPodNameAndDt(podName,
-            dt);
-        System.out.println(JSON.toJSONString(jvmMonitorMetricData));
-    }
+    //private JvmMonitorMetricDataService repository = new JvmMonitorMetricDataService();
+    //
+    //@Test
+    //public void getJvmMetric1() {
+    //    String podName = "xx";
+    //    long dt = 0L;
+    //    List<JvmMonitorMetricData> jvmMonitorMetricData = repository.queryByPodNameAndDt(podName,
+    //        dt);
+    //    System.out.println(JSON.toJSONString(jvmMonitorMetricData));
+    //}
 }
