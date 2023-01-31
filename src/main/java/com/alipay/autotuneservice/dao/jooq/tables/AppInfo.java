@@ -4,6 +4,7 @@
 package com.alipay.autotuneservice.dao.jooq.tables;
 
 
+import com.alipay.autotuneservice.dao.jooq.Indexes;
 import com.alipay.autotuneservice.dao.jooq.Keys;
 import com.alipay.autotuneservice.dao.jooq.TmaestroLite;
 import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
@@ -15,6 +16,7 @@ import java.util.List;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Row16;
@@ -165,6 +167,11 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
     @Override
     public Schema getSchema() {
         return TmaestroLite.TMAESTRO_LITE;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.<Index>asList(Indexes.APP_INFO__INDEX_CLUSTER, Indexes.APP_INFO_ACCESS_TOKEN_CLUSTER_NAME_STATUS_INDEX, Indexes.APP_INFO_APP_NAME_ACCESS_TOKEN_STATUS_INDEX, Indexes.APP_INFO_ID_STATUS_INDEX);
     }
 
     @Override

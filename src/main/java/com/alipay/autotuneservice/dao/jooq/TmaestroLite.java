@@ -10,23 +10,31 @@ import com.alipay.autotuneservice.dao.jooq.tables.AppLog;
 import com.alipay.autotuneservice.dao.jooq.tables.BaseLine;
 import com.alipay.autotuneservice.dao.jooq.tables.CommandInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ConfigInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.ContainerProcessInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.ContainerStatistics;
 import com.alipay.autotuneservice.dao.jooq.tables.ExpertKnowledge;
 import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckResult;
 import com.alipay.autotuneservice.dao.jooq.tables.HelpInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JavaInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMarketInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetric;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmOptsConfig;
+import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.K8sAccessTokenInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.Lock;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetaInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.MeterMetricInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.NodeInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.Notice;
 import com.alipay.autotuneservice.dao.jooq.tables.Notify;
+import com.alipay.autotuneservice.dao.jooq.tables.PodAttach;
 import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckControl;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
+import com.alipay.autotuneservice.dao.jooq.tables.RiskStatisticPreData;
 import com.alipay.autotuneservice.dao.jooq.tables.RuleInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.StorageInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TaskPipelineInfo;
@@ -40,6 +48,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskData;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskDataDev;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTaskInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuningParamTrialData;
+import com.alipay.autotuneservice.dao.jooq.tables.TwatchInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.UserInfo;
 
 import java.util.Arrays;
@@ -94,6 +103,16 @@ public class TmaestroLite extends SchemaImpl {
     public final ConfigInfo CONFIG_INFO = ConfigInfo.CONFIG_INFO;
 
     /**
+     * The table <code>TMAESTRO-LITE.CONTAINER_PROCESS_INFO</code>.
+     */
+    public final ContainerProcessInfo CONTAINER_PROCESS_INFO = ContainerProcessInfo.CONTAINER_PROCESS_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.CONTAINER_STATISTICS</code>.
+     */
+    public final ContainerStatistics CONTAINER_STATISTICS = ContainerStatistics.CONTAINER_STATISTICS;
+
+    /**
      * The table <code>TMAESTRO-LITE.EXPERT_KNOWLEDGE</code>.
      */
     public final ExpertKnowledge EXPERT_KNOWLEDGE = ExpertKnowledge.EXPERT_KNOWLEDGE;
@@ -124,9 +143,24 @@ public class TmaestroLite extends SchemaImpl {
     public final JvmMarketInfo JVM_MARKET_INFO = JvmMarketInfo.JVM_MARKET_INFO;
 
     /**
+     * The table <code>TMAESTRO-LITE.JVM_MONITOR_METRIC</code>.
+     */
+    public final JvmMonitorMetric JVM_MONITOR_METRIC = JvmMonitorMetric.JVM_MONITOR_METRIC;
+
+    /**
+     * The table <code>TMAESTRO-LITE.JVM_MONITOR_METRIC_DATA</code>.
+     */
+    public final JvmMonitorMetricData JVM_MONITOR_METRIC_DATA = JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA;
+
+    /**
      * The table <code>TMAESTRO-LITE.JVM_OPTS_CONFIG</code>.
      */
     public final JvmOptsConfig JVM_OPTS_CONFIG = JvmOptsConfig.JVM_OPTS_CONFIG;
+
+    /**
+     * The table <code>TMAESTRO-LITE.JVM_RISK_STATISTIC_PROBLEM</code>.
+     */
+    public final JvmRiskStatisticProblem JVM_RISK_STATISTIC_PROBLEM = JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM;
 
     /**
      * The table <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER</code>.
@@ -149,6 +183,11 @@ public class TmaestroLite extends SchemaImpl {
     public final MeterMetaInfo METER_META_INFO = MeterMetaInfo.METER_META_INFO;
 
     /**
+     * The table <code>TMAESTRO-LITE.METER_METRIC_INFO</code>.
+     */
+    public final MeterMetricInfo METER_METRIC_INFO = MeterMetricInfo.METER_METRIC_INFO;
+
+    /**
      * The table <code>TMAESTRO-LITE.NODE_INFO</code>.
      */
     public final NodeInfo NODE_INFO = NodeInfo.NODE_INFO;
@@ -164,6 +203,11 @@ public class TmaestroLite extends SchemaImpl {
     public final Notify NOTIFY = Notify.NOTIFY;
 
     /**
+     * The table <code>TMAESTRO-LITE.POD_ATTACH</code>.
+     */
+    public final PodAttach POD_ATTACH = PodAttach.POD_ATTACH;
+
+    /**
      * The table <code>TMAESTRO-LITE.POD_INFO</code>.
      */
     public final PodInfo POD_INFO = PodInfo.POD_INFO;
@@ -177,6 +221,11 @@ public class TmaestroLite extends SchemaImpl {
      * The table <code>TMAESTRO-LITE.RISK_CHECK_TASK</code>.
      */
     public final RiskCheckTask RISK_CHECK_TASK = RiskCheckTask.RISK_CHECK_TASK;
+
+    /**
+     * The table <code>TMAESTRO-LITE.RISK_STATISTIC_PRE_DATA</code>.
+     */
+    public final RiskStatisticPreData RISK_STATISTIC_PRE_DATA = RiskStatisticPreData.RISK_STATISTIC_PRE_DATA;
 
     /**
      * The table <code>TMAESTRO-LITE.RULE_INFO</code>.
@@ -244,6 +293,11 @@ public class TmaestroLite extends SchemaImpl {
     public final TuningParamTrialData TUNING_PARAM_TRIAL_DATA = TuningParamTrialData.TUNING_PARAM_TRIAL_DATA;
 
     /**
+     * The table <code>TMAESTRO-LITE.TWATCH_INFO</code>.
+     */
+    public final TwatchInfo TWATCH_INFO = TwatchInfo.TWATCH_INFO;
+
+    /**
      * The table <code>TMAESTRO-LITE.USER_INFO</code>.
      */
     public final UserInfo USER_INFO = UserInfo.USER_INFO;
@@ -270,23 +324,31 @@ public class TmaestroLite extends SchemaImpl {
             BaseLine.BASE_LINE,
             CommandInfo.COMMAND_INFO,
             ConfigInfo.CONFIG_INFO,
+            ContainerProcessInfo.CONTAINER_PROCESS_INFO,
+            ContainerStatistics.CONTAINER_STATISTICS,
             ExpertKnowledge.EXPERT_KNOWLEDGE,
             HealthCheckInfo.HEALTH_CHECK_INFO,
             HealthCheckResult.HEALTH_CHECK_RESULT,
             HelpInfo.HELP_INFO,
             JavaInfo.JAVA_INFO,
             JvmMarketInfo.JVM_MARKET_INFO,
+            JvmMonitorMetric.JVM_MONITOR_METRIC,
+            JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA,
             JvmOptsConfig.JVM_OPTS_CONFIG,
+            JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM,
             JvmTuningRiskCenter.JVM_TUNING_RISK_CENTER,
             K8sAccessTokenInfo.K8S_ACCESS_TOKEN_INFO,
             Lock.LOCK,
             MeterMetaInfo.METER_META_INFO,
+            MeterMetricInfo.METER_METRIC_INFO,
             NodeInfo.NODE_INFO,
             Notice.NOTICE,
             Notify.NOTIFY,
+            PodAttach.POD_ATTACH,
             PodInfo.POD_INFO,
             RiskCheckControl.RISK_CHECK_CONTROL,
             RiskCheckTask.RISK_CHECK_TASK,
+            RiskStatisticPreData.RISK_STATISTIC_PRE_DATA,
             RuleInfo.RULE_INFO,
             StorageInfo.STORAGE_INFO,
             TaskPipelineInfo.TASK_PIPELINE_INFO,
@@ -300,6 +362,7 @@ public class TmaestroLite extends SchemaImpl {
             TuningParamTaskDataDev.TUNING_PARAM_TASK_DATA_DEV,
             TuningParamTaskInfo.TUNING_PARAM_TASK_INFO,
             TuningParamTrialData.TUNING_PARAM_TRIAL_DATA,
+            TwatchInfo.TWATCH_INFO,
             UserInfo.USER_INFO);
     }
 }
