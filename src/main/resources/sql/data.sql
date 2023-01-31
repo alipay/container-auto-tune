@@ -828,6 +828,27 @@ create table if not exists `tmaestro-lite`.threadpool_monitor_metric_data
     THREAD_POOL_NAME         varchar(256)
     );
 -- comment '线程监控信息';
+
+create table if not exists `tmaestro-lite`.threadpool1_monitor_metric_data
+(
+    id    int auto_increment comment '唯一ID;唯一ID' primary key,
+    HOST_NAME     varchar(128) not null comment 'host name',
+    PERIOD      bigint      not null comment '日期',
+    ACTIVE_COUNT     int null comment 'activeCount',
+    APP_NAME     varchar(128) null comment 'appName',
+    BLOCK_QUEUE     bigint null comment 'blockQueue',
+    COMPLETED_TASK_COUNT     bigint null comment 'completedTaskCount',
+    CORE_POOL_SIZE    int null comment 'corePoolSize',
+    DT     bigint null comment 'dt',
+    IDLE_POOL_SIZE     int null comment 'idlePoolSize',
+    KEEP_ALIVE_TIME     bigint null comment 'keepAliveTime',
+    LARGEST_POOL_SIZE     int null comment 'largestPoolSize',
+    MAXI_MUM_POOL_SIZE     int null comment 'maximumPoolSize',
+    POOL_SIZE     int null comment 'poolSize',
+    REJECT_COUNT     bigint null comment 'rejectCount',
+    TASK_COUNT     bigint null comment 'taskCount',
+    THREAD_POOL_NAME         varchar(256)
+    );
 create index if not exists threadpool_monitor_metric_data_HOST_NAME_THREAD_POOL_NAME_PERIOD_index
     on `tmaestro-lite`.threadpool_monitor_metric_data (HOST_NAME, THREAD_POOL_NAME, PERIOD);
 

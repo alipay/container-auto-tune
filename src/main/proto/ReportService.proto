@@ -35,6 +35,8 @@ message SystemMetricsGrpc {
     int32 system_cpu_count = 1;
     double system_cpu_load = 2;
     double process_cpu_load = 3;
+    double wait_cpu_load = 4;
+    double cpu_load = 5;
 }
 
 message JStateMetricsGrpc {
@@ -65,6 +67,18 @@ message JStateMetricsGrpc {
     double mcmx = 25;
     double ccsmn = 26;
     double ccsmx = 27;
+    //safeponit
+    int64 safepoint_count = 28;
+    int64 safepoint_time = 29;
+    //thread
+    int64 thread_count = 30;
+    int64 peak_thread_count = 31;
+    int64 daemon_thread_count = 32;
+    int64 dead_locked_count = 33;
+    //classload
+    int64 total_loaded_class_count = 34;
+    int64 loaded_class_count = 35;
+    int64 unloaded_class_count = 36;
 }
 
 message MemoryMetricsGrpc {
@@ -83,18 +97,26 @@ message SystemCommonGrpc {
     string app_name = 1;
     string access_token = 2;
     string server_type = 3;
-    int64 timestamp = 4;
-    string hostname = 5;
-    string namespace = 6;
-    string pod_ip = 7;
-    string java_version = 8;
-    repeated string collectors = 9;
-    string union_code = 10;
+    string jvm_config = 4;
+    int64 timestamp = 5;
+    string hostname = 6;
+    string namespace = 7;
+    string pod_ip = 8;
+    string java_version = 9;
+    repeated string collectors = 10;
+    string union_code = 11;
+    int64 jvm_jit_time = 12;
+    repeated ThreadPoolReq thread_pool_req = 13;
 }
 
 message CallBackRequest {
     string session_id = 1;
     map<string, string> tags = 2;
+}
+
+message ActionReportReq {
+    string action_key = 1;
+    string json_params = 2;
 }
 
 message MetricsGrpcRequest {
@@ -124,9 +146,38 @@ message FileResponse {
     string message = 2;
 }
 
+message ThreadPoolReq {
+    string thread_pool_name = 1;
+    int32 active_count = 2;
+    int32 pool_size = 3;
+    int32 core_pool_size = 4;
+    int64 keep_alive_time = 5;
+    int64 completed_task_count = 6;
+    int32 largest_pool_size = 7;
+    int32 maximum_pool_size = 8;
+    int64 task_count = 9;
+    int64 block_queue = 10;
+    int64 reject_count = 11;
+    int32 idle_pool_size = 12;
+}
+
+message RequestMessage{
+    string hostname = 1;
+    string namespace = 2;
+    string req_msg = 3;
+    string session_id = 4;
+}
+
+message ResponseMessage{
+    string session_id = 1;
+    string rsp_msg = 2;
+}
+
 service ReportService {
     rpc Report (MetricsGrpcRequest) returns (CommonResponse) {}
     rpc Upload (stream FileRequest) returns (stream FileResponse) {}
     rpc HeartBeat (SystemCommonGrpc) returns (CommandResponse) {}
     rpc CallBack (CallBackRequest) returns (CommonResponse) {}
+    rpc ActionReport (ActionReportReq) returns (CommonResponse) {}
+    rpc ArthasStreamFunc(stream RequestMessage) returns (stream ResponseMessage){}
 }
