@@ -29,7 +29,6 @@ public class TuneParamInfo implements Serializable {
     private String        operator;
     private String        changedTuneGroup;
     private String        defaultParam;
-    private Integer       version;
 
     public TuneParamInfo() {}
 
@@ -47,7 +46,6 @@ public class TuneParamInfo implements Serializable {
         this.operator = value.operator;
         this.changedTuneGroup = value.changedTuneGroup;
         this.defaultParam = value.defaultParam;
-        this.version = value.version;
     }
 
     public TuneParamInfo(
@@ -63,8 +61,7 @@ public class TuneParamInfo implements Serializable {
         String        updateParams,
         String        operator,
         String        changedTuneGroup,
-        String        defaultParam,
-        Integer       version
+        String        defaultParam
     ) {
         this.id = id;
         this.createTime = createTime;
@@ -79,7 +76,6 @@ public class TuneParamInfo implements Serializable {
         this.operator = operator;
         this.changedTuneGroup = changedTuneGroup;
         this.defaultParam = defaultParam;
-        this.version = version;
     }
 
     /**
@@ -277,21 +273,6 @@ public class TuneParamInfo implements Serializable {
         return this;
     }
 
-    /**
-     * Getter for <code>TMAESTRO-LITE.TUNE_PARAM_INFO.VERSION</code>.
-     */
-    public Integer getVersion() {
-        return this.version;
-    }
-
-    /**
-     * Setter for <code>TMAESTRO-LITE.TUNE_PARAM_INFO.VERSION</code>.
-     */
-    public TuneParamInfo setVersion(Integer version) {
-        this.version = version;
-        return this;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("TuneParamInfo (");
@@ -309,7 +290,6 @@ public class TuneParamInfo implements Serializable {
         sb.append(", ").append(operator);
         sb.append(", ").append(changedTuneGroup);
         sb.append(", ").append(defaultParam);
-        sb.append(", ").append(version);
 
         sb.append(")");
         return sb.toString();

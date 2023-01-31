@@ -31,7 +31,7 @@ public class AppInfo implements Serializable {
     private String        appTag;
     private String        namespace;
     private String        clusterId;
-    private String        serverType;
+    private String        appJvmTemplate;
 
     public AppInfo() {}
 
@@ -51,7 +51,7 @@ public class AppInfo implements Serializable {
         this.appTag = value.appTag;
         this.namespace = value.namespace;
         this.clusterId = value.clusterId;
-        this.serverType = value.serverType;
+        this.appJvmTemplate = value.appJvmTemplate;
     }
 
     public AppInfo(
@@ -70,7 +70,7 @@ public class AppInfo implements Serializable {
         String        appTag,
         String        namespace,
         String        clusterId,
-        String        serverType
+        String        appJvmTemplate
     ) {
         this.id = id;
         this.userId = userId;
@@ -87,7 +87,7 @@ public class AppInfo implements Serializable {
         this.appTag = appTag;
         this.namespace = namespace;
         this.clusterId = clusterId;
-        this.serverType = serverType;
+        this.appJvmTemplate = appJvmTemplate;
     }
 
     /**
@@ -316,17 +316,17 @@ public class AppInfo implements Serializable {
     }
 
     /**
-     * Getter for <code>TMAESTRO-LITE.APP_INFO.SERVER_TYPE</code>. 资源类型
+     * Getter for <code>TMAESTRO-LITE.APP_INFO.APP_JVM_TEMPLATE</code>. 该应用对应的APP模版
      */
-    public String getServerType() {
-        return this.serverType;
+    public String getAppJvmTemplate() {
+        return this.appJvmTemplate;
     }
 
     /**
-     * Setter for <code>TMAESTRO-LITE.APP_INFO.SERVER_TYPE</code>. 资源类型
+     * Setter for <code>TMAESTRO-LITE.APP_INFO.APP_JVM_TEMPLATE</code>. 该应用对应的APP模版
      */
-    public AppInfo setServerType(String serverType) {
-        this.serverType = serverType;
+    public AppInfo setAppJvmTemplate(String appJvmTemplate) {
+        this.appJvmTemplate = appJvmTemplate;
         return this;
     }
 
@@ -349,7 +349,7 @@ public class AppInfo implements Serializable {
         sb.append(", ").append(appTag);
         sb.append(", ").append(namespace);
         sb.append(", ").append(clusterId);
-        sb.append(", ").append(serverType);
+        sb.append(", ").append(appJvmTemplate);
 
         sb.append(")");
         return sb.toString();

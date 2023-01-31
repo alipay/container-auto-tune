@@ -41,6 +41,7 @@ public class PodInfo implements Serializable {
     private String        nodeIp;
     private String        nodeName;
     private String        serverType;
+    private String        unicode;
 
     public PodInfo() {}
 
@@ -70,6 +71,7 @@ public class PodInfo implements Serializable {
         this.nodeIp = value.nodeIp;
         this.nodeName = value.nodeName;
         this.serverType = value.serverType;
+        this.unicode = value.unicode;
     }
 
     public PodInfo(
@@ -97,7 +99,8 @@ public class PodInfo implements Serializable {
         String        dHostname,
         String        nodeIp,
         String        nodeName,
-        String        serverType
+        String        serverType,
+        String        unicode
     ) {
         this.id = id;
         this.appId = appId;
@@ -124,6 +127,7 @@ public class PodInfo implements Serializable {
         this.nodeIp = nodeIp;
         this.nodeName = nodeName;
         this.serverType = serverType;
+        this.unicode = unicode;
     }
 
     /**
@@ -491,17 +495,32 @@ public class PodInfo implements Serializable {
     }
 
     /**
-     * Getter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>. 资源类型
+     * Getter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>.
      */
     public String getServerType() {
         return this.serverType;
     }
 
     /**
-     * Setter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>. 资源类型
+     * Setter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>.
      */
     public PodInfo setServerType(String serverType) {
         this.serverType = serverType;
+        return this;
+    }
+
+    /**
+     * Getter for <code>TMAESTRO-LITE.POD_INFO.UNICODE</code>.
+     */
+    public String getUnicode() {
+        return this.unicode;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.POD_INFO.UNICODE</code>.
+     */
+    public PodInfo setUnicode(String unicode) {
+        this.unicode = unicode;
         return this;
     }
 
@@ -534,6 +553,7 @@ public class PodInfo implements Serializable {
         sb.append(", ").append(nodeIp);
         sb.append(", ").append(nodeName);
         sb.append(", ").append(serverType);
+        sb.append(", ").append(unicode);
 
         sb.append(")");
         return sb.toString();

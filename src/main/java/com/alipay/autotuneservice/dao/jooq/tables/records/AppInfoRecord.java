@@ -249,17 +249,17 @@ public class AppInfoRecord extends UpdatableRecordImpl<AppInfoRecord> implements
     }
 
     /**
-     * Setter for <code>TMAESTRO-LITE.APP_INFO.SERVER_TYPE</code>. 资源类型
+     * Setter for <code>TMAESTRO-LITE.APP_INFO.APP_JVM_TEMPLATE</code>. 该应用对应的APP模版
      */
-    public AppInfoRecord setServerType(String value) {
+    public AppInfoRecord setAppJvmTemplate(String value) {
         set(15, value);
         return this;
     }
 
     /**
-     * Getter for <code>TMAESTRO-LITE.APP_INFO.SERVER_TYPE</code>. 资源类型
+     * Getter for <code>TMAESTRO-LITE.APP_INFO.APP_JVM_TEMPLATE</code>. 该应用对应的APP模版
      */
-    public String getServerType() {
+    public String getAppJvmTemplate() {
         return (String) get(15);
     }
 
@@ -363,7 +363,7 @@ public class AppInfoRecord extends UpdatableRecordImpl<AppInfoRecord> implements
 
     @Override
     public Field<String> field16() {
-        return AppInfo.APP_INFO.SERVER_TYPE;
+        return AppInfo.APP_INFO.APP_JVM_TEMPLATE;
     }
 
     @Override
@@ -443,7 +443,7 @@ public class AppInfoRecord extends UpdatableRecordImpl<AppInfoRecord> implements
 
     @Override
     public String component16() {
-        return getServerType();
+        return getAppJvmTemplate();
     }
 
     @Override
@@ -523,7 +523,7 @@ public class AppInfoRecord extends UpdatableRecordImpl<AppInfoRecord> implements
 
     @Override
     public String value16() {
-        return getServerType();
+        return getAppJvmTemplate();
     }
 
     @Override
@@ -618,7 +618,7 @@ public class AppInfoRecord extends UpdatableRecordImpl<AppInfoRecord> implements
 
     @Override
     public AppInfoRecord value16(String value) {
-        setServerType(value);
+        setAppJvmTemplate(value);
         return this;
     }
 
@@ -657,7 +657,7 @@ public class AppInfoRecord extends UpdatableRecordImpl<AppInfoRecord> implements
     /**
      * Create a detached, initialised AppInfoRecord
      */
-    public AppInfoRecord(Integer id, Integer userId, String accessToken, String nodeIds, String appName, String appAsName, String appDesc, LocalDateTime createdTime, LocalDateTime updatedTime, String status, String appDefaultJvm, String clusterName, String appTag, String namespace, String clusterId, String serverType) {
+    public AppInfoRecord(Integer id, Integer userId, String accessToken, String nodeIds, String appName, String appAsName, String appDesc, LocalDateTime createdTime, LocalDateTime updatedTime, String status, String appDefaultJvm, String clusterName, String appTag, String namespace, String clusterId, String appJvmTemplate) {
         super(AppInfo.APP_INFO);
 
         setId(id);
@@ -675,6 +675,6 @@ public class AppInfoRecord extends UpdatableRecordImpl<AppInfoRecord> implements
         setAppTag(appTag);
         setNamespace(namespace);
         setClusterId(clusterId);
-        setServerType(serverType);
+        setAppJvmTemplate(appJvmTemplate);
     }
 }

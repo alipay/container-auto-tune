@@ -82,7 +82,7 @@ public class TunePipelinePhase extends TableImpl<TunePipelinePhaseRecord> {
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PIPELINE_PHASE.CONTEXT</code>. 上下文
      */
-    public final TableField<TunePipelinePhaseRecord, String> CONTEXT = createField(DSL.name("CONTEXT"), SQLDataType.VARCHAR(1000), this, "上下文");
+    public final TableField<TunePipelinePhaseRecord, String> CONTEXT = createField(DSL.name("CONTEXT"), SQLDataType.VARCHAR(16000), this, "上下文");
 
     private TunePipelinePhase(Name alias, Table<TunePipelinePhaseRecord> aliased) {
         this(alias, aliased, null);
