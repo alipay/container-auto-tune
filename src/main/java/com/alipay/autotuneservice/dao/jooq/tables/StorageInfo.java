@@ -17,7 +17,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row9;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -55,9 +55,9 @@ public class StorageInfo extends TableImpl<StorageInfoRecord> {
     public final TableField<StorageInfoRecord, Long> ID = createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>TMAESTRO-LITE.STORAGE_INFO.TYPE</code>.
+     * The column <code>TMAESTRO-LITE.STORAGE_INFO.S3_KEY</code>.
      */
-    public final TableField<StorageInfoRecord, String> TYPE = createField(DSL.name("TYPE"), SQLDataType.VARCHAR(128), this, "");
+    public final TableField<StorageInfoRecord, String> S3_KEY = createField(DSL.name("S3_KEY"), SQLDataType.VARCHAR(512).nullable(false), this, "");
 
     /**
      * The column <code>TMAESTRO-LITE.STORAGE_INFO.FILE_NAME</code>.
@@ -65,34 +65,14 @@ public class StorageInfo extends TableImpl<StorageInfoRecord> {
     public final TableField<StorageInfoRecord, String> FILE_NAME = createField(DSL.name("FILE_NAME"), SQLDataType.VARCHAR(512), this, "");
 
     /**
-     * The column <code>TMAESTRO-LITE.STORAGE_INFO.S3_KEY</code>.
+     * The column <code>TMAESTRO-LITE.STORAGE_INFO.CREATED_TIME</code>.
      */
-    public final TableField<StorageInfoRecord, String> S3_KEY = createField(DSL.name("S3_KEY"), SQLDataType.VARCHAR(512).nullable(false), this, "");
-
-    /**
-     * The column <code>TMAESTRO-LITE.STORAGE_INFO.RESULT_KEY</code>.
-     */
-    public final TableField<StorageInfoRecord, String> RESULT_KEY = createField(DSL.name("RESULT_KEY"), SQLDataType.VARCHAR(128), this, "");
-
-    /**
-     * The column <code>TMAESTRO-LITE.STORAGE_INFO.ACCESS_TOKEN</code>.
-     */
-    public final TableField<StorageInfoRecord, String> ACCESS_TOKEN = createField(DSL.name("ACCESS_TOKEN"), SQLDataType.VARCHAR(128), this, "");
-
-    /**
-     * The column <code>TMAESTRO-LITE.STORAGE_INFO.OPERATOR</code>.
-     */
-    public final TableField<StorageInfoRecord, String> OPERATOR = createField(DSL.name("OPERATOR"), SQLDataType.VARCHAR(128), this, "");
+    public final TableField<StorageInfoRecord, LocalDateTime> CREATED_TIME = createField(DSL.name("CREATED_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
      * The column <code>TMAESTRO-LITE.STORAGE_INFO.UPDATED_TIME</code>.
      */
     public final TableField<StorageInfoRecord, LocalDateTime> UPDATED_TIME = createField(DSL.name("UPDATED_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
-
-    /**
-     * The column <code>TMAESTRO-LITE.STORAGE_INFO.CREATED_TIME</code>.
-     */
-    public final TableField<StorageInfoRecord, LocalDateTime> CREATED_TIME = createField(DSL.name("CREATED_TIME"), SQLDataType.LOCALDATETIME(6), this, "");
 
     private StorageInfo(Name alias, Table<StorageInfoRecord> aliased) {
         this(alias, aliased, null);
@@ -174,11 +154,11 @@ public class StorageInfo extends TableImpl<StorageInfoRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row9 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row9<Long, String, String, String, String, String, String, LocalDateTime, LocalDateTime> fieldsRow() {
-        return (Row9) super.fieldsRow();
+    public Row5<Long, String, String, LocalDateTime, LocalDateTime> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 }

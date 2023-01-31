@@ -104,12 +104,12 @@ public class TunePlan extends TableImpl<TunePlanRecord> {
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PLAN.TUNE_EFFECT</code>.
      */
-    public final TableField<TunePlanRecord, String> TUNE_EFFECT = createField(DSL.name("TUNE_EFFECT"), SQLDataType.VARCHAR(2000), this, "");
+    public final TableField<TunePlanRecord, String> TUNE_EFFECT = createField(DSL.name("TUNE_EFFECT"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PLAN.PREDICT_EFFECT</code>. 预期评估
      */
-    public final TableField<TunePlanRecord, String> PREDICT_EFFECT = createField(DSL.name("PREDICT_EFFECT"), SQLDataType.VARCHAR(2000), this, "预期评估");
+    public final TableField<TunePlanRecord, String> PREDICT_EFFECT = createField(DSL.name("PREDICT_EFFECT"), SQLDataType.VARCHAR(1000), this, "预期评估");
 
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PLAN.TUNE_STATUS</code>.

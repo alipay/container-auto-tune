@@ -104,7 +104,7 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.APP_INFO.APP_DEFAULT_JVM</code>. 集群jvm生效配置;集群jvm生效配置
      */
-    public final TableField<AppInfoRecord, String> APP_DEFAULT_JVM = createField(DSL.name("APP_DEFAULT_JVM"), SQLDataType.VARCHAR(1024), this, "集群jvm生效配置;集群jvm生效配置");
+    public final TableField<AppInfoRecord, String> APP_DEFAULT_JVM = createField(DSL.name("APP_DEFAULT_JVM"), SQLDataType.VARCHAR(1000), this, "集群jvm生效配置;集群jvm生效配置");
 
     /**
      * The column <code>TMAESTRO-LITE.APP_INFO.CLUSTER_NAME</code>. k8s集群名
@@ -127,9 +127,9 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
     public final TableField<AppInfoRecord, String> CLUSTER_ID = createField(DSL.name("CLUSTER_ID"), SQLDataType.VARCHAR(255), this, "集群ID");
 
     /**
-     * The column <code>TMAESTRO-LITE.APP_INFO.APP_JVM_TEMPLATE</code>. 该应用对应的APP模版
+     * The column <code>TMAESTRO-LITE.APP_INFO.SERVER_TYPE</code>. 资源类型
      */
-    public final TableField<AppInfoRecord, String> APP_JVM_TEMPLATE = createField(DSL.name("APP_JVM_TEMPLATE"), SQLDataType.VARCHAR(2048), this, "该应用对应的APP模版");
+    public final TableField<AppInfoRecord, String> SERVER_TYPE = createField(DSL.name("SERVER_TYPE"), SQLDataType.VARCHAR(255), this, "资源类型");
 
     private AppInfo(Name alias, Table<AppInfoRecord> aliased) {
         this(alias, aliased, null);
@@ -186,7 +186,7 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
 
     @Override
     public List<UniqueKey<AppInfoRecord>> getKeys() {
-        return Arrays.<UniqueKey<AppInfoRecord>>asList(Keys.CONSTRAINT_7, Keys.APP_INFO_APP_NAME_ACCESS_TOKEN_NAMESPACE_UINDEX);
+        return Arrays.<UniqueKey<AppInfoRecord>>asList(Keys.CONSTRAINT_7, Keys.APP_INFO_APP_NAME_ACCESS_TOKEN_UINDEX);
     }
 
     @Override

@@ -20,15 +20,13 @@ public class K8sAccessTokenInfo implements Serializable {
     private LocalDateTime createTime;
     private LocalDateTime updatedTime;
     private String        accessToken;
-    private String        clusterName;
-    private String        region;
-    private String        s3Key;
     private String        accessKeyId;
     private String        secretAccessKey;
     private String        cer;
+    private String        clusterName;
+    private String        region;
     private String        endpoint;
     private String        clusterId;
-    private String        clusterStatus;
 
     public K8sAccessTokenInfo() {}
 
@@ -37,15 +35,13 @@ public class K8sAccessTokenInfo implements Serializable {
         this.createTime = value.createTime;
         this.updatedTime = value.updatedTime;
         this.accessToken = value.accessToken;
-        this.clusterName = value.clusterName;
-        this.region = value.region;
-        this.s3Key = value.s3Key;
         this.accessKeyId = value.accessKeyId;
         this.secretAccessKey = value.secretAccessKey;
         this.cer = value.cer;
+        this.clusterName = value.clusterName;
+        this.region = value.region;
         this.endpoint = value.endpoint;
         this.clusterId = value.clusterId;
-        this.clusterStatus = value.clusterStatus;
     }
 
     public K8sAccessTokenInfo(
@@ -53,29 +49,25 @@ public class K8sAccessTokenInfo implements Serializable {
         LocalDateTime createTime,
         LocalDateTime updatedTime,
         String        accessToken,
-        String        clusterName,
-        String        region,
-        String        s3Key,
         String        accessKeyId,
         String        secretAccessKey,
         String        cer,
+        String        clusterName,
+        String        region,
         String        endpoint,
-        String        clusterId,
-        String        clusterStatus
+        String        clusterId
     ) {
         this.id = id;
         this.createTime = createTime;
         this.updatedTime = updatedTime;
         this.accessToken = accessToken;
-        this.clusterName = clusterName;
-        this.region = region;
-        this.s3Key = s3Key;
         this.accessKeyId = accessKeyId;
         this.secretAccessKey = secretAccessKey;
         this.cer = cer;
+        this.clusterName = clusterName;
+        this.region = region;
         this.endpoint = endpoint;
         this.clusterId = clusterId;
-        this.clusterStatus = clusterStatus;
     }
 
     /**
@@ -139,51 +131,6 @@ public class K8sAccessTokenInfo implements Serializable {
     }
 
     /**
-     * Getter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CLUSTER_NAME</code>. 集群名称
-     */
-    public String getClusterName() {
-        return this.clusterName;
-    }
-
-    /**
-     * Setter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CLUSTER_NAME</code>. 集群名称
-     */
-    public K8sAccessTokenInfo setClusterName(String clusterName) {
-        this.clusterName = clusterName;
-        return this;
-    }
-
-    /**
-     * Getter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.REGION</code>. aws;region
-     */
-    public String getRegion() {
-        return this.region;
-    }
-
-    /**
-     * Setter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.REGION</code>. aws;region
-     */
-    public K8sAccessTokenInfo setRegion(String region) {
-        this.region = region;
-        return this;
-    }
-
-    /**
-     * Getter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.S3_KEY</code>.
-     */
-    public String getS3Key() {
-        return this.s3Key;
-    }
-
-    /**
-     * Setter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.S3_KEY</code>.
-     */
-    public K8sAccessTokenInfo setS3Key(String s3Key) {
-        this.s3Key = s3Key;
-        return this;
-    }
-
-    /**
      * Getter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.ACCESS_KEY_ID</code>. access;key id
      */
     public String getAccessKeyId() {
@@ -229,6 +176,36 @@ public class K8sAccessTokenInfo implements Serializable {
     }
 
     /**
+     * Getter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CLUSTER_NAME</code>. 集群名称
+     */
+    public String getClusterName() {
+        return this.clusterName;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CLUSTER_NAME</code>. 集群名称
+     */
+    public K8sAccessTokenInfo setClusterName(String clusterName) {
+        this.clusterName = clusterName;
+        return this;
+    }
+
+    /**
+     * Getter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.REGION</code>. aws;region
+     */
+    public String getRegion() {
+        return this.region;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.REGION</code>. aws;region
+     */
+    public K8sAccessTokenInfo setRegion(String region) {
+        this.region = region;
+        return this;
+    }
+
+    /**
      * Getter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.ENDPOINT</code>. aws;endpoint url
      */
     public String getEndpoint() {
@@ -258,21 +235,6 @@ public class K8sAccessTokenInfo implements Serializable {
         return this;
     }
 
-    /**
-     * Getter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CLUSTER_STATUS</code>. 集群状态：INSTALLING 安装中; INSTALLED 已安装； INSTALL_FAILED 安装失败
-     */
-    public String getClusterStatus() {
-        return this.clusterStatus;
-    }
-
-    /**
-     * Setter for <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CLUSTER_STATUS</code>. 集群状态：INSTALLING 安装中; INSTALLED 已安装； INSTALL_FAILED 安装失败
-     */
-    public K8sAccessTokenInfo setClusterStatus(String clusterStatus) {
-        this.clusterStatus = clusterStatus;
-        return this;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("K8sAccessTokenInfo (");
@@ -281,15 +243,13 @@ public class K8sAccessTokenInfo implements Serializable {
         sb.append(", ").append(createTime);
         sb.append(", ").append(updatedTime);
         sb.append(", ").append(accessToken);
-        sb.append(", ").append(clusterName);
-        sb.append(", ").append(region);
-        sb.append(", ").append(s3Key);
         sb.append(", ").append(accessKeyId);
         sb.append(", ").append(secretAccessKey);
         sb.append(", ").append(cer);
+        sb.append(", ").append(clusterName);
+        sb.append(", ").append(region);
         sb.append(", ").append(endpoint);
         sb.append(", ").append(clusterId);
-        sb.append(", ").append(clusterStatus);
 
         sb.append(")");
         return sb.toString();

@@ -16,7 +16,7 @@ public class CommandInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long          id;
+    private Integer       id;
     private String        sessionid;
     private String        runleAction;
     private String        resultType;
@@ -28,8 +28,6 @@ public class CommandInfo implements Serializable {
     private String        status;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
-    private String        taskName;
-    private String        podName;
 
     public CommandInfo() {}
 
@@ -46,12 +44,10 @@ public class CommandInfo implements Serializable {
         this.status = value.status;
         this.createdTime = value.createdTime;
         this.updatedTime = value.updatedTime;
-        this.taskName = value.taskName;
-        this.podName = value.podName;
     }
 
     public CommandInfo(
-        Long          id,
+        Integer       id,
         String        sessionid,
         String        runleAction,
         String        resultType,
@@ -62,9 +58,7 @@ public class CommandInfo implements Serializable {
         String        context,
         String        status,
         LocalDateTime createdTime,
-        LocalDateTime updatedTime,
-        String        taskName,
-        String        podName
+        LocalDateTime updatedTime
     ) {
         this.id = id;
         this.sessionid = sessionid;
@@ -78,21 +72,19 @@ public class CommandInfo implements Serializable {
         this.status = status;
         this.createdTime = createdTime;
         this.updatedTime = updatedTime;
-        this.taskName = taskName;
-        this.podName = podName;
     }
 
     /**
-     * Getter for <code>TMAESTRO-LITE.COMMAND_INFO.ID</code>. 主键
+     * Getter for <code>TMAESTRO-LITE.COMMAND_INFO.ID</code>. 主键ID
      */
-    public Long getId() {
+    public Integer getId() {
         return this.id;
     }
 
     /**
-     * Setter for <code>TMAESTRO-LITE.COMMAND_INFO.ID</code>. 主键
+     * Setter for <code>TMAESTRO-LITE.COMMAND_INFO.ID</code>. 主键ID
      */
-    public CommandInfo setId(Long id) {
+    public CommandInfo setId(Integer id) {
         this.id = id;
         return this;
     }
@@ -262,36 +254,6 @@ public class CommandInfo implements Serializable {
         return this;
     }
 
-    /**
-     * Getter for <code>TMAESTRO-LITE.COMMAND_INFO.TASK_NAME</code>.
-     */
-    public String getTaskName() {
-        return this.taskName;
-    }
-
-    /**
-     * Setter for <code>TMAESTRO-LITE.COMMAND_INFO.TASK_NAME</code>.
-     */
-    public CommandInfo setTaskName(String taskName) {
-        this.taskName = taskName;
-        return this;
-    }
-
-    /**
-     * Getter for <code>TMAESTRO-LITE.COMMAND_INFO.POD_NAME</code>.
-     */
-    public String getPodName() {
-        return this.podName;
-    }
-
-    /**
-     * Setter for <code>TMAESTRO-LITE.COMMAND_INFO.POD_NAME</code>.
-     */
-    public CommandInfo setPodName(String podName) {
-        this.podName = podName;
-        return this;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CommandInfo (");
@@ -308,8 +270,6 @@ public class CommandInfo implements Serializable {
         sb.append(", ").append(status);
         sb.append(", ").append(createdTime);
         sb.append(", ").append(updatedTime);
-        sb.append(", ").append(taskName);
-        sb.append(", ").append(podName);
 
         sb.append(")");
         return sb.toString();

@@ -77,7 +77,7 @@ public class TuningParamTaskInfo extends TableImpl<TuningParamTaskInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.PARAM_DISTRIBUTION</code>.
      */
-    public final TableField<TuningParamTaskInfoRecord, String> PARAM_DISTRIBUTION = createField(DSL.name("PARAM_DISTRIBUTION"), SQLDataType.VARCHAR(2000), this, "");
+    public final TableField<TuningParamTaskInfoRecord, String> PARAM_DISTRIBUTION = createField(DSL.name("PARAM_DISTRIBUTION"), SQLDataType.VARCHAR(1000), this, "");
 
     /**
      * The column <code>TMAESTRO-LITE.TUNING_PARAM_TASK_INFO.PROBLEM_ID</code>.

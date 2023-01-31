@@ -67,7 +67,7 @@ public class ExpertKnowledge extends TableImpl<ExpertKnowledgeRecord> {
     /**
      * The column <code>TMAESTRO-LITE.EXPERT_KNOWLEDGE.DESC</code>. 问题描述
      */
-    public final TableField<ExpertKnowledgeRecord, String> DESC = createField(DSL.name("DESC"), SQLDataType.VARCHAR(2048), this, "问题描述");
+    public final TableField<ExpertKnowledgeRecord, String> DESC = createField(DSL.name("DESC"), SQLDataType.VARCHAR(1000), this, "问题描述");
 
     /**
      * The column <code>TMAESTRO-LITE.EXPERT_KNOWLEDGE.PROBLEM_TYPE_SET</code>. 问题类型集合
@@ -77,7 +77,7 @@ public class ExpertKnowledge extends TableImpl<ExpertKnowledgeRecord> {
     /**
      * The column <code>TMAESTRO-LITE.EXPERT_KNOWLEDGE.EXPERT_JVM_PLANS</code>. 调整方案
      */
-    public final TableField<ExpertKnowledgeRecord, String> EXPERT_JVM_PLANS = createField(DSL.name("EXPERT_JVM_PLANS"), SQLDataType.VARCHAR(2048), this, "调整方案");
+    public final TableField<ExpertKnowledgeRecord, String> EXPERT_JVM_PLANS = createField(DSL.name("EXPERT_JVM_PLANS"), SQLDataType.VARCHAR(1000), this, "调整方案");
 
     /**
      * The column <code>TMAESTRO-LITE.EXPERT_KNOWLEDGE.CREATED_TIME</code>. 创建时间

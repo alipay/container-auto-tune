@@ -69,7 +69,7 @@ public class RiskCheckTask extends TableImpl<RiskCheckTaskRecord> {
     /**
      * The column <code>TMAESTRO-LITE.RISK_CHECK_TASK.EXECUTE_PARAM</code>. 任务ID列表
      */
-    public final TableField<RiskCheckTaskRecord, String> EXECUTE_PARAM = createField(DSL.name("EXECUTE_PARAM"), SQLDataType.VARCHAR(5000).nullable(false), this, "任务ID列表");
+    public final TableField<RiskCheckTaskRecord, String> EXECUTE_PARAM = createField(DSL.name("EXECUTE_PARAM"), SQLDataType.VARCHAR(1000).nullable(false), this, "任务ID列表");
 
     /**
      * The column <code>TMAESTRO-LITE.RISK_CHECK_TASK.TASK_STATUS</code>. 任务执行状态(READY,INTERUPTE,END)
@@ -89,7 +89,7 @@ public class RiskCheckTask extends TableImpl<RiskCheckTaskRecord> {
     /**
      * The column <code>TMAESTRO-LITE.RISK_CHECK_TASK.TASK_RISK_MSG</code>. 风险详情
      */
-    public final TableField<RiskCheckTaskRecord, String> TASK_RISK_MSG = createField(DSL.name("TASK_RISK_MSG"), SQLDataType.VARCHAR(5000), this, "风险详情");
+    public final TableField<RiskCheckTaskRecord, String> TASK_RISK_MSG = createField(DSL.name("TASK_RISK_MSG"), SQLDataType.VARCHAR(1000), this, "风险详情");
 
     /**
      * The column <code>TMAESTRO-LITE.RISK_CHECK_TASK.CREATE_TIME</code>. 创建时间

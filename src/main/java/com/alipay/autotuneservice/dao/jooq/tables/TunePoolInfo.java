@@ -102,12 +102,12 @@ public class TunePoolInfo extends TableImpl<TunePoolInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.TUNE_POOL_INFO.EXPERIMENT_POOL_CONFIG</code>. 实验池配置
      */
-    public final TableField<TunePoolInfoRecord, String> EXPERIMENT_POOL_CONFIG = createField(DSL.name("EXPERIMENT_POOL_CONFIG"), SQLDataType.VARCHAR(2000).nullable(false), this, "实验池配置");
+    public final TableField<TunePoolInfoRecord, String> EXPERIMENT_POOL_CONFIG = createField(DSL.name("EXPERIMENT_POOL_CONFIG"), SQLDataType.VARCHAR(1000).nullable(false), this, "实验池配置");
 
     /**
      * The column <code>TMAESTRO-LITE.TUNE_POOL_INFO.BATCH_POOL_CONFIG</code>. 调参池配置
      */
-    public final TableField<TunePoolInfoRecord, String> BATCH_POOL_CONFIG = createField(DSL.name("BATCH_POOL_CONFIG"), SQLDataType.VARCHAR(2000).nullable(false), this, "调参池配置");
+    public final TableField<TunePoolInfoRecord, String> BATCH_POOL_CONFIG = createField(DSL.name("BATCH_POOL_CONFIG"), SQLDataType.VARCHAR(1000).nullable(false), this, "调参池配置");
 
     private TunePoolInfo(Name alias, Table<TunePoolInfoRecord> aliased) {
         this(alias, aliased, null);

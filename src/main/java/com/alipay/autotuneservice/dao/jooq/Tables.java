@@ -4,7 +4,6 @@
 package com.alipay.autotuneservice.dao.jooq;
 
 
-import com.alipay.autotuneservice.dao.jooq.tables.Alarm;
 import com.alipay.autotuneservice.dao.jooq.tables.AppInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.AppLog;
 import com.alipay.autotuneservice.dao.jooq.tables.BaseLine;
@@ -14,9 +13,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.ContainerProcessInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ContainerStatistics;
 import com.alipay.autotuneservice.dao.jooq.tables.ExpertKnowledge;
 import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckInfo;
-import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckResult;
 import com.alipay.autotuneservice.dao.jooq.tables.HelpInfo;
-import com.alipay.autotuneservice.dao.jooq.tables.JavaInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMarketInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetric;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
@@ -24,18 +21,14 @@ import com.alipay.autotuneservice.dao.jooq.tables.JvmOptsConfig;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.K8sAccessTokenInfo;
-import com.alipay.autotuneservice.dao.jooq.tables.Lock;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetaInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetricInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.NodeInfo;
-import com.alipay.autotuneservice.dao.jooq.tables.Notice;
-import com.alipay.autotuneservice.dao.jooq.tables.Notify;
 import com.alipay.autotuneservice.dao.jooq.tables.PodAttach;
 import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckControl;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskStatisticPreData;
-import com.alipay.autotuneservice.dao.jooq.tables.RuleInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.StorageInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TaskPipelineInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuneLogInfo;
@@ -57,11 +50,6 @@ import com.alipay.autotuneservice.dao.jooq.tables.UserInfo;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
-
-    /**
-     * The table <code>TMAESTRO-LITE.ALARM</code>.
-     */
-    public static final Alarm ALARM = Alarm.ALARM;
 
     /**
      * The table <code>TMAESTRO-LITE.APP_INFO</code>.
@@ -109,19 +97,9 @@ public class Tables {
     public static final HealthCheckInfo HEALTH_CHECK_INFO = HealthCheckInfo.HEALTH_CHECK_INFO;
 
     /**
-     * The table <code>TMAESTRO-LITE.HEALTH_CHECK_RESULT</code>.
-     */
-    public static final HealthCheckResult HEALTH_CHECK_RESULT = HealthCheckResult.HEALTH_CHECK_RESULT;
-
-    /**
      * The table <code>TMAESTRO-LITE.HELP_INFO</code>.
      */
     public static final HelpInfo HELP_INFO = HelpInfo.HELP_INFO;
-
-    /**
-     * The table <code>TMAESTRO-LITE.JAVA_INFO</code>.
-     */
-    public static final JavaInfo JAVA_INFO = JavaInfo.JAVA_INFO;
 
     /**
      * The table <code>TMAESTRO-LITE.JVM_MARKET_INFO</code>.
@@ -159,11 +137,6 @@ public class Tables {
     public static final K8sAccessTokenInfo K8S_ACCESS_TOKEN_INFO = K8sAccessTokenInfo.K8S_ACCESS_TOKEN_INFO;
 
     /**
-     * The table <code>TMAESTRO-LITE.LOCK</code>.
-     */
-    public static final Lock LOCK = Lock.LOCK;
-
-    /**
      * The table <code>TMAESTRO-LITE.METER_META_INFO</code>.
      */
     public static final MeterMetaInfo METER_META_INFO = MeterMetaInfo.METER_META_INFO;
@@ -177,16 +150,6 @@ public class Tables {
      * The table <code>TMAESTRO-LITE.NODE_INFO</code>.
      */
     public static final NodeInfo NODE_INFO = NodeInfo.NODE_INFO;
-
-    /**
-     * The table <code>TMAESTRO-LITE.NOTICE</code>.
-     */
-    public static final Notice NOTICE = Notice.NOTICE;
-
-    /**
-     * The table <code>TMAESTRO-LITE.NOTIFY</code>.
-     */
-    public static final Notify NOTIFY = Notify.NOTIFY;
 
     /**
      * The table <code>TMAESTRO-LITE.POD_ATTACH</code>.
@@ -212,11 +175,6 @@ public class Tables {
      * The table <code>TMAESTRO-LITE.RISK_STATISTIC_PRE_DATA</code>.
      */
     public static final RiskStatisticPreData RISK_STATISTIC_PRE_DATA = RiskStatisticPreData.RISK_STATISTIC_PRE_DATA;
-
-    /**
-     * The table <code>TMAESTRO-LITE.RULE_INFO</code>.
-     */
-    public static final RuleInfo RULE_INFO = RuleInfo.RULE_INFO;
 
     /**
      * The table <code>TMAESTRO-LITE.STORAGE_INFO</code>.
