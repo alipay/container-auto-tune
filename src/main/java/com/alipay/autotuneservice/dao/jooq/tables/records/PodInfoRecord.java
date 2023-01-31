@@ -385,7 +385,7 @@ public class PodInfoRecord extends UpdatableRecordImpl<PodInfoRecord> {
     }
 
     /**
-     * Setter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>. 资源类型
+     * Setter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>.
      */
     public PodInfoRecord setServerType(String value) {
         set(24, value);
@@ -393,10 +393,25 @@ public class PodInfoRecord extends UpdatableRecordImpl<PodInfoRecord> {
     }
 
     /**
-     * Getter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>. 资源类型
+     * Getter for <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>.
      */
     public String getServerType() {
         return (String) get(24);
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.POD_INFO.UNICODE</code>.
+     */
+    public PodInfoRecord setUnicode(String value) {
+        set(25, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>TMAESTRO-LITE.POD_INFO.UNICODE</code>.
+     */
+    public String getUnicode() {
+        return (String) get(25);
     }
 
     // -------------------------------------------------------------------------
@@ -422,7 +437,7 @@ public class PodInfoRecord extends UpdatableRecordImpl<PodInfoRecord> {
     /**
      * Create a detached, initialised PodInfoRecord
      */
-    public PodInfoRecord(Integer id, Integer appId, Integer nodeId, String podName, String ip, String status, LocalDateTime createdTime, String podJvm, String env, String podDeployType, String podTemplate, String podTags, String accessToken, String clusterName, String k8sNamespace, String podStatus, LocalDateTime updatedTime, Integer cpuCoreLimit, Integer memLimit, String cpuLimit, Integer agentInstall, String dHostname, String nodeIp, String nodeName, String serverType) {
+    public PodInfoRecord(Integer id, Integer appId, Integer nodeId, String podName, String ip, String status, LocalDateTime createdTime, String podJvm, String env, String podDeployType, String podTemplate, String podTags, String accessToken, String clusterName, String k8sNamespace, String podStatus, LocalDateTime updatedTime, Integer cpuCoreLimit, Integer memLimit, String cpuLimit, Integer agentInstall, String dHostname, String nodeIp, String nodeName, String serverType, String unicode) {
         super(PodInfo.POD_INFO);
 
         setId(id);
@@ -450,5 +465,6 @@ public class PodInfoRecord extends UpdatableRecordImpl<PodInfoRecord> {
         setNodeIp(nodeIp);
         setNodeName(nodeName);
         setServerType(serverType);
+        setUnicode(unicode);
     }
 }

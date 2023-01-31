@@ -77,7 +77,7 @@ public class MeterMetaInfo extends TableImpl<MeterMetaInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.METER_META_INFO.METER_METRICS</code>. 监控指标信息
      */
-    public final TableField<MeterMetaInfoRecord, String> METER_METRICS = createField(DSL.name("METER_METRICS"), SQLDataType.VARCHAR(1000), this, "监控指标信息");
+    public final TableField<MeterMetaInfoRecord, String> METER_METRICS = createField(DSL.name("METER_METRICS"), SQLDataType.VARCHAR(2048), this, "监控指标信息");
 
     /**
      * The column <code>TMAESTRO-LITE.METER_META_INFO.METER_ENABLE</code>.

@@ -17,7 +17,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row11;
+import org.jooq.Row13;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -67,22 +67,7 @@ public class K8sAccessTokenInfo extends TableImpl<K8sAccessTokenInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.ACCESS_TOKEN</code>. access;token
      */
-    public final TableField<K8sAccessTokenInfoRecord, String> ACCESS_TOKEN = createField(DSL.name("ACCESS_TOKEN"), SQLDataType.VARCHAR(1000).nullable(false), this, "access;token");
-
-    /**
-     * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.ACCESS_KEY_ID</code>. access;key id
-     */
-    public final TableField<K8sAccessTokenInfoRecord, String> ACCESS_KEY_ID = createField(DSL.name("ACCESS_KEY_ID"), SQLDataType.VARCHAR(128).nullable(false), this, "access;key id");
-
-    /**
-     * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.SECRET_ACCESS_KEY</code>. Secret;Access Key
-     */
-    public final TableField<K8sAccessTokenInfoRecord, String> SECRET_ACCESS_KEY = createField(DSL.name("SECRET_ACCESS_KEY"), SQLDataType.VARCHAR(1000).nullable(false), this, "Secret;Access Key");
-
-    /**
-     * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CER</code>. 证书
-     */
-    public final TableField<K8sAccessTokenInfoRecord, String> CER = createField(DSL.name("CER"), SQLDataType.VARCHAR(5120).nullable(false), this, "证书");
+    public final TableField<K8sAccessTokenInfoRecord, String> ACCESS_TOKEN = createField(DSL.name("ACCESS_TOKEN"), SQLDataType.VARCHAR(200).nullable(false), this, "access;token");
 
     /**
      * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CLUSTER_NAME</code>. 集群名称
@@ -92,17 +77,42 @@ public class K8sAccessTokenInfo extends TableImpl<K8sAccessTokenInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.REGION</code>. aws;region
      */
-    public final TableField<K8sAccessTokenInfoRecord, String> REGION = createField(DSL.name("REGION"), SQLDataType.VARCHAR(1024).nullable(false), this, "aws;region");
+    public final TableField<K8sAccessTokenInfoRecord, String> REGION = createField(DSL.name("REGION"), SQLDataType.VARCHAR(100).nullable(false), this, "aws;region");
+
+    /**
+     * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.S3_KEY</code>.
+     */
+    public final TableField<K8sAccessTokenInfoRecord, String> S3_KEY = createField(DSL.name("S3_KEY"), SQLDataType.VARCHAR(200).nullable(false), this, "");
+
+    /**
+     * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.ACCESS_KEY_ID</code>. access;key id
+     */
+    public final TableField<K8sAccessTokenInfoRecord, String> ACCESS_KEY_ID = createField(DSL.name("ACCESS_KEY_ID"), SQLDataType.VARCHAR(128), this, "access;key id");
+
+    /**
+     * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.SECRET_ACCESS_KEY</code>. Secret;Access Key
+     */
+    public final TableField<K8sAccessTokenInfoRecord, String> SECRET_ACCESS_KEY = createField(DSL.name("SECRET_ACCESS_KEY"), SQLDataType.VARCHAR(100), this, "Secret;Access Key");
+
+    /**
+     * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CER</code>. 证书
+     */
+    public final TableField<K8sAccessTokenInfoRecord, String> CER = createField(DSL.name("CER"), SQLDataType.VARCHAR(100), this, "证书");
 
     /**
      * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.ENDPOINT</code>. aws;endpoint url
      */
-    public final TableField<K8sAccessTokenInfoRecord, String> ENDPOINT = createField(DSL.name("ENDPOINT"), SQLDataType.VARCHAR(1024).nullable(false), this, "aws;endpoint url");
+    public final TableField<K8sAccessTokenInfoRecord, String> ENDPOINT = createField(DSL.name("ENDPOINT"), SQLDataType.VARCHAR(100), this, "aws;endpoint url");
 
     /**
      * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CLUSTER_ID</code>. 集群ID
      */
     public final TableField<K8sAccessTokenInfoRecord, String> CLUSTER_ID = createField(DSL.name("CLUSTER_ID"), SQLDataType.VARCHAR(128), this, "集群ID");
+
+    /**
+     * The column <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO.CLUSTER_STATUS</code>. 集群状态：INSTALLING 安装中; INSTALLED 已安装； INSTALL_FAILED 安装失败
+     */
+    public final TableField<K8sAccessTokenInfoRecord, String> CLUSTER_STATUS = createField(DSL.name("CLUSTER_STATUS"), SQLDataType.VARCHAR(48), this, "集群状态：INSTALLING 安装中; INSTALLED 已安装； INSTALL_FAILED 安装失败");
 
     private K8sAccessTokenInfo(Name alias, Table<K8sAccessTokenInfoRecord> aliased) {
         this(alias, aliased, null);
@@ -154,7 +164,7 @@ public class K8sAccessTokenInfo extends TableImpl<K8sAccessTokenInfoRecord> {
 
     @Override
     public List<UniqueKey<K8sAccessTokenInfoRecord>> getKeys() {
-        return Arrays.<UniqueKey<K8sAccessTokenInfoRecord>>asList(Keys.CONSTRAINT_1);
+        return Arrays.<UniqueKey<K8sAccessTokenInfoRecord>>asList(Keys.CONSTRAINT_1, Keys.K8S_ACCESS_TOKEN_INFO_ACCESS_TOKEN_CLUSTER_NAME_UINDEX);
     }
 
     @Override
@@ -184,11 +194,11 @@ public class K8sAccessTokenInfo extends TableImpl<K8sAccessTokenInfoRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row11 type methods
+    // Row13 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<Integer, LocalDateTime, LocalDateTime, String, String, String, String, String, String, String, String> fieldsRow() {
-        return (Row11) super.fieldsRow();
+    public Row13<Integer, LocalDateTime, LocalDateTime, String, String, String, String, String, String, String, String, String, String> fieldsRow() {
+        return (Row13) super.fieldsRow();
     }
 }

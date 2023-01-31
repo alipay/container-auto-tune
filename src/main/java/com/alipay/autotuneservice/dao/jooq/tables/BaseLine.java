@@ -124,12 +124,12 @@ public class BaseLine extends TableImpl<BaseLineRecord> {
 
     @Override
     public UniqueKey<BaseLineRecord> getPrimaryKey() {
-        return Keys.CONSTRAINT_3;
+        return Keys.CONSTRAINT_3B;
     }
 
     @Override
     public List<UniqueKey<BaseLineRecord>> getKeys() {
-        return Arrays.<UniqueKey<BaseLineRecord>>asList(Keys.CONSTRAINT_3);
+        return Arrays.<UniqueKey<BaseLineRecord>>asList(Keys.CONSTRAINT_3B);
     }
 
     @Override

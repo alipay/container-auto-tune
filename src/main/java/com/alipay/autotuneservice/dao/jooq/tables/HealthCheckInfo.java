@@ -82,7 +82,7 @@ public class HealthCheckInfo extends TableImpl<HealthCheckInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.HEALTH_CHECK_INFO.PROBLEAM_POINT</code>. 检查问题点
      */
-    public final TableField<HealthCheckInfoRecord, String> PROBLEAM_POINT = createField(DSL.name("PROBLEAM_POINT"), SQLDataType.VARCHAR(1000).nullable(false), this, "检查问题点");
+    public final TableField<HealthCheckInfoRecord, String> PROBLEAM_POINT = createField(DSL.name("PROBLEAM_POINT"), SQLDataType.VARCHAR(4000).nullable(false), this, "检查问题点");
 
     /**
      * The column <code>TMAESTRO-LITE.HEALTH_CHECK_INFO.GRADE</code>. 分数
@@ -97,7 +97,7 @@ public class HealthCheckInfo extends TableImpl<HealthCheckInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.HEALTH_CHECK_INFO.ALGO_PROBLEAM</code>.
      */
-    public final TableField<HealthCheckInfoRecord, String> ALGO_PROBLEAM = createField(DSL.name("ALGO_PROBLEAM"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<HealthCheckInfoRecord, String> ALGO_PROBLEAM = createField(DSL.name("ALGO_PROBLEAM"), SQLDataType.VARCHAR(4000), this, "");
 
     private HealthCheckInfo(Name alias, Table<HealthCheckInfoRecord> aliased) {
         this(alias, aliased, null);

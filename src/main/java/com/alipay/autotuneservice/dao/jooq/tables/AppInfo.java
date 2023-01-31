@@ -4,7 +4,6 @@
 package com.alipay.autotuneservice.dao.jooq.tables;
 
 
-import com.alipay.autotuneservice.dao.jooq.Indexes;
 import com.alipay.autotuneservice.dao.jooq.Keys;
 import com.alipay.autotuneservice.dao.jooq.TmaestroLite;
 import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
@@ -16,10 +15,9 @@ import java.util.List;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
-import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row16;
+import org.jooq.Row17;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -104,7 +102,7 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.APP_INFO.APP_DEFAULT_JVM</code>. 集群jvm生效配置;集群jvm生效配置
      */
-    public final TableField<AppInfoRecord, String> APP_DEFAULT_JVM = createField(DSL.name("APP_DEFAULT_JVM"), SQLDataType.VARCHAR(1000), this, "集群jvm生效配置;集群jvm生效配置");
+    public final TableField<AppInfoRecord, String> APP_DEFAULT_JVM = createField(DSL.name("APP_DEFAULT_JVM"), SQLDataType.VARCHAR(1024), this, "集群jvm生效配置;集群jvm生效配置");
 
     /**
      * The column <code>TMAESTRO-LITE.APP_INFO.CLUSTER_NAME</code>. k8s集群名
@@ -130,6 +128,11 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
      * The column <code>TMAESTRO-LITE.APP_INFO.SERVER_TYPE</code>. 资源类型
      */
     public final TableField<AppInfoRecord, String> SERVER_TYPE = createField(DSL.name("SERVER_TYPE"), SQLDataType.VARCHAR(255), this, "资源类型");
+
+    /**
+     * The column <code>TMAESTRO-LITE.APP_INFO.APP_JVM_TEMPLATE</code>. 该应用对应的APP模版
+     */
+    public final TableField<AppInfoRecord, String> APP_JVM_TEMPLATE = createField(DSL.name("APP_JVM_TEMPLATE"), SQLDataType.VARCHAR(2048), this, "该应用对应的APP模版");
 
     private AppInfo(Name alias, Table<AppInfoRecord> aliased) {
         this(alias, aliased, null);
@@ -170,11 +173,6 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
     }
 
     @Override
-    public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.APP_INFO__INDEX_CLUSTER, Indexes.APP_INFO_ACCESS_TOKEN_CLUSTER_NAME_STATUS_INDEX, Indexes.APP_INFO_APP_NAME_ACCESS_TOKEN_STATUS_INDEX, Indexes.APP_INFO_ID_STATUS_INDEX);
-    }
-
-    @Override
     public Identity<AppInfoRecord, Integer> getIdentity() {
         return (Identity<AppInfoRecord, Integer>) super.getIdentity();
     }
@@ -186,7 +184,7 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
 
     @Override
     public List<UniqueKey<AppInfoRecord>> getKeys() {
-        return Arrays.<UniqueKey<AppInfoRecord>>asList(Keys.CONSTRAINT_7, Keys.APP_INFO_APP_NAME_ACCESS_TOKEN_UINDEX);
+        return Arrays.<UniqueKey<AppInfoRecord>>asList(Keys.CONSTRAINT_7, Keys.APP_INFO_APP_NAME_ACCESS_TOKEN_NAMESPACE_UINDEX);
     }
 
     @Override
@@ -216,11 +214,11 @@ public class AppInfo extends TableImpl<AppInfoRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row16 type methods
+    // Row17 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row16<Integer, Integer, String, String, String, String, String, LocalDateTime, LocalDateTime, String, String, String, String, String, String, String> fieldsRow() {
-        return (Row16) super.fieldsRow();
+    public Row17<Integer, Integer, String, String, String, String, String, LocalDateTime, LocalDateTime, String, String, String, String, String, String, String, String> fieldsRow() {
+        return (Row17) super.fieldsRow();
     }
 }

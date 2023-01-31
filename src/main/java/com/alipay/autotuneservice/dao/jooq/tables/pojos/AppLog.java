@@ -24,6 +24,8 @@ public class AppLog implements Serializable {
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
     private String        fileName;
+    private String        context;
+    private String        status;
 
     public AppLog() {}
 
@@ -36,6 +38,8 @@ public class AppLog implements Serializable {
         this.createdTime = value.createdTime;
         this.updatedTime = value.updatedTime;
         this.fileName = value.fileName;
+        this.context = value.context;
+        this.status = value.status;
     }
 
     public AppLog(
@@ -46,7 +50,9 @@ public class AppLog implements Serializable {
         String        hostName,
         LocalDateTime createdTime,
         LocalDateTime updatedTime,
-        String        fileName
+        String        fileName,
+        String        context,
+        String        status
     ) {
         this.id = id;
         this.appId = appId;
@@ -56,6 +62,8 @@ public class AppLog implements Serializable {
         this.createdTime = createdTime;
         this.updatedTime = updatedTime;
         this.fileName = fileName;
+        this.context = context;
+        this.status = status;
     }
 
     /**
@@ -178,6 +186,36 @@ public class AppLog implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>TMAESTRO-LITE.APP_LOG.CONTEXT</code>. 上下文
+     */
+    public String getContext() {
+        return this.context;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.APP_LOG.CONTEXT</code>. 上下文
+     */
+    public AppLog setContext(String context) {
+        this.context = context;
+        return this;
+    }
+
+    /**
+     * Getter for <code>TMAESTRO-LITE.APP_LOG.STATUS</code>.
+     */
+    public String getStatus() {
+        return this.status;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.APP_LOG.STATUS</code>.
+     */
+    public AppLog setStatus(String status) {
+        this.status = status;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("AppLog (");
@@ -190,6 +228,8 @@ public class AppLog implements Serializable {
         sb.append(", ").append(createdTime);
         sb.append(", ").append(updatedTime);
         sb.append(", ").append(fileName);
+        sb.append(", ").append(context);
+        sb.append(", ").append(status);
 
         sb.append(")");
         return sb.toString();

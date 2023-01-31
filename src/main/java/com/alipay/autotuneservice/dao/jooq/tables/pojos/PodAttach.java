@@ -51,16 +51,14 @@ public class PodAttach implements Serializable {
     }
 
     /**
-     * Getter for <code>TMAESTRO-LITE.POD_ATTACH.ID</code>. p
-rimary key
+     * Getter for <code>TMAESTRO-LITE.POD_ATTACH.ID</code>. primary key
      */
     public Integer getId() {
         return this.id;
     }
 
     /**
-     * Setter for <code>TMAESTRO-LITE.POD_ATTACH.ID</code>. p
-rimary key
+     * Setter for <code>TMAESTRO-LITE.POD_ATTACH.ID</code>. primary key
      */
     public PodAttach setId(Integer id) {
         this.id = id;

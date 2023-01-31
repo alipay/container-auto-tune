@@ -24,8 +24,7 @@ public class PodAttachRecord extends UpdatableRecordImpl<PodAttachRecord> implem
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>TMAESTRO-LITE.POD_ATTACH.ID</code>. p
-rimary key
+     * Setter for <code>TMAESTRO-LITE.POD_ATTACH.ID</code>. primary key
      */
     public PodAttachRecord setId(Integer value) {
         set(0, value);
@@ -33,8 +32,7 @@ rimary key
     }
 
     /**
-     * Getter for <code>TMAESTRO-LITE.POD_ATTACH.ID</code>. p
-rimary key
+     * Getter for <code>TMAESTRO-LITE.POD_ATTACH.ID</code>. primary key
      */
     public Integer getId() {
         return (Integer) get(0);

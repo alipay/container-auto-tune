@@ -4,7 +4,6 @@
 package com.alipay.autotuneservice.dao.jooq.tables;
 
 
-import com.alipay.autotuneservice.dao.jooq.Indexes;
 import com.alipay.autotuneservice.dao.jooq.Keys;
 import com.alipay.autotuneservice.dao.jooq.TmaestroLite;
 import com.alipay.autotuneservice.dao.jooq.tables.records.RiskCheckControlRecord;
@@ -16,7 +15,6 @@ import java.util.List;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
-import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Row12;
@@ -94,7 +92,7 @@ public class RiskCheckControl extends TableImpl<RiskCheckControlRecord> {
     /**
      * The column <code>TMAESTRO-LITE.RISK_CHECK_CONTROL.RISK_MSG</code>. 风险详情
      */
-    public final TableField<RiskCheckControlRecord, String> RISK_MSG = createField(DSL.name("RISK_MSG"), SQLDataType.VARCHAR(1000), this, "风险详情");
+    public final TableField<RiskCheckControlRecord, String> RISK_MSG = createField(DSL.name("RISK_MSG"), SQLDataType.VARCHAR(5000), this, "风险详情");
 
     /**
      * The column <code>TMAESTRO-LITE.RISK_CHECK_CONTROL.CREATE_TIME</code>. 创建时间
@@ -147,11 +145,6 @@ public class RiskCheckControl extends TableImpl<RiskCheckControlRecord> {
     @Override
     public Schema getSchema() {
         return TmaestroLite.TMAESTRO_LITE;
-    }
-
-    @Override
-    public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.RISK_CHECK_CONTROLLER_TRACE_ID_IDX);
     }
 
     @Override

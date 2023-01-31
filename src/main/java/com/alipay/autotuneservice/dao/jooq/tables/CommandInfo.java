@@ -17,7 +17,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row12;
+import org.jooq.Row14;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -50,9 +50,9 @@ public class CommandInfo extends TableImpl<CommandInfoRecord> {
     }
 
     /**
-     * The column <code>TMAESTRO-LITE.COMMAND_INFO.ID</code>. 主键ID
+     * The column <code>TMAESTRO-LITE.COMMAND_INFO.ID</code>. 主键
      */
-    public final TableField<CommandInfoRecord, Integer> ID = createField(DSL.name("ID"), SQLDataType.INTEGER.nullable(false).identity(true), this, "主键ID");
+    public final TableField<CommandInfoRecord, Long> ID = createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "主键");
 
     /**
      * The column <code>TMAESTRO-LITE.COMMAND_INFO.SESSIONID</code>. 会话ID
@@ -72,7 +72,7 @@ public class CommandInfo extends TableImpl<CommandInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.COMMAND_INFO.RESULT</code>. 结果
      */
-    public final TableField<CommandInfoRecord, String> RESULT = createField(DSL.name("RESULT"), SQLDataType.VARCHAR(1000), this, "结果");
+    public final TableField<CommandInfoRecord, String> RESULT = createField(DSL.name("RESULT"), SQLDataType.CLOB, this, "结果");
 
     /**
      * The column <code>TMAESTRO-LITE.COMMAND_INFO.ACCESS_TOKEN</code>. 关联的token
@@ -92,12 +92,12 @@ public class CommandInfo extends TableImpl<CommandInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.COMMAND_INFO.CONTEXT</code>. 执行上下文
      */
-    public final TableField<CommandInfoRecord, String> CONTEXT = createField(DSL.name("CONTEXT"), SQLDataType.VARCHAR(1000), this, "执行上下文");
+    public final TableField<CommandInfoRecord, String> CONTEXT = createField(DSL.name("CONTEXT"), SQLDataType.CLOB, this, "执行上下文");
 
     /**
      * The column <code>TMAESTRO-LITE.COMMAND_INFO.STATUS</code>. 执行状态
      */
-    public final TableField<CommandInfoRecord, String> STATUS = createField(DSL.name("STATUS"), SQLDataType.VARCHAR(128).nullable(false), this, "执行状态");
+    public final TableField<CommandInfoRecord, String> STATUS = createField(DSL.name("STATUS"), SQLDataType.VARCHAR(128), this, "执行状态");
 
     /**
      * The column <code>TMAESTRO-LITE.COMMAND_INFO.CREATED_TIME</code>. 创建时间
@@ -108,6 +108,16 @@ public class CommandInfo extends TableImpl<CommandInfoRecord> {
      * The column <code>TMAESTRO-LITE.COMMAND_INFO.UPDATED_TIME</code>. 更新时间
      */
     public final TableField<CommandInfoRecord, LocalDateTime> UPDATED_TIME = createField(DSL.name("UPDATED_TIME"), SQLDataType.LOCALDATETIME(6), this, "更新时间");
+
+    /**
+     * The column <code>TMAESTRO-LITE.COMMAND_INFO.TASK_NAME</code>.
+     */
+    public final TableField<CommandInfoRecord, String> TASK_NAME = createField(DSL.name("TASK_NAME"), SQLDataType.VARCHAR(256), this, "");
+
+    /**
+     * The column <code>TMAESTRO-LITE.COMMAND_INFO.POD_NAME</code>.
+     */
+    public final TableField<CommandInfoRecord, String> POD_NAME = createField(DSL.name("POD_NAME"), SQLDataType.VARCHAR(256), this, "");
 
     private CommandInfo(Name alias, Table<CommandInfoRecord> aliased) {
         this(alias, aliased, null);
@@ -148,8 +158,8 @@ public class CommandInfo extends TableImpl<CommandInfoRecord> {
     }
 
     @Override
-    public Identity<CommandInfoRecord, Integer> getIdentity() {
-        return (Identity<CommandInfoRecord, Integer>) super.getIdentity();
+    public Identity<CommandInfoRecord, Long> getIdentity() {
+        return (Identity<CommandInfoRecord, Long>) super.getIdentity();
     }
 
     @Override
@@ -189,11 +199,11 @@ public class CommandInfo extends TableImpl<CommandInfoRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row12 type methods
+    // Row14 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row12<Integer, String, String, String, String, String, String, String, String, String, LocalDateTime, LocalDateTime> fieldsRow() {
-        return (Row12) super.fieldsRow();
+    public Row14<Long, String, String, String, String, String, String, String, String, String, LocalDateTime, LocalDateTime, String, String> fieldsRow() {
+        return (Row14) super.fieldsRow();
     }
 }

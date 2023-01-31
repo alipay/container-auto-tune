@@ -17,33 +17,49 @@ public class StorageInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long          id;
-    private String        s3Key;
+    private String        type;
     private String        fileName;
-    private LocalDateTime createdTime;
+    private String        s3Key;
+    private String        resultKey;
+    private String        accessToken;
+    private String        operator;
     private LocalDateTime updatedTime;
+    private LocalDateTime createdTime;
 
     public StorageInfo() {}
 
     public StorageInfo(StorageInfo value) {
         this.id = value.id;
-        this.s3Key = value.s3Key;
+        this.type = value.type;
         this.fileName = value.fileName;
-        this.createdTime = value.createdTime;
+        this.s3Key = value.s3Key;
+        this.resultKey = value.resultKey;
+        this.accessToken = value.accessToken;
+        this.operator = value.operator;
         this.updatedTime = value.updatedTime;
+        this.createdTime = value.createdTime;
     }
 
     public StorageInfo(
         Long          id,
-        String        s3Key,
+        String        type,
         String        fileName,
-        LocalDateTime createdTime,
-        LocalDateTime updatedTime
+        String        s3Key,
+        String        resultKey,
+        String        accessToken,
+        String        operator,
+        LocalDateTime updatedTime,
+        LocalDateTime createdTime
     ) {
         this.id = id;
-        this.s3Key = s3Key;
+        this.type = type;
         this.fileName = fileName;
-        this.createdTime = createdTime;
+        this.s3Key = s3Key;
+        this.resultKey = resultKey;
+        this.accessToken = accessToken;
+        this.operator = operator;
         this.updatedTime = updatedTime;
+        this.createdTime = createdTime;
     }
 
     /**
@@ -62,17 +78,17 @@ public class StorageInfo implements Serializable {
     }
 
     /**
-     * Getter for <code>TMAESTRO-LITE.STORAGE_INFO.S3_KEY</code>.
+     * Getter for <code>TMAESTRO-LITE.STORAGE_INFO.TYPE</code>.
      */
-    public String getS3Key() {
-        return this.s3Key;
+    public String getType() {
+        return this.type;
     }
 
     /**
-     * Setter for <code>TMAESTRO-LITE.STORAGE_INFO.S3_KEY</code>.
+     * Setter for <code>TMAESTRO-LITE.STORAGE_INFO.TYPE</code>.
      */
-    public StorageInfo setS3Key(String s3Key) {
-        this.s3Key = s3Key;
+    public StorageInfo setType(String type) {
+        this.type = type;
         return this;
     }
 
@@ -92,17 +108,62 @@ public class StorageInfo implements Serializable {
     }
 
     /**
-     * Getter for <code>TMAESTRO-LITE.STORAGE_INFO.CREATED_TIME</code>.
+     * Getter for <code>TMAESTRO-LITE.STORAGE_INFO.S3_KEY</code>.
      */
-    public LocalDateTime getCreatedTime() {
-        return this.createdTime;
+    public String getS3Key() {
+        return this.s3Key;
     }
 
     /**
-     * Setter for <code>TMAESTRO-LITE.STORAGE_INFO.CREATED_TIME</code>.
+     * Setter for <code>TMAESTRO-LITE.STORAGE_INFO.S3_KEY</code>.
      */
-    public StorageInfo setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public StorageInfo setS3Key(String s3Key) {
+        this.s3Key = s3Key;
+        return this;
+    }
+
+    /**
+     * Getter for <code>TMAESTRO-LITE.STORAGE_INFO.RESULT_KEY</code>.
+     */
+    public String getResultKey() {
+        return this.resultKey;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.STORAGE_INFO.RESULT_KEY</code>.
+     */
+    public StorageInfo setResultKey(String resultKey) {
+        this.resultKey = resultKey;
+        return this;
+    }
+
+    /**
+     * Getter for <code>TMAESTRO-LITE.STORAGE_INFO.ACCESS_TOKEN</code>.
+     */
+    public String getAccessToken() {
+        return this.accessToken;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.STORAGE_INFO.ACCESS_TOKEN</code>.
+     */
+    public StorageInfo setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+        return this;
+    }
+
+    /**
+     * Getter for <code>TMAESTRO-LITE.STORAGE_INFO.OPERATOR</code>.
+     */
+    public String getOperator() {
+        return this.operator;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.STORAGE_INFO.OPERATOR</code>.
+     */
+    public StorageInfo setOperator(String operator) {
+        this.operator = operator;
         return this;
     }
 
@@ -121,15 +182,34 @@ public class StorageInfo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>TMAESTRO-LITE.STORAGE_INFO.CREATED_TIME</code>.
+     */
+    public LocalDateTime getCreatedTime() {
+        return this.createdTime;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.STORAGE_INFO.CREATED_TIME</code>.
+     */
+    public StorageInfo setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("StorageInfo (");
 
         sb.append(id);
-        sb.append(", ").append(s3Key);
+        sb.append(", ").append(type);
         sb.append(", ").append(fileName);
-        sb.append(", ").append(createdTime);
+        sb.append(", ").append(s3Key);
+        sb.append(", ").append(resultKey);
+        sb.append(", ").append(accessToken);
+        sb.append(", ").append(operator);
         sb.append(", ").append(updatedTime);
+        sb.append(", ").append(createdTime);
 
         sb.append(")");
         return sb.toString();
