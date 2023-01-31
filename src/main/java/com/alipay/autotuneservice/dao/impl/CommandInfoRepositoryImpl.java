@@ -82,7 +82,7 @@ public class CommandInfoRepositoryImpl extends BaseDao implements CommandInfoRep
         try {
             UpdateQuery<CommandInfoRecord> updateQuery = mDSLContext.updateQuery(Tables.COMMAND_INFO);
             updateQuery.addValue(Tables.COMMAND_INFO.STATUS, commandStatus.name());
-            updateQuery.addConditions(Tables.COMMAND_INFO.ID.eq(id));
+            updateQuery.addConditions(Tables.COMMAND_INFO.ID.eq((int)id));
             updateQuery.execute();
             return Boolean.TRUE;
         } catch (Exception e) {
