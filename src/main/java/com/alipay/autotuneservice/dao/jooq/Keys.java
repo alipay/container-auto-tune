@@ -25,6 +25,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckControl;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
 import com.alipay.autotuneservice.dao.jooq.tables.StorageInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TaskPipelineInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.ThreadpoolMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.TuneLogInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuneParamInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TunePipeline;
@@ -57,6 +58,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.records.RiskCheckControlRecord
 import com.alipay.autotuneservice.dao.jooq.tables.records.RiskCheckTaskRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.StorageInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TaskPipelineInfoRecord;
+import com.alipay.autotuneservice.dao.jooq.tables.records.ThreadpoolMonitorMetricDataRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TuneLogInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TuneParamInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TunePipelinePhaseRecord;
@@ -112,6 +114,7 @@ public class Keys {
     public static final UniqueKey<RiskCheckTaskRecord> CONSTRAINT_6 = Internal.createUniqueKey(RiskCheckTask.RISK_CHECK_TASK, DSL.name("CONSTRAINT_6"), new TableField[] { RiskCheckTask.RISK_CHECK_TASK.ID }, true);
     public static final UniqueKey<StorageInfoRecord> CONSTRAINT_C1 = Internal.createUniqueKey(StorageInfo.STORAGE_INFO, DSL.name("CONSTRAINT_C1"), new TableField[] { StorageInfo.STORAGE_INFO.ID }, true);
     public static final UniqueKey<TaskPipelineInfoRecord> CONSTRAINT_9 = Internal.createUniqueKey(TaskPipelineInfo.TASK_PIPELINE_INFO, DSL.name("CONSTRAINT_9"), new TableField[] { TaskPipelineInfo.TASK_PIPELINE_INFO.ID }, true);
+    public static final UniqueKey<ThreadpoolMonitorMetricDataRecord> CONSTRAINT_D = Internal.createUniqueKey(ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA, DSL.name("CONSTRAINT_D"), new TableField[] { ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA.ID }, true);
     public static final UniqueKey<TuneLogInfoRecord> CONSTRAINT_B = Internal.createUniqueKey(TuneLogInfo.TUNE_LOG_INFO, DSL.name("CONSTRAINT_B"), new TableField[] { TuneLogInfo.TUNE_LOG_INFO.ID }, true);
     public static final UniqueKey<TuneLogInfoRecord> TUNE_LOG_INFO_ID_APP_ID_JVM_MARKET_ID_BATCH_NO_UINDEX = Internal.createUniqueKey(TuneLogInfo.TUNE_LOG_INFO, DSL.name("TUNE_LOG_INFO_ID_APP_ID_JVM_MARKET_ID_BATCH_NO_UINDEX"), new TableField[] { TuneLogInfo.TUNE_LOG_INFO.ID, TuneLogInfo.TUNE_LOG_INFO.APP_ID, TuneLogInfo.TUNE_LOG_INFO.JVM_MARKET_ID, TuneLogInfo.TUNE_LOG_INFO.BATCH_NO }, true);
     public static final UniqueKey<TuneLogInfoRecord> TUNE_LOG_INFO_PIPELINE_ID_APP_ID_JVM_MARKET_ID_BATCH_NO_UINDEX = Internal.createUniqueKey(TuneLogInfo.TUNE_LOG_INFO, DSL.name("TUNE_LOG_INFO_PIPELINE_ID_APP_ID_JVM_MARKET_ID_BATCH_NO_UINDEX"), new TableField[] { TuneLogInfo.TUNE_LOG_INFO.PIPELINE_ID, TuneLogInfo.TUNE_LOG_INFO.APP_ID, TuneLogInfo.TUNE_LOG_INFO.JVM_MARKET_ID, TuneLogInfo.TUNE_LOG_INFO.BATCH_NO }, true);

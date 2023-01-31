@@ -14,6 +14,7 @@ import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckControl;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskStatisticPreData;
+import com.alipay.autotuneservice.dao.jooq.tables.ThreadpoolMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.TunePlan;
 import com.alipay.autotuneservice.dao.jooq.tables.TwatchInfo;
 
@@ -56,6 +57,7 @@ public class Indexes {
     public static final Index RISK_CHECK_TASK_JOB_ID_IDX = Internal.createIndex(DSL.name("RISK_CHECK_TASK_JOB_ID_IDX"), RiskCheckTask.RISK_CHECK_TASK, new OrderField[] { RiskCheckTask.RISK_CHECK_TASK.JOB_ID }, false);
     public static final Index RISK_CHECK_TASK_TASK_TRACE_ID_IDX = Internal.createIndex(DSL.name("RISK_CHECK_TASK_TASK_TRACE_ID_IDX"), RiskCheckTask.RISK_CHECK_TASK, new OrderField[] { RiskCheckTask.RISK_CHECK_TASK.TASK_TRACE_ID }, false);
     public static final Index RISK_STATISTIC_PRE_DATA_APPID_TIMESTAMP_INDEX = Internal.createIndex(DSL.name("RISK_STATISTIC_PRE_DATA_APPID_TIMESTAMP_INDEX"), RiskStatisticPreData.RISK_STATISTIC_PRE_DATA, new OrderField[] { RiskStatisticPreData.RISK_STATISTIC_PRE_DATA.APP_ID, RiskStatisticPreData.RISK_STATISTIC_PRE_DATA.DT }, false);
+    public static final Index THREADPOOL_MONITOR_METRIC_DATA_HOST_NAME_THREAD_POOL_NAME_PERIOD_INDEX = Internal.createIndex(DSL.name("THREADPOOL_MONITOR_METRIC_DATA_HOST_NAME_THREAD_POOL_NAME_PERIOD_INDEX"), ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA, new OrderField[] { ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA.HOST_NAME, ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA.THREAD_POOL_NAME, ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA.PERIOD }, false);
     public static final Index TUNE_PLAN_APP_ID_INDEX = Internal.createIndex(DSL.name("TUNE_PLAN_APP_ID_INDEX"), TunePlan.TUNE_PLAN, new OrderField[] { TunePlan.TUNE_PLAN.APP_ID }, false);
     public static final Index TWATCH_INFO_AGENT_NAME_INDEX = Internal.createIndex(DSL.name("TWATCH_INFO_AGENT_NAME_INDEX"), TwatchInfo.TWATCH_INFO, new OrderField[] { TwatchInfo.TWATCH_INFO.AGENT_NAME }, false);
     public static final Index TWATCH_INFO_CONTAINERID_INDEX = Internal.createIndex(DSL.name("TWATCH_INFO_CONTAINERID_INDEX"), TwatchInfo.TWATCH_INFO, new OrderField[] { TwatchInfo.TWATCH_INFO.CONTAINER_ID }, false);
