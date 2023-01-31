@@ -23,10 +23,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 
 @SpringBootApplication()
-public class AutotuneServiceApplication {
+public class ContainerAutoTuneApplication {
 
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(AutotuneServiceApplication.class);
+        SpringApplication application = new SpringApplication(ContainerAutoTuneApplication.class);
         addListener(application);
         application.run(args);
     }

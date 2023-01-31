@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.alipay</groupId>
-    <artifactId>autotune-service</artifactId>
+    <artifactId>container-auto-tune</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>autotune-service</name>
-    <description>autotune-service</description>
+    <name>container-auto-tune</name>
+    <description>container-auto-tune</description>
     <properties>
         <java.version>1.8</java.version>
         <fastjson.version>1.2.83_noneautotype</fastjson.version>
