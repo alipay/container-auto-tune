@@ -4,6 +4,7 @@
 package com.alipay.autotuneservice.dao.jooq;
 
 
+import com.alipay.autotuneservice.dao.jooq.tables.Alarm;
 import com.alipay.autotuneservice.dao.jooq.tables.AppInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.AppLog;
 import com.alipay.autotuneservice.dao.jooq.tables.BaseLine;
@@ -13,22 +14,26 @@ import com.alipay.autotuneservice.dao.jooq.tables.ContainerProcessInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ContainerStatistics;
 import com.alipay.autotuneservice.dao.jooq.tables.ExpertKnowledge;
 import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckResult;
 import com.alipay.autotuneservice.dao.jooq.tables.HelpInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.JavaInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMarketInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetric;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmOptsConfig;
-import com.alipay.autotuneservice.dao.jooq.tables.JvmRiskStatisticProblem;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmTuningRiskCenter;
 import com.alipay.autotuneservice.dao.jooq.tables.K8sAccessTokenInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.Lock;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetaInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetricInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.NodeInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.Notice;
+import com.alipay.autotuneservice.dao.jooq.tables.Notify;
 import com.alipay.autotuneservice.dao.jooq.tables.PodAttach;
 import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckControl;
 import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
-import com.alipay.autotuneservice.dao.jooq.tables.RiskStatisticPreData;
+import com.alipay.autotuneservice.dao.jooq.tables.RuleInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.StorageInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TaskPipelineInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ThreadpoolMonitorMetricData;
@@ -65,6 +70,11 @@ public class TmaestroLite extends SchemaImpl {
      * The reference instance of <code>TMAESTRO-LITE</code>
      */
     public static final TmaestroLite TMAESTRO_LITE = new TmaestroLite();
+
+    /**
+     * The table <code>TMAESTRO-LITE.ALARM</code>.
+     */
+    public final Alarm ALARM = Alarm.ALARM;
 
     /**
      * The table <code>TMAESTRO-LITE.APP_INFO</code>.
@@ -112,9 +122,19 @@ public class TmaestroLite extends SchemaImpl {
     public final HealthCheckInfo HEALTH_CHECK_INFO = HealthCheckInfo.HEALTH_CHECK_INFO;
 
     /**
+     * The table <code>TMAESTRO-LITE.HEALTH_CHECK_RESULT</code>.
+     */
+    public final HealthCheckResult HEALTH_CHECK_RESULT = HealthCheckResult.HEALTH_CHECK_RESULT;
+
+    /**
      * The table <code>TMAESTRO-LITE.HELP_INFO</code>.
      */
     public final HelpInfo HELP_INFO = HelpInfo.HELP_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.JAVA_INFO</code>.
+     */
+    public final JavaInfo JAVA_INFO = JavaInfo.JAVA_INFO;
 
     /**
      * The table <code>TMAESTRO-LITE.JVM_MARKET_INFO</code>.
@@ -137,11 +157,6 @@ public class TmaestroLite extends SchemaImpl {
     public final JvmOptsConfig JVM_OPTS_CONFIG = JvmOptsConfig.JVM_OPTS_CONFIG;
 
     /**
-     * The table <code>TMAESTRO-LITE.JVM_RISK_STATISTIC_PROBLEM</code>.
-     */
-    public final JvmRiskStatisticProblem JVM_RISK_STATISTIC_PROBLEM = JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM;
-
-    /**
      * The table <code>TMAESTRO-LITE.JVM_TUNING_RISK_CENTER</code>.
      */
     public final JvmTuningRiskCenter JVM_TUNING_RISK_CENTER = JvmTuningRiskCenter.JVM_TUNING_RISK_CENTER;
@@ -150,6 +165,11 @@ public class TmaestroLite extends SchemaImpl {
      * The table <code>TMAESTRO-LITE.K8S_ACCESS_TOKEN_INFO</code>.
      */
     public final K8sAccessTokenInfo K8S_ACCESS_TOKEN_INFO = K8sAccessTokenInfo.K8S_ACCESS_TOKEN_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.LOCK</code>.
+     */
+    public final Lock LOCK = Lock.LOCK;
 
     /**
      * The table <code>TMAESTRO-LITE.METER_META_INFO</code>.
@@ -165,6 +185,16 @@ public class TmaestroLite extends SchemaImpl {
      * The table <code>TMAESTRO-LITE.NODE_INFO</code>.
      */
     public final NodeInfo NODE_INFO = NodeInfo.NODE_INFO;
+
+    /**
+     * The table <code>TMAESTRO-LITE.NOTICE</code>.
+     */
+    public final Notice NOTICE = Notice.NOTICE;
+
+    /**
+     * The table <code>TMAESTRO-LITE.NOTIFY</code>.
+     */
+    public final Notify NOTIFY = Notify.NOTIFY;
 
     /**
      * The table <code>TMAESTRO-LITE.POD_ATTACH</code>.
@@ -187,9 +217,9 @@ public class TmaestroLite extends SchemaImpl {
     public final RiskCheckTask RISK_CHECK_TASK = RiskCheckTask.RISK_CHECK_TASK;
 
     /**
-     * The table <code>TMAESTRO-LITE.RISK_STATISTIC_PRE_DATA</code>.
+     * The table <code>TMAESTRO-LITE.RULE_INFO</code>.
      */
-    public final RiskStatisticPreData RISK_STATISTIC_PRE_DATA = RiskStatisticPreData.RISK_STATISTIC_PRE_DATA;
+    public final RuleInfo RULE_INFO = RuleInfo.RULE_INFO;
 
     /**
      * The table <code>TMAESTRO-LITE.STORAGE_INFO</code>.
@@ -282,6 +312,7 @@ public class TmaestroLite extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
+            Alarm.ALARM,
             AppInfo.APP_INFO,
             AppLog.APP_LOG,
             BaseLine.BASE_LINE,
@@ -291,22 +322,26 @@ public class TmaestroLite extends SchemaImpl {
             ContainerStatistics.CONTAINER_STATISTICS,
             ExpertKnowledge.EXPERT_KNOWLEDGE,
             HealthCheckInfo.HEALTH_CHECK_INFO,
+            HealthCheckResult.HEALTH_CHECK_RESULT,
             HelpInfo.HELP_INFO,
+            JavaInfo.JAVA_INFO,
             JvmMarketInfo.JVM_MARKET_INFO,
             JvmMonitorMetric.JVM_MONITOR_METRIC,
             JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA,
             JvmOptsConfig.JVM_OPTS_CONFIG,
-            JvmRiskStatisticProblem.JVM_RISK_STATISTIC_PROBLEM,
             JvmTuningRiskCenter.JVM_TUNING_RISK_CENTER,
             K8sAccessTokenInfo.K8S_ACCESS_TOKEN_INFO,
+            Lock.LOCK,
             MeterMetaInfo.METER_META_INFO,
             MeterMetricInfo.METER_METRIC_INFO,
             NodeInfo.NODE_INFO,
+            Notice.NOTICE,
+            Notify.NOTIFY,
             PodAttach.POD_ATTACH,
             PodInfo.POD_INFO,
             RiskCheckControl.RISK_CHECK_CONTROL,
             RiskCheckTask.RISK_CHECK_TASK,
-            RiskStatisticPreData.RISK_STATISTIC_PRE_DATA,
+            RuleInfo.RULE_INFO,
             StorageInfo.STORAGE_INFO,
             TaskPipelineInfo.TASK_PIPELINE_INFO,
             ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA,

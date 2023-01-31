@@ -4,7 +4,6 @@
 package com.alipay.autotuneservice.dao.jooq.tables;
 
 
-import com.alipay.autotuneservice.dao.jooq.Indexes;
 import com.alipay.autotuneservice.dao.jooq.Keys;
 import com.alipay.autotuneservice.dao.jooq.TmaestroLite;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
@@ -16,7 +15,6 @@ import java.util.List;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
-import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Schema;
@@ -88,12 +86,12 @@ public class PodInfo extends TableImpl<PodInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.POD_INFO.POD_JVM</code>. 生效jvm配置
      */
-    public final TableField<PodInfoRecord, String> POD_JVM = createField(DSL.name("POD_JVM"), SQLDataType.VARCHAR(1000), this, "生效jvm配置");
+    public final TableField<PodInfoRecord, String> POD_JVM = createField(DSL.name("POD_JVM"), SQLDataType.VARCHAR(4000), this, "生效jvm配置");
 
     /**
      * The column <code>TMAESTRO-LITE.POD_INFO.ENV</code>. 环境变量
      */
-    public final TableField<PodInfoRecord, String> ENV = createField(DSL.name("ENV"), SQLDataType.VARCHAR(1000), this, "环境变量");
+    public final TableField<PodInfoRecord, String> ENV = createField(DSL.name("ENV"), SQLDataType.VARCHAR(4000), this, "环境变量");
 
     /**
      * The column <code>TMAESTRO-LITE.POD_INFO.POD_DEPLOY_TYPE</code>. pod部署类型
@@ -108,7 +106,7 @@ public class PodInfo extends TableImpl<PodInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.POD_INFO.POD_TAGS</code>. 标签
      */
-    public final TableField<PodInfoRecord, String> POD_TAGS = createField(DSL.name("POD_TAGS"), SQLDataType.VARCHAR(1000), this, "标签");
+    public final TableField<PodInfoRecord, String> POD_TAGS = createField(DSL.name("POD_TAGS"), SQLDataType.VARCHAR(4000), this, "标签");
 
     /**
      * The column <code>TMAESTRO-LITE.POD_INFO.ACCESS_TOKEN</code>. 关联的token
@@ -173,9 +171,14 @@ public class PodInfo extends TableImpl<PodInfoRecord> {
     public final TableField<PodInfoRecord, String> NODE_NAME = createField(DSL.name("NODE_NAME"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>. 资源类型
+     * The column <code>TMAESTRO-LITE.POD_INFO.SERVER_TYPE</code>.
      */
-    public final TableField<PodInfoRecord, String> SERVER_TYPE = createField(DSL.name("SERVER_TYPE"), SQLDataType.VARCHAR(255), this, "资源类型");
+    public final TableField<PodInfoRecord, String> SERVER_TYPE = createField(DSL.name("SERVER_TYPE"), SQLDataType.VARCHAR(127), this, "");
+
+    /**
+     * The column <code>TMAESTRO-LITE.POD_INFO.UNICODE</code>.
+     */
+    public final TableField<PodInfoRecord, String> UNICODE = createField(DSL.name("UNICODE"), SQLDataType.VARCHAR(127), this, "");
 
     private PodInfo(Name alias, Table<PodInfoRecord> aliased) {
         this(alias, aliased, null);
@@ -213,11 +216,6 @@ public class PodInfo extends TableImpl<PodInfoRecord> {
     @Override
     public Schema getSchema() {
         return TmaestroLite.TMAESTRO_LITE;
-    }
-
-    @Override
-    public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.POD_INFO_APP_ID_AGENT_INSTALL_INDEX, Indexes.POD_INFO_APP_ID_POD_STATUS_INDEX);
     }
 
     @Override

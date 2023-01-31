@@ -17,7 +17,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row14;
+import org.jooq.Row13;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -97,7 +97,7 @@ public class TuneParamInfo extends TableImpl<TuneParamInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PARAM_INFO.UPDATE_PARAMS</code>. 更新的JVM参数，以JSON形式存储
      */
-    public final TableField<TuneParamInfoRecord, String> UPDATE_PARAMS = createField(DSL.name("UPDATE_PARAMS"), SQLDataType.VARCHAR(1000), this, "更新的JVM参数，以JSON形式存储");
+    public final TableField<TuneParamInfoRecord, String> UPDATE_PARAMS = createField(DSL.name("UPDATE_PARAMS"), SQLDataType.VARCHAR(4096), this, "更新的JVM参数，以JSON形式存储");
 
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PARAM_INFO.OPERATOR</code>. 操作员
@@ -112,12 +112,7 @@ public class TuneParamInfo extends TableImpl<TuneParamInfoRecord> {
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PARAM_INFO.DEFAULT_PARAM</code>. app默认启动参数
      */
-    public final TableField<TuneParamInfoRecord, String> DEFAULT_PARAM = createField(DSL.name("DEFAULT_PARAM"), SQLDataType.VARCHAR(1000), this, "app默认启动参数");
-
-    /**
-     * The column <code>TMAESTRO-LITE.TUNE_PARAM_INFO.VERSION</code>.
-     */
-    public final TableField<TuneParamInfoRecord, Integer> VERSION = createField(DSL.name("VERSION"), SQLDataType.INTEGER, this, "");
+    public final TableField<TuneParamInfoRecord, String> DEFAULT_PARAM = createField(DSL.name("DEFAULT_PARAM"), SQLDataType.VARCHAR(4096), this, "app默认启动参数");
 
     private TuneParamInfo(Name alias, Table<TuneParamInfoRecord> aliased) {
         this(alias, aliased, null);
@@ -199,11 +194,11 @@ public class TuneParamInfo extends TableImpl<TuneParamInfoRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row14 type methods
+    // Row13 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row14<Integer, LocalDateTime, LocalDateTime, Integer, Integer, Integer, String, String, String, String, String, String, String, Integer> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row13<Integer, LocalDateTime, LocalDateTime, Integer, Integer, Integer, String, String, String, String, String, String, String> fieldsRow() {
+        return (Row13) super.fieldsRow();
     }
 }

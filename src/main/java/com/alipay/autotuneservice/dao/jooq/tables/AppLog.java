@@ -17,7 +17,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row8;
+import org.jooq.Row10;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -88,6 +88,16 @@ public class AppLog extends TableImpl<AppLogRecord> {
      * The column <code>TMAESTRO-LITE.APP_LOG.FILE_NAME</code>. 文件名
      */
     public final TableField<AppLogRecord, String> FILE_NAME = createField(DSL.name("FILE_NAME"), SQLDataType.VARCHAR(256).nullable(false), this, "文件名");
+
+    /**
+     * The column <code>TMAESTRO-LITE.APP_LOG.CONTEXT</code>. 上下文
+     */
+    public final TableField<AppLogRecord, String> CONTEXT = createField(DSL.name("CONTEXT"), SQLDataType.VARCHAR(2048), this, "上下文");
+
+    /**
+     * The column <code>TMAESTRO-LITE.APP_LOG.STATUS</code>.
+     */
+    public final TableField<AppLogRecord, String> STATUS = createField(DSL.name("STATUS"), SQLDataType.VARCHAR(128), this, "");
 
     private AppLog(Name alias, Table<AppLogRecord> aliased) {
         this(alias, aliased, null);
@@ -169,11 +179,11 @@ public class AppLog extends TableImpl<AppLogRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row8 type methods
+    // Row10 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<Long, Integer, String, String, String, LocalDateTime, LocalDateTime, String> fieldsRow() {
-        return (Row8) super.fieldsRow();
+    public Row10<Long, Integer, String, String, String, LocalDateTime, LocalDateTime, String, String, String> fieldsRow() {
+        return (Row10) super.fieldsRow();
     }
 }

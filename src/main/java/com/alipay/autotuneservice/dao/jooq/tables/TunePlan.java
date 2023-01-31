@@ -4,7 +4,6 @@
 package com.alipay.autotuneservice.dao.jooq.tables;
 
 
-import com.alipay.autotuneservice.dao.jooq.Indexes;
 import com.alipay.autotuneservice.dao.jooq.Keys;
 import com.alipay.autotuneservice.dao.jooq.TmaestroLite;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TunePlanRecord;
@@ -16,7 +15,6 @@ import java.util.List;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
-import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Row13;
@@ -104,12 +102,12 @@ public class TunePlan extends TableImpl<TunePlanRecord> {
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PLAN.TUNE_EFFECT</code>.
      */
-    public final TableField<TunePlanRecord, String> TUNE_EFFECT = createField(DSL.name("TUNE_EFFECT"), SQLDataType.VARCHAR(1000), this, "");
+    public final TableField<TunePlanRecord, String> TUNE_EFFECT = createField(DSL.name("TUNE_EFFECT"), SQLDataType.VARCHAR(2000), this, "");
 
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PLAN.PREDICT_EFFECT</code>. 预期评估
      */
-    public final TableField<TunePlanRecord, String> PREDICT_EFFECT = createField(DSL.name("PREDICT_EFFECT"), SQLDataType.VARCHAR(1000), this, "预期评估");
+    public final TableField<TunePlanRecord, String> PREDICT_EFFECT = createField(DSL.name("PREDICT_EFFECT"), SQLDataType.VARCHAR(2000), this, "预期评估");
 
     /**
      * The column <code>TMAESTRO-LITE.TUNE_PLAN.TUNE_STATUS</code>.
@@ -152,11 +150,6 @@ public class TunePlan extends TableImpl<TunePlanRecord> {
     @Override
     public Schema getSchema() {
         return TmaestroLite.TMAESTRO_LITE;
-    }
-
-    @Override
-    public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.TUNE_PLAN_APP_ID_INDEX);
     }
 
     @Override

@@ -32,6 +32,7 @@ public class AppInfo implements Serializable {
     private String        namespace;
     private String        clusterId;
     private String        serverType;
+    private String        appJvmTemplate;
 
     public AppInfo() {}
 
@@ -52,6 +53,7 @@ public class AppInfo implements Serializable {
         this.namespace = value.namespace;
         this.clusterId = value.clusterId;
         this.serverType = value.serverType;
+        this.appJvmTemplate = value.appJvmTemplate;
     }
 
     public AppInfo(
@@ -70,7 +72,8 @@ public class AppInfo implements Serializable {
         String        appTag,
         String        namespace,
         String        clusterId,
-        String        serverType
+        String        serverType,
+        String        appJvmTemplate
     ) {
         this.id = id;
         this.userId = userId;
@@ -88,6 +91,7 @@ public class AppInfo implements Serializable {
         this.namespace = namespace;
         this.clusterId = clusterId;
         this.serverType = serverType;
+        this.appJvmTemplate = appJvmTemplate;
     }
 
     /**
@@ -330,6 +334,21 @@ public class AppInfo implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>TMAESTRO-LITE.APP_INFO.APP_JVM_TEMPLATE</code>. 该应用对应的APP模版
+     */
+    public String getAppJvmTemplate() {
+        return this.appJvmTemplate;
+    }
+
+    /**
+     * Setter for <code>TMAESTRO-LITE.APP_INFO.APP_JVM_TEMPLATE</code>. 该应用对应的APP模版
+     */
+    public AppInfo setAppJvmTemplate(String appJvmTemplate) {
+        this.appJvmTemplate = appJvmTemplate;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("AppInfo (");
@@ -350,6 +369,7 @@ public class AppInfo implements Serializable {
         sb.append(", ").append(namespace);
         sb.append(", ").append(clusterId);
         sb.append(", ").append(serverType);
+        sb.append(", ").append(appJvmTemplate);
 
         sb.append(")");
         return sb.toString();
