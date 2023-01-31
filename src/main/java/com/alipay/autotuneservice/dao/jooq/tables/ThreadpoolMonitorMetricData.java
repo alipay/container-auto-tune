@@ -63,7 +63,7 @@ public class ThreadpoolMonitorMetricData extends TableImpl<ThreadpoolMonitorMetr
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.PERIOD</code>. 日期
      */
-    public final TableField<ThreadpoolMonitorMetricDataRecord, Integer> PERIOD = createField(DSL.name("PERIOD"), SQLDataType.INTEGER.nullable(false), this, "日期");
+    public final TableField<ThreadpoolMonitorMetricDataRecord, Long> PERIOD = createField(DSL.name("PERIOD"), SQLDataType.BIGINT.nullable(false), this, "日期");
 
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.ACTIVE_COUNT</code>. activeCount
@@ -78,12 +78,12 @@ public class ThreadpoolMonitorMetricData extends TableImpl<ThreadpoolMonitorMetr
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.BLOCK_QUEUE</code>. blockQueue
      */
-    public final TableField<ThreadpoolMonitorMetricDataRecord, Integer> BLOCK_QUEUE = createField(DSL.name("BLOCK_QUEUE"), SQLDataType.INTEGER, this, "blockQueue");
+    public final TableField<ThreadpoolMonitorMetricDataRecord, Long> BLOCK_QUEUE = createField(DSL.name("BLOCK_QUEUE"), SQLDataType.BIGINT, this, "blockQueue");
 
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.COMPLETED_TASK_COUNT</code>. completedTaskCount
      */
-    public final TableField<ThreadpoolMonitorMetricDataRecord, Integer> COMPLETED_TASK_COUNT = createField(DSL.name("COMPLETED_TASK_COUNT"), SQLDataType.INTEGER, this, "completedTaskCount");
+    public final TableField<ThreadpoolMonitorMetricDataRecord, Long> COMPLETED_TASK_COUNT = createField(DSL.name("COMPLETED_TASK_COUNT"), SQLDataType.BIGINT, this, "completedTaskCount");
 
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.CORE_POOL_SIZE</code>. corePoolSize
@@ -93,7 +93,7 @@ public class ThreadpoolMonitorMetricData extends TableImpl<ThreadpoolMonitorMetr
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.DT</code>. dt
      */
-    public final TableField<ThreadpoolMonitorMetricDataRecord, Integer> DT = createField(DSL.name("DT"), SQLDataType.INTEGER, this, "dt");
+    public final TableField<ThreadpoolMonitorMetricDataRecord, Long> DT = createField(DSL.name("DT"), SQLDataType.BIGINT, this, "dt");
 
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.IDLE_POOL_SIZE</code>. idlePoolSize
@@ -103,7 +103,7 @@ public class ThreadpoolMonitorMetricData extends TableImpl<ThreadpoolMonitorMetr
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.KEEP_ALIVE_TIME</code>. keepAliveTime
      */
-    public final TableField<ThreadpoolMonitorMetricDataRecord, Integer> KEEP_ALIVE_TIME = createField(DSL.name("KEEP_ALIVE_TIME"), SQLDataType.INTEGER, this, "keepAliveTime");
+    public final TableField<ThreadpoolMonitorMetricDataRecord, Long> KEEP_ALIVE_TIME = createField(DSL.name("KEEP_ALIVE_TIME"), SQLDataType.BIGINT, this, "keepAliveTime");
 
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.LARGEST_POOL_SIZE</code>. largestPoolSize
@@ -123,12 +123,12 @@ public class ThreadpoolMonitorMetricData extends TableImpl<ThreadpoolMonitorMetr
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.REJECT_COUNT</code>. rejectCount
      */
-    public final TableField<ThreadpoolMonitorMetricDataRecord, Integer> REJECT_COUNT = createField(DSL.name("REJECT_COUNT"), SQLDataType.INTEGER, this, "rejectCount");
+    public final TableField<ThreadpoolMonitorMetricDataRecord, Long> REJECT_COUNT = createField(DSL.name("REJECT_COUNT"), SQLDataType.BIGINT, this, "rejectCount");
 
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.TASK_COUNT</code>. taskCount
      */
-    public final TableField<ThreadpoolMonitorMetricDataRecord, Integer> TASK_COUNT = createField(DSL.name("TASK_COUNT"), SQLDataType.INTEGER, this, "taskCount");
+    public final TableField<ThreadpoolMonitorMetricDataRecord, Long> TASK_COUNT = createField(DSL.name("TASK_COUNT"), SQLDataType.BIGINT, this, "taskCount");
 
     /**
      * The column <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.THREAD_POOL_NAME</code>.
@@ -224,7 +224,7 @@ public class ThreadpoolMonitorMetricData extends TableImpl<ThreadpoolMonitorMetr
     // -------------------------------------------------------------------------
 
     @Override
-    public Row17<Integer, String, Integer, Integer, String, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, String> fieldsRow() {
+    public Row17<Integer, String, Long, Integer, String, Long, Long, Integer, Long, Integer, Long, Integer, Integer, Integer, Long, Long, String> fieldsRow() {
         return (Row17) super.fieldsRow();
     }
 }
