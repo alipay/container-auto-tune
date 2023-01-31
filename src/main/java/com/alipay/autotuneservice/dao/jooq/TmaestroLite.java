@@ -36,7 +36,6 @@ import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
 import com.alipay.autotuneservice.dao.jooq.tables.RuleInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.StorageInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TaskPipelineInfo;
-import com.alipay.autotuneservice.dao.jooq.tables.Threadpool1MonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.ThreadpoolMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.TuneLogInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuneParamInfo;
@@ -233,11 +232,6 @@ public class TmaestroLite extends SchemaImpl {
     public final TaskPipelineInfo TASK_PIPELINE_INFO = TaskPipelineInfo.TASK_PIPELINE_INFO;
 
     /**
-     * The table <code>TMAESTRO-LITE.THREADPOOL1_MONITOR_METRIC_DATA</code>.
-     */
-    public final Threadpool1MonitorMetricData THREADPOOL1_MONITOR_METRIC_DATA = Threadpool1MonitorMetricData.THREADPOOL1_MONITOR_METRIC_DATA;
-
-    /**
      * The table <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA</code>.
      */
     public final ThreadpoolMonitorMetricData THREADPOOL_MONITOR_METRIC_DATA = ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA;
@@ -350,7 +344,6 @@ public class TmaestroLite extends SchemaImpl {
             RuleInfo.RULE_INFO,
             StorageInfo.STORAGE_INFO,
             TaskPipelineInfo.TASK_PIPELINE_INFO,
-            Threadpool1MonitorMetricData.THREADPOOL1_MONITOR_METRIC_DATA,
             ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA,
             TuneLogInfo.TUNE_LOG_INFO,
             TuneParamInfo.TUNE_PARAM_INFO,

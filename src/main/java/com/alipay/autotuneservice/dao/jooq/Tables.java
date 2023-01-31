@@ -36,7 +36,6 @@ import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
 import com.alipay.autotuneservice.dao.jooq.tables.RuleInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.StorageInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TaskPipelineInfo;
-import com.alipay.autotuneservice.dao.jooq.tables.Threadpool1MonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.ThreadpoolMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.TuneLogInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.TuneParamInfo;
@@ -217,11 +216,6 @@ public class Tables {
      * The table <code>TMAESTRO-LITE.TASK_PIPELINE_INFO</code>.
      */
     public static final TaskPipelineInfo TASK_PIPELINE_INFO = TaskPipelineInfo.TASK_PIPELINE_INFO;
-
-    /**
-     * The table <code>TMAESTRO-LITE.THREADPOOL1_MONITOR_METRIC_DATA</code>.
-     */
-    public static final Threadpool1MonitorMetricData THREADPOOL1_MONITOR_METRIC_DATA = Threadpool1MonitorMetricData.THREADPOOL1_MONITOR_METRIC_DATA;
 
     /**
      * The table <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA</code>.

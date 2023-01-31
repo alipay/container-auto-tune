@@ -17,20 +17,20 @@ public class ThreadpoolMonitorMetricData implements Serializable {
 
     private Integer id;
     private String  hostName;
-    private Integer period;
+    private Long    period;
     private Integer activeCount;
     private String  appName;
-    private Integer blockQueue;
-    private Integer completedTaskCount;
+    private Long    blockQueue;
+    private Long    completedTaskCount;
     private Integer corePoolSize;
-    private Integer dt;
+    private Long    dt;
     private Integer idlePoolSize;
-    private Integer keepAliveTime;
+    private Long    keepAliveTime;
     private Integer largestPoolSize;
     private Integer maxiMumPoolSize;
     private Integer poolSize;
-    private Integer rejectCount;
-    private Integer taskCount;
+    private Long    rejectCount;
+    private Long    taskCount;
     private String  threadPoolName;
 
     public ThreadpoolMonitorMetricData() {}
@@ -58,20 +58,20 @@ public class ThreadpoolMonitorMetricData implements Serializable {
     public ThreadpoolMonitorMetricData(
         Integer id,
         String  hostName,
-        Integer period,
+        Long    period,
         Integer activeCount,
         String  appName,
-        Integer blockQueue,
-        Integer completedTaskCount,
+        Long    blockQueue,
+        Long    completedTaskCount,
         Integer corePoolSize,
-        Integer dt,
+        Long    dt,
         Integer idlePoolSize,
-        Integer keepAliveTime,
+        Long    keepAliveTime,
         Integer largestPoolSize,
         Integer maxiMumPoolSize,
         Integer poolSize,
-        Integer rejectCount,
-        Integer taskCount,
+        Long    rejectCount,
+        Long    taskCount,
         String  threadPoolName
     ) {
         this.id = id;
@@ -126,14 +126,14 @@ public class ThreadpoolMonitorMetricData implements Serializable {
     /**
      * Getter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.PERIOD</code>. 日期
      */
-    public Integer getPeriod() {
+    public Long getPeriod() {
         return this.period;
     }
 
     /**
      * Setter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.PERIOD</code>. 日期
      */
-    public ThreadpoolMonitorMetricData setPeriod(Integer period) {
+    public ThreadpoolMonitorMetricData setPeriod(Long period) {
         this.period = period;
         return this;
     }
@@ -171,14 +171,14 @@ public class ThreadpoolMonitorMetricData implements Serializable {
     /**
      * Getter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.BLOCK_QUEUE</code>. blockQueue
      */
-    public Integer getBlockQueue() {
+    public Long getBlockQueue() {
         return this.blockQueue;
     }
 
     /**
      * Setter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.BLOCK_QUEUE</code>. blockQueue
      */
-    public ThreadpoolMonitorMetricData setBlockQueue(Integer blockQueue) {
+    public ThreadpoolMonitorMetricData setBlockQueue(Long blockQueue) {
         this.blockQueue = blockQueue;
         return this;
     }
@@ -186,14 +186,14 @@ public class ThreadpoolMonitorMetricData implements Serializable {
     /**
      * Getter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.COMPLETED_TASK_COUNT</code>. completedTaskCount
      */
-    public Integer getCompletedTaskCount() {
+    public Long getCompletedTaskCount() {
         return this.completedTaskCount;
     }
 
     /**
      * Setter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.COMPLETED_TASK_COUNT</code>. completedTaskCount
      */
-    public ThreadpoolMonitorMetricData setCompletedTaskCount(Integer completedTaskCount) {
+    public ThreadpoolMonitorMetricData setCompletedTaskCount(Long completedTaskCount) {
         this.completedTaskCount = completedTaskCount;
         return this;
     }
@@ -216,14 +216,14 @@ public class ThreadpoolMonitorMetricData implements Serializable {
     /**
      * Getter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.DT</code>. dt
      */
-    public Integer getDt() {
+    public Long getDt() {
         return this.dt;
     }
 
     /**
      * Setter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.DT</code>. dt
      */
-    public ThreadpoolMonitorMetricData setDt(Integer dt) {
+    public ThreadpoolMonitorMetricData setDt(Long dt) {
         this.dt = dt;
         return this;
     }
@@ -246,14 +246,14 @@ public class ThreadpoolMonitorMetricData implements Serializable {
     /**
      * Getter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.KEEP_ALIVE_TIME</code>. keepAliveTime
      */
-    public Integer getKeepAliveTime() {
+    public Long getKeepAliveTime() {
         return this.keepAliveTime;
     }
 
     /**
      * Setter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.KEEP_ALIVE_TIME</code>. keepAliveTime
      */
-    public ThreadpoolMonitorMetricData setKeepAliveTime(Integer keepAliveTime) {
+    public ThreadpoolMonitorMetricData setKeepAliveTime(Long keepAliveTime) {
         this.keepAliveTime = keepAliveTime;
         return this;
     }
@@ -306,14 +306,14 @@ public class ThreadpoolMonitorMetricData implements Serializable {
     /**
      * Getter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.REJECT_COUNT</code>. rejectCount
      */
-    public Integer getRejectCount() {
+    public Long getRejectCount() {
         return this.rejectCount;
     }
 
     /**
      * Setter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.REJECT_COUNT</code>. rejectCount
      */
-    public ThreadpoolMonitorMetricData setRejectCount(Integer rejectCount) {
+    public ThreadpoolMonitorMetricData setRejectCount(Long rejectCount) {
         this.rejectCount = rejectCount;
         return this;
     }
@@ -321,14 +321,14 @@ public class ThreadpoolMonitorMetricData implements Serializable {
     /**
      * Getter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.TASK_COUNT</code>. taskCount
      */
-    public Integer getTaskCount() {
+    public Long getTaskCount() {
         return this.taskCount;
     }
 
     /**
      * Setter for <code>TMAESTRO-LITE.THREADPOOL_MONITOR_METRIC_DATA.TASK_COUNT</code>. taskCount
      */
-    public ThreadpoolMonitorMetricData setTaskCount(Integer taskCount) {
+    public ThreadpoolMonitorMetricData setTaskCount(Long taskCount) {
         this.taskCount = taskCount;
         return this;
     }
