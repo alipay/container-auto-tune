@@ -88,7 +88,7 @@ public class UserInfo extends TableImpl<UserInfoRecord> {
      * The column <code>TMAESTRO-LITE.USER_INFO.TENANT_CODE</code>. 租户
 
      */
-    public final TableField<UserInfoRecord, String> TENANT_CODE = createField(DSL.name("TENANT_CODE"), SQLDataType.VARCHAR(128), this, "租户\n");
+    public final TableField<UserInfoRecord, String> TENANT_CODE = createField(DSL.name("TENANT_CODE"), SQLDataType.VARCHAR(128), this, "租户\r\n");
 
     /**
      * The column <code>TMAESTRO-LITE.USER_INFO.PRODUCT_ACCOUNT_ID</code>. 产品账户

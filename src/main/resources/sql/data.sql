@@ -760,3 +760,77 @@ create table if not exists  `tmaestro-lite`.command_info (
     CREATED_TIME datetime not null COMMENT '创建时间',
     UPDATED_TIME datetime null COMMENT '更新时间'
 );
+
+
+create table if not exists `tmaestro-lite`.jvm_monitor_metric_data
+(
+    POD_NAME     varchar(64) not null comment 'pod name',
+    GMT_MODIFIED bigint      not null comment '修改时间',
+    APP_NAME     varchar(32) not null comment 'app name',
+    DATA         varchar(128)
+    );
+-- comment '容器java进程jvm监控信息';
+create index if not exists jvm_monitor_metric_data_appName_index
+    on `tmaestro-lite`.jvm_monitor_metric_data (APP_NAME);
+create index if not exists jvm_monitor_metric_data_podName_index
+    on `tmaestro-lite`.jvm_monitor_metric_data (POD_NAME);
+create index if not exists jvm_monitor_metric_data_gmtModified_index
+    on `tmaestro-lite`.jvm_monitor_metric_data (GMT_MODIFIED);
+
+create table if not exists `tmaestro-lite`.container_statistics
+(
+    POD_NAME     varchar(64) not null comment 'pod name',
+    GMT_MODIFIED bigint      not null comment '修改时间',
+    APP_ID       bigint      not null comment 'app id',
+    CONTAINER_ID varchar(64) not null comment 'container Id',
+    DATA         varchar(128)
+    );
+-- comment '容器系统统计信息';
+create index if not exists container_statistics_containerId_index
+    on `tmaestro-lite`.container_statistics (CONTAINER_ID);
+create index if not exists container_statistics_appId_index
+    on `tmaestro-lite`.container_statistics (APP_ID);
+create index if not exists container_statistics_info_podName_index
+    on `tmaestro-lite`.container_statistics (POD_NAME);
+create index if not exists container_statistics_info_gmtModified_index
+    on `tmaestro-lite`.container_statistics (GMT_MODIFIED);
+
+create table if not exists `tmaestro-lite`.container_process_info
+(
+    POD_NAME     varchar(64) not null comment 'pod name',
+    GMT_MODIFIED bigint      not null comment '修改时间',
+    APP_ID       bigint      not null comment 'app id',
+    CONTAINER_ID varchar(64) not null comment 'container Id',
+    DATA         varchar(128)
+    );
+-- comment 'container process info';
+create index if not exists container_process_info_containerId_index
+    on `tmaestro-lite`.container_process_info (CONTAINER_ID);
+create index if not exists container_process_info_appId_index
+    on `tmaestro-lite`.container_process_info (APP_ID);
+create index if not exists container_process_info_podName_index
+    on `tmaestro-lite`.container_process_info (POD_NAME);
+create index if not exists container_process_info_gmtModified_index
+    on `tmaestro-lite`.container_process_info (GMT_MODIFIED);
+
+create table if not exists `tmaestro-lite`.twatch_info
+(
+    CONTAINER_ID   varchar(128) not null comment 'cantainer Id',
+    CONTAINER_NAME varchar(64)  not null comment '容器名称',
+    NAMESPACE      varchar(64)  null comment '容器所在namespace',
+    POD_NAME       varchar(64)  not null comment 'pod name',
+    AGENT_NAME     varchar(64)  not null comment 'twatch demonset pod name',
+    GMT_MODIFIED   bigint       not null comment '修改时间',
+    DT_PERIOD      bigint       not null comment '按天分区',
+    NODE_NAME      varchar(64)  null comment 'node name',
+    NODE_IP        varchar(64)  null comment 'node ip'
+    );
+-- comment 'daemonSet 采集容器元数据';
+create index if not exists twatch_info_containerId_index
+    on `tmaestro-lite`.twatch_info (CONTAINER_ID);
+
+create index if not exists twatch_info_containerName_index
+    on `tmaestro-lite`.twatch_info (CONTAINER_NAME);
+
+create index if not exists twatch_info_AGENT_NAME_index
+    on `tmaestro-lite`.twatch_info (AGENT_NAME);

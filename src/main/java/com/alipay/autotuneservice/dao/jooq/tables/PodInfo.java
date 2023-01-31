@@ -155,7 +155,7 @@ public class PodInfo extends TableImpl<PodInfoRecord> {
 1 - 安装
 0 - 未安装
      */
-    public final TableField<PodInfoRecord, Integer> AGENT_INSTALL = createField(DSL.name("AGENT_INSTALL"), SQLDataType.INTEGER.defaultValue(DSL.field("0", SQLDataType.INTEGER)), this, "是否安装autotuneagent.\n1 - 安装\n0 - 未安装");
+    public final TableField<PodInfoRecord, Integer> AGENT_INSTALL = createField(DSL.name("AGENT_INSTALL"), SQLDataType.INTEGER.defaultValue(DSL.field("0", SQLDataType.INTEGER)), this, "是否安装autotuneagent.\r\n1 - 安装\r\n0 - 未安装");
 
     /**
      * The column <code>TMAESTRO-LITE.POD_INFO.D_HOSTNAME</code>.

@@ -53,7 +53,7 @@ public class PodAttach extends TableImpl<PodAttachRecord> {
      * The column <code>TMAESTRO-LITE.POD_ATTACH.ID</code>. p
 rimary key
      */
-    public final TableField<PodAttachRecord, Integer> ID = createField(DSL.name("ID"), SQLDataType.INTEGER.nullable(false).identity(true), this, "p\nrimary key");
+    public final TableField<PodAttachRecord, Integer> ID = createField(DSL.name("ID"), SQLDataType.INTEGER.nullable(false).identity(true), this, "p\r\nrimary key");
 
     /**
      * The column <code>TMAESTRO-LITE.POD_ATTACH.ACCESS_TOKEN</code>. 关联的token
