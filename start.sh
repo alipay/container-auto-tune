@@ -7,13 +7,14 @@ Blue=$'\e[1;34m'
 end=$'\e[0m'
 TMAESTRO_YAML=tmaestro-lite.yaml
 TMAESTRO_YAML_NEW=/tmp/tmaestro-lite.yaml.new
+TMAESTRO_HOME_PAGE_URL="http://localhost:30081"
 
 if ! [ -x "$(command -v kubectl)" ]; then
   echo "${Red}Error: kubectl is not installed. (kubectl required to install tmaestro, please install kubectl firstly.)${end}"
   exit 1
 fi
 
-check_image(){
+get_latest_image(){
   docker images -a | grep -E "^tmaestro/" | sort -r | head -1 | awk  '{print $1}'
   if [ $? -ne 0 ]; then
       echo "${Red}No tmaestro images found. please execute make cmd firstly.${end}"
@@ -24,35 +25,16 @@ check_image(){
   echo "get TMAESTRO_IMAGE is $TMAESTRO_IMAGE"
 }
 
-tmaestro_yaml_env_subst(){
-  echo "get tmaestro_yaml_env_subst TMAESTRO_IMAGE is $TMAESTRO_IMAGE"
-  envsubst < ${TMAESTRO_YAML} > "${TMAESTRO_YAML_NEW}"
-  cp ${TMAESTRO_YAML_NEW}  ./${TMAESTRO_YAML}
+create_config_map(){
+  echo "${Green} ===> start to create configmap to store local config file.${end}"
+  kubectl get configmap tmaestro-kube-config
+  if [ $? -ne 0 ]; then
+    kubeconfig=`ls ~/.kube/config`
+    echo "${kubeconfig}"
+    cmd=$(echo "kubectl create configmap tmaestro-kube-config --from-file=${kubeconfig}")
+    $cmd
+  fi
 }
-
-echo "${Green} ===> start build image.${end}"
-make
-check_image
-tmaestro_yaml_env_subst
-
-echo "${Green} ===> start to get latest tmaestro image.${end}"
-check_image
-tmaestro_yaml_env_subst
-
-echo "${Green} ===> start to mount kube config file.${end}"
-kubectl get configmap tmaestro-kube-config
-if [ $? -ne 0 ]; then
-  kubeconfig=`ls ~/.kube/config`
-  echo "${kubeconfig}"
-  cmd=$(echo "kubectl create configmap tmaestro-kube-config --from-file=${kubeconfig}")
-  $cmd
-fi
-
-echo "${Green}===> start to create tmaestro-properties configmap${end}"
-#kubectl apply -f tmaestro-properties-configmap.yaml
-
-echo "${Green}===> start deploy tmaestro.${end}"
-kubectl apply -f tmaestro-lite.yaml
 
 install_demonset(){
     echo -ne "${Green}[ ========>                                                       (10%)]${end}\r"
@@ -65,28 +47,12 @@ install_demonset(){
       exit 119
     fi
     echo -ne "${Green}[ ================================================================(100%)]${end}\r"
+    print_success_icon
+    echo -e "${Blue}Congratulations!!! Twatch is now installed successfully.${end}"
 }
 
 print_success_icon(){
   echo "🍺 🍺 🍺 🍺 🍺 🍺"
-}
-install_demonset
-print_success_icon
-echo -e "${Blue}Congratulations!!! Twatch is now installed successfully.${end}"
-
-echo -e "${Green}===> start deploy tmaestro.${end}"
-install_tmaestro(){
-    echo -ne "${Green}[ ========>                                                       (10%)]${end}\r"
-    kubectl apply -f tmaestro-lite.yaml
-    echo -ne "${Green}[ ================================>                               (53%)]${end}\r"
-    sleep 6
-    kubectl get pods | grep "tmaestro" | grep Running
-    if [ $? != 0 ]; then
-      echo "${Red}Install tmaestro failed, please contact tmaestro experts to handle it!${end}"
-      exit 119
-    fi
-    echo -ne "${Green}[ ================================================================(100%)]${end}\r"
-    echo -ne '\n'
 }
 
 print_tmaestro(){
@@ -98,12 +64,47 @@ print_tmaestro(){
   echo '                                                               ';
 }
 
-TMAESTRO_HOME_PAGE_URL="http://localhost:30083"
 print_tmaestro_success(){
   print_tmaestro
   print_success_icon
   echo -e "${Blue} Congratulations!!! Tmaestro is now installed successfully. please go to TMaestro homepage(${TMAESTRO_HOME_PAGE_URL}) to explore it."
 }
 
-install_tmaestro
-print_tmaestro_success
+install_tmaestro(){
+    echo -e "${Green}===> start deploy tmaestro.${end}"
+    kubectl get pods | grep "tmaestro" | grep Running
+        if [ $? == 0 ]; then
+          echo "${Green} update tmaestro image=${image}.${end}"
+          kubectl set image deployment/tmaestro tmaestro-server=${image}
+          print_tmaestro_success
+          exit 119
+        fi
+    echo -ne "${Green}[ ========>                                                       (10%)]${end}\r"
+    kubectl apply -f tmaestro-lite.yaml
+    echo -ne "${Green}[ ================================>                               (53%)]${end}\r"
+    sleep 6
+    kubectl get pods | grep "tmaestro" | grep Running
+    if [ $? != 0 ]; then
+      echo "${Red}Install tmaestro failed, please contact tmaestro experts to handle it!${end}"
+      exit 119
+    fi
+    echo -ne "${Green}[ ================================================================(100%)]${end}\r"
+    echo -ne '\n'
+    print_tmaestro_success
+}
+
+main(){
+  # build image
+  echo "${Green} ===> start build image.${end}"
+  make
+  # get latest image
+  get_latest_image
+  # create configMap to store local config file
+  create_config_map
+  # deploy tmaestro-server
+  install_tmaestro
+  # deploy twatch
+  install_demonset
+}
+
+main

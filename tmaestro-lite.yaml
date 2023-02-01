@@ -15,7 +15,7 @@ spec:
         app: tmaestro
     spec:
       containers:
-        - image: tmaestro/202211151959
+        - image: tmaestro/202302011547
           imagePullPolicy: Never
           name: tmaestro-server
           ports:
@@ -40,11 +40,6 @@ spec:
             - name: tmaestro
               mountPath: "/opt/app/storage"
               readOnly: true
-        - name: intelligent-param-tuning-open
-          imagePullPolicy: Always
-          image: registry.cn-beijing.aliyuncs.com/saasalpha/tmaster:ats_intelligent_param_tuning_open_202209151414
-          ports:
-            - containerPort: 5000
       volumes:
         - name: tmaestro
           configMap:

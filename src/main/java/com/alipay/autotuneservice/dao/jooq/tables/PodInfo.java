@@ -4,6 +4,7 @@
 package com.alipay.autotuneservice.dao.jooq.tables;
 
 
+import com.alipay.autotuneservice.dao.jooq.Indexes;
 import com.alipay.autotuneservice.dao.jooq.Keys;
 import com.alipay.autotuneservice.dao.jooq.TmaestroLite;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
@@ -15,6 +16,7 @@ import java.util.List;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Schema;
@@ -216,6 +218,11 @@ public class PodInfo extends TableImpl<PodInfoRecord> {
     @Override
     public Schema getSchema() {
         return TmaestroLite.TMAESTRO_LITE;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.<Index>asList(Indexes.POD_INFO_APP_ID_AGENT_INSTALL_INDEX, Indexes.POD_INFO_APP_ID_POD_STATUS_INDEX, Indexes.POD_INFO_D_HOSTNAME_INDEX);
     }
 
     @Override

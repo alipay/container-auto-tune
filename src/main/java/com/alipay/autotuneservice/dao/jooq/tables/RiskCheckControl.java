@@ -4,6 +4,7 @@
 package com.alipay.autotuneservice.dao.jooq.tables;
 
 
+import com.alipay.autotuneservice.dao.jooq.Indexes;
 import com.alipay.autotuneservice.dao.jooq.Keys;
 import com.alipay.autotuneservice.dao.jooq.TmaestroLite;
 import com.alipay.autotuneservice.dao.jooq.tables.records.RiskCheckControlRecord;
@@ -15,6 +16,7 @@ import java.util.List;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Row12;
@@ -145,6 +147,11 @@ public class RiskCheckControl extends TableImpl<RiskCheckControlRecord> {
     @Override
     public Schema getSchema() {
         return TmaestroLite.TMAESTRO_LITE;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.<Index>asList(Indexes.RISK_CHECK_CONTROLLER_TRACE_ID_IDX);
     }
 
     @Override

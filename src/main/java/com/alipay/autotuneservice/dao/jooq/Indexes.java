@@ -4,11 +4,17 @@
 package com.alipay.autotuneservice.dao.jooq;
 
 
+import com.alipay.autotuneservice.dao.jooq.tables.AppInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ContainerProcessInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.ContainerStatistics;
+import com.alipay.autotuneservice.dao.jooq.tables.HealthCheckResult;
 import com.alipay.autotuneservice.dao.jooq.tables.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dao.jooq.tables.MeterMetricInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.PodInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckControl;
+import com.alipay.autotuneservice.dao.jooq.tables.RiskCheckTask;
 import com.alipay.autotuneservice.dao.jooq.tables.ThreadpoolMonitorMetricData;
+import com.alipay.autotuneservice.dao.jooq.tables.TunePlan;
 import com.alipay.autotuneservice.dao.jooq.tables.TwatchInfo;
 
 import org.jooq.Index;
@@ -27,6 +33,9 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
+    public static final Index APP_INFO_ACCESS_TOKEN_CLUSTER_NAME_STATUS_INDEX = Internal.createIndex(DSL.name("APP_INFO_ACCESS_TOKEN_CLUSTER_NAME_STATUS_INDEX"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.ACCESS_TOKEN, AppInfo.APP_INFO.CLUSTER_NAME, AppInfo.APP_INFO.STATUS }, false);
+    public static final Index APP_INFO_APP_NAME_ACCESS_TOKEN_STATUS_INDEX = Internal.createIndex(DSL.name("APP_INFO_APP_NAME_ACCESS_TOKEN_STATUS_INDEX"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.APP_NAME, AppInfo.APP_INFO.ACCESS_TOKEN, AppInfo.APP_INFO.STATUS }, false);
+    public static final Index APP_INFO_ID_STATUS_INDEX = Internal.createIndex(DSL.name("APP_INFO_ID_STATUS_INDEX"), AppInfo.APP_INFO, new OrderField[] { AppInfo.APP_INFO.ID, AppInfo.APP_INFO.STATUS }, false);
     public static final Index CONTAINER_PROCESS_INFO_APPID_INDEX = Internal.createIndex(DSL.name("CONTAINER_PROCESS_INFO_APPID_INDEX"), ContainerProcessInfo.CONTAINER_PROCESS_INFO, new OrderField[] { ContainerProcessInfo.CONTAINER_PROCESS_INFO.APP_ID }, false);
     public static final Index CONTAINER_PROCESS_INFO_CONTAINERID_INDEX = Internal.createIndex(DSL.name("CONTAINER_PROCESS_INFO_CONTAINERID_INDEX"), ContainerProcessInfo.CONTAINER_PROCESS_INFO, new OrderField[] { ContainerProcessInfo.CONTAINER_PROCESS_INFO.CONTAINER_ID }, false);
     public static final Index CONTAINER_PROCESS_INFO_GMTMODIFIED_INDEX = Internal.createIndex(DSL.name("CONTAINER_PROCESS_INFO_GMTMODIFIED_INDEX"), ContainerProcessInfo.CONTAINER_PROCESS_INFO, new OrderField[] { ContainerProcessInfo.CONTAINER_PROCESS_INFO.GMT_MODIFIED }, false);
@@ -35,11 +44,19 @@ public class Indexes {
     public static final Index CONTAINER_STATISTICS_CONTAINERID_INDEX = Internal.createIndex(DSL.name("CONTAINER_STATISTICS_CONTAINERID_INDEX"), ContainerStatistics.CONTAINER_STATISTICS, new OrderField[] { ContainerStatistics.CONTAINER_STATISTICS.CONTAINER_ID }, false);
     public static final Index CONTAINER_STATISTICS_INFO_GMTMODIFIED_INDEX = Internal.createIndex(DSL.name("CONTAINER_STATISTICS_INFO_GMTMODIFIED_INDEX"), ContainerStatistics.CONTAINER_STATISTICS, new OrderField[] { ContainerStatistics.CONTAINER_STATISTICS.GMT_MODIFIED }, false);
     public static final Index CONTAINER_STATISTICS_INFO_PODNAME_INDEX = Internal.createIndex(DSL.name("CONTAINER_STATISTICS_INFO_PODNAME_INDEX"), ContainerStatistics.CONTAINER_STATISTICS, new OrderField[] { ContainerStatistics.CONTAINER_STATISTICS.POD_NAME }, false);
+    public static final Index HEALTH_CHECK_RESULT_ID_INDEX = Internal.createIndex(DSL.name("HEALTH_CHECK_RESULT_ID_INDEX"), HealthCheckResult.HEALTH_CHECK_RESULT, new OrderField[] { HealthCheckResult.HEALTH_CHECK_RESULT.ID }, false);
     public static final Index JVM_MONITOR_METRIC_DATA_APPNAME_INDEX = Internal.createIndex(DSL.name("JVM_MONITOR_METRIC_DATA_APPNAME_INDEX"), JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA, new OrderField[] { JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA.APP_NAME }, false);
     public static final Index JVM_MONITOR_METRIC_DATA_GMTMODIFIED_INDEX = Internal.createIndex(DSL.name("JVM_MONITOR_METRIC_DATA_GMTMODIFIED_INDEX"), JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA, new OrderField[] { JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA.GMT_MODIFIED }, false);
     public static final Index JVM_MONITOR_METRIC_DATA_PODNAME_INDEX = Internal.createIndex(DSL.name("JVM_MONITOR_METRIC_DATA_PODNAME_INDEX"), JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA, new OrderField[] { JvmMonitorMetricData.JVM_MONITOR_METRIC_DATA.POD_NAME }, false);
     public static final Index METER_METRIC_INFO_APPID_METRICNAME_DT_INDEX = Internal.createIndex(DSL.name("METER_METRIC_INFO_APPID_METRICNAME_DT_INDEX"), MeterMetricInfo.METER_METRIC_INFO, new OrderField[] { MeterMetricInfo.METER_METRIC_INFO.APP_ID, MeterMetricInfo.METER_METRIC_INFO.METRIC_NAME, MeterMetricInfo.METER_METRIC_INFO.DT }, false);
+    public static final Index POD_INFO_APP_ID_AGENT_INSTALL_INDEX = Internal.createIndex(DSL.name("POD_INFO_APP_ID_AGENT_INSTALL_INDEX"), PodInfo.POD_INFO, new OrderField[] { PodInfo.POD_INFO.APP_ID, PodInfo.POD_INFO.AGENT_INSTALL }, false);
+    public static final Index POD_INFO_APP_ID_POD_STATUS_INDEX = Internal.createIndex(DSL.name("POD_INFO_APP_ID_POD_STATUS_INDEX"), PodInfo.POD_INFO, new OrderField[] { PodInfo.POD_INFO.APP_ID, PodInfo.POD_INFO.POD_STATUS }, false);
+    public static final Index POD_INFO_D_HOSTNAME_INDEX = Internal.createIndex(DSL.name("POD_INFO_D_HOSTNAME_INDEX"), PodInfo.POD_INFO, new OrderField[] { PodInfo.POD_INFO.D_HOSTNAME }, false);
+    public static final Index RISK_CHECK_CONTROLLER_TRACE_ID_IDX = Internal.createIndex(DSL.name("RISK_CHECK_CONTROLLER_TRACE_ID_IDX"), RiskCheckControl.RISK_CHECK_CONTROL, new OrderField[] { RiskCheckControl.RISK_CHECK_CONTROL.TRACE_ID }, false);
+    public static final Index RISK_CHECK_TASK_JOB_ID_IDX = Internal.createIndex(DSL.name("RISK_CHECK_TASK_JOB_ID_IDX"), RiskCheckTask.RISK_CHECK_TASK, new OrderField[] { RiskCheckTask.RISK_CHECK_TASK.JOB_ID }, false);
+    public static final Index RISK_CHECK_TASK_TASK_TRACE_ID_IDX = Internal.createIndex(DSL.name("RISK_CHECK_TASK_TASK_TRACE_ID_IDX"), RiskCheckTask.RISK_CHECK_TASK, new OrderField[] { RiskCheckTask.RISK_CHECK_TASK.TASK_TRACE_ID }, false);
     public static final Index THREADPOOL_MONITOR_METRIC_DATA_HOST_NAME_THREAD_POOL_NAME_PERIOD_INDEX = Internal.createIndex(DSL.name("THREADPOOL_MONITOR_METRIC_DATA_HOST_NAME_THREAD_POOL_NAME_PERIOD_INDEX"), ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA, new OrderField[] { ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA.HOST_NAME, ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA.THREAD_POOL_NAME, ThreadpoolMonitorMetricData.THREADPOOL_MONITOR_METRIC_DATA.PERIOD }, false);
+    public static final Index TUNE_PLAN_APP_ID_INDEX = Internal.createIndex(DSL.name("TUNE_PLAN_APP_ID_INDEX"), TunePlan.TUNE_PLAN, new OrderField[] { TunePlan.TUNE_PLAN.APP_ID }, false);
     public static final Index TWATCH_INFO_AGENT_NAME_INDEX = Internal.createIndex(DSL.name("TWATCH_INFO_AGENT_NAME_INDEX"), TwatchInfo.TWATCH_INFO, new OrderField[] { TwatchInfo.TWATCH_INFO.AGENT_NAME }, false);
     public static final Index TWATCH_INFO_CONTAINERID_INDEX = Internal.createIndex(DSL.name("TWATCH_INFO_CONTAINERID_INDEX"), TwatchInfo.TWATCH_INFO, new OrderField[] { TwatchInfo.TWATCH_INFO.CONTAINER_ID }, false);
     public static final Index TWATCH_INFO_CONTAINERNAME_INDEX = Internal.createIndex(DSL.name("TWATCH_INFO_CONTAINERNAME_INDEX"), TwatchInfo.TWATCH_INFO, new OrderField[] { TwatchInfo.TWATCH_INFO.CONTAINER_NAME }, false);

@@ -4,6 +4,7 @@
 package com.alipay.autotuneservice.dao.jooq.tables;
 
 
+import com.alipay.autotuneservice.dao.jooq.Indexes;
 import com.alipay.autotuneservice.dao.jooq.Keys;
 import com.alipay.autotuneservice.dao.jooq.TmaestroLite;
 import com.alipay.autotuneservice.dao.jooq.tables.records.HealthCheckResultRecord;
@@ -15,6 +16,7 @@ import java.util.List;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Row11;
@@ -140,6 +142,11 @@ public class HealthCheckResult extends TableImpl<HealthCheckResultRecord> {
     @Override
     public Schema getSchema() {
         return TmaestroLite.TMAESTRO_LITE;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.<Index>asList(Indexes.HEALTH_CHECK_RESULT_ID_INDEX);
     }
 
     @Override
