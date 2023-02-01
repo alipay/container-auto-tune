@@ -15,7 +15,7 @@ spec:
         app: tmaestro
     spec:
       containers:
-        - image: tmaestro/202302011547
+        - image: REPLACE_WITH_TMAESTRO_IMAGE
           imagePullPolicy: Never
           name: tmaestro-server
           ports:
