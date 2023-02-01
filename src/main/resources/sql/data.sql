@@ -62,15 +62,13 @@ create table if not exists `tmaestro-lite`.app_log
 -- comment '应用日志';
 
 create index if not exists app_info_ACCESS_TOKEN_CLUSTER_NAME_STATUS_index
-    on tmaster-lite.app_info (ACCESS_TOKEN, CLUSTER_NAME, STATUS);
+    on `tmaestro-lite`.app_info (ACCESS_TOKEN, CLUSTER_NAME, STATUS);
 
 create index if not exists app_info_APP_NAME_ACCESS_TOKEN_STATUS_index
-    on tmaster-lite.app_info (APP_NAME, ACCESS_TOKEN, STATUS);
+    on `tmaestro-lite`.app_info (APP_NAME, ACCESS_TOKEN, STATUS);
 
 create index if not exists app_info_ID_STATUS_index
-    on tmaster-lite.app_info (ID, STATUS);
-
-
+    on `tmaestro-lite`.app_info (ID, STATUS);
 
 create table if not exists `tmaestro-lite`.base_line
 (
@@ -172,7 +170,7 @@ create table if not exists `tmaestro-lite`.health_check_result
 -- comment '健康检查结果标';
 
 create index if not exists health_check_result_ID_index
-    on tmaster-lite.health_check_result (ID);
+    on `tmaestro-lite`.health_check_result (ID);
 
 create table if not exists `tmaestro-lite`.help_info
 (
@@ -345,7 +343,7 @@ create table if not exists `tmaestro-lite`.notify
 
 create table if not exists `tmaestro-lite`.pod_attach
 (
-    ID            int auto_increment comment primary key
+    ID            int auto_increment comment 'primary key'
     primary key,
     ACCESS_TOKEN  varchar(256) not null comment '关联的token',
     POD_ID        int          not null comment 'pod id',
@@ -392,13 +390,13 @@ create table if not exists `tmaestro-lite`.pod_info
 -- comment '单机管理表';
 
 create index if not exists pod_info_APP_ID_AGENT_INSTALL_index
-    on tmaster-lite.pod_info (APP_ID, AGENT_INSTALL);
+    on `tmaestro-lite`.pod_info (APP_ID, AGENT_INSTALL);
 
 create index if not exists pod_info_APP_ID_POD_STATUS_index
-    on tmaster-lite.pod_info (APP_ID, POD_STATUS);
+    on `tmaestro-lite`.pod_info (APP_ID, POD_STATUS);
 
 create index if not exists pod_info_D_HOSTNAME_index
-    on tmaster-lite.pod_info (D_HOSTNAME);
+    on `tmaestro-lite`.pod_info (D_HOSTNAME);
 
 create table if not exists `tmaestro-lite`.risk_check_control
 (
@@ -419,7 +417,7 @@ create table if not exists `tmaestro-lite`.risk_check_control
 -- comment '风险识别控制表';
 
 create index if not exists risk_check_controller_TRACE_ID_IDX
-    on tmaster-lite.risk_check_control (TRACE_ID);
+    on `tmaestro-lite`.risk_check_control (TRACE_ID);
 
 create table if not exists `tmaestro-lite`.risk_check_task
 (
@@ -437,10 +435,10 @@ create table if not exists `tmaestro-lite`.risk_check_task
 -- comment '风险识别任务表';
 
 create index if not exists risk_check_task_JOB_ID_IDX
-    on tmaster-lite.risk_check_task (JOB_ID);
+    on `tmaestro-lite`.risk_check_task (JOB_ID);
 
 create index if not exists risk_check_task_TASK_TRACE_ID_IDX
-    on tmaster-lite.risk_check_task (TASK_TRACE_ID);
+    on `tmaestro-lite`.risk_check_task (TASK_TRACE_ID);
 
 create table if not exists `tmaestro-lite`.rule_info
 (
@@ -591,7 +589,7 @@ create table if not exists `tmaestro-lite`.tune_plan
 -- comment '调参计划';
 
 create index if not exists tune_plan_APP_ID_index
-    on tmaster-lite.tune_plan (APP_ID);
+    on `tmaestro-lite`.tune_plan (APP_ID);
 
 create table if not exists `tmaestro-lite`.tune_pool_info
 (
