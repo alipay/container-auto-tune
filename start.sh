@@ -80,7 +80,8 @@ install_tmaestro(){
           exit 119
         fi
     echo -ne "${Green}[ ========>                                                       (10%)]${end}\r"
-    sed "s/REPLACE_WITH_TMAESTRO_IMAGE/${image}/"  tmaestro-lite.yaml > /tmp/tmaestro-lite.yaml
+#    sed 's/REPLACE_WITH_TMAESTRO_IMAGE/$image/'  tmaestro-lite.yaml > /tmp/tmaestro-lite.yaml
+    sed -e "s|REPLACE_WITH_TMAESTRO_IMAGE|$image|"  tmaestro-lite.yaml > /tmp/tmaestro-lite.yaml
     kubectl apply -f /tmp/tmaestro-lite.yaml
     echo -ne "${Green}[ ================================>                               (53%)]${end}\r"
     sleep 6
