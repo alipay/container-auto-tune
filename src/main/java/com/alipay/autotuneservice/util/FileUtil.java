@@ -6,6 +6,7 @@ package com.alipay.autotuneservice.util;
 
 import com.alipay.autotuneservice.base.h2.H2DBManagerImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.reflect.IReflectionWorld;
 
 import java.io.File;
 import java.io.InputStream;
@@ -33,5 +34,14 @@ public class FileUtil {
         }catch (Exception e){
             log.error("copyfileFromResourcePath occurs an error.", e);
         }
+    }
+
+    /**
+     * read resource file as input stream
+     * @param resourceFilePath resource path
+     * @return Inputstream object
+     */
+    public static InputStream readResourceFileAsInputStream(String resourceFilePath){
+        return FileUtil.class.getClassLoader().getResourceAsStream(resourceFilePath);
     }
 }
