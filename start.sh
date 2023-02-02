@@ -106,7 +106,7 @@ main(){
   # deploy tmaestro-server
   install_tmaestro
   # deploy twatch
-  install_demonset
+#  install_demonset
 }
 
 main
