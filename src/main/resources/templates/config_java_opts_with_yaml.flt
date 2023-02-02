@@ -22,7 +22,7 @@ get_java_opts(){
   echo "Get podName=${POD_NAME}"
 
   echo "=====> step2: start to check whether autoTuneAgent.jar installed ====="
-  wget -qO autoTuneAgent.jar ${TUNE_MASTER_SERVER_URL}/api/storage/download/autoTuneAgent.jar
+  wget -qO autoTuneAgent.jar ${TUNE_MASTER_SERVER_URL}/api/storage/autoTuneAgent.jar
   if [ ! -f ${TUNE_AGENT_NAME} ]; then
     echo "file ${TUNE_AGENT_NAME} not exists."
     return ${ERROR_CODE}

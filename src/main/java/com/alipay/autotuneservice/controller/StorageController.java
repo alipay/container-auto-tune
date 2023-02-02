@@ -22,6 +22,7 @@ import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.alipay.autotuneservice.model.common.FileContent;
 import com.alipay.autotuneservice.model.common.StorageInfo;
 import com.alipay.autotuneservice.service.StorageInfoService;
+import com.alipay.autotuneservice.util.FileUtil;
 import com.alipay.autotuneservice.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -118,6 +119,16 @@ public class StorageController {
     }
 
     /**
+     * 下载docker启动脚本
+     */
+    @GetMapping(path = "/autoTuneAgent.jar")
+    public ResponseEntity<StreamingResponseBody> downloadTuneAgent(HttpServletResponse response) {
+        return ResponseEntity.ok(this.createResponseStream(response,
+                FileUtil.readResourceFileAsInputStream("agent/autoTuneAgent.jar"),
+                "autoTuneAgent.jar"));
+    }
+
+    /**
      * 下载tmaestro-entry.sh文件
      */
     @NoLogin
@@ -144,9 +155,9 @@ public class StorageController {
     @GetMapping(path = "/installTuneAgent.sh")
     public ResponseEntity<StreamingResponseBody> downloadAttachAgentFile(HttpServletResponse response,
                                                                          @RequestParam(value = "accessToken", required = false)
-                                                                         String accessToken,
+                                                                                 String accessToken,
                                                                          @RequestParam(value = "attachId", required = false)
-                                                                         Integer attachId) {
+                                                                                 Integer attachId) {
         log.info("downloadAttachAgentFile, accessToken:{}, attachId:{}", accessToken, attachId);
         FileContent fileContent = storageInfoService.generateInstallAttachAutoTuneJar(accessToken,
                 attachId);
@@ -164,7 +175,7 @@ public class StorageController {
     @GetMapping(path = "/tmaster.yml")
     public ResponseEntity<StreamingResponseBody> downloadTmasterYaml(HttpServletResponse response,
                                                                      @RequestParam(required = false, defaultValue = "")
-                                                                     String accessToken) {
+                                                                             String accessToken) {
         FileContent fileContent = storageInfoService.generateAutoTuneYaml(accessToken);
         if (fileContent == null) {
             return ResponseEntity.internalServerError().body(null);
