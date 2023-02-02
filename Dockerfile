@@ -17,7 +17,7 @@
 
 FROM azul/zulu-openjdk-alpine:8u322-8.60.0.21
 
-ARG JAR_FILE=target/autotune-service-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=target/container-auto-tune-0.0.1-SNAPSHOT.jar
 ARG STORAGE_PATH=storage/
 
 WORKDIR /opt/app

@@ -73,7 +73,6 @@ public class MinioClientImpl implements IMinioClient {
     @Override
     public MinioUploadFileResult uploadObject(String bucket, String filePath, String fileName) {
         try {
-            boolean found = getMinioClient().bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
             if (!checkBucketExists(bucket)) {
                 // Make a new bucket called 'asiatrip'.
                 log.info("bucket={} not exists, so will create it.", bucket);

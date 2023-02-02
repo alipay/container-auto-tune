@@ -4,14 +4,11 @@
  */
 package com.alipay.autotuneservice.base.minio;
 
+import com.alipay.autotuneservice.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Embed the minio server
@@ -23,50 +20,39 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class MinioServerStarter {
 
+    private static String START_MINIO_SCRIPT = "/tmp/minio-server/start-minio.sh";
+    private static String START_MINIO_CMD    = "/bin/sh /tmp/minio-server/start-minio.sh";
+
     @PostConstruct
     public void startMinioServer() {
-        start();
-    }
-
-    private boolean execCmd(String cmd) {
         try {
-            Process exec = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", cmd});
-            if (exec.waitFor() != 0) {
-                log.error("execCmd={} failed. errorMsg={}", cmd, convert(exec.getErrorStream()));
-                return false;
-            }
-            return true;
+            start();
         } catch (Exception e) {
-            log.error("execCmd={} occurs an error.", cmd, e);
-            return false;
+            log.error("init minio-server occurs an error.", e);
         }
     }
 
-    private String convert(InputStream inputStream) throws IOException {
-        return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+    private void start() {
+        copyMinioFiles();
+        execCmd();
     }
 
-    private void start() {
-        //if (!execCmd("ls /tmp/minio-server")) {
-        //    execCmd("mkdir /tmp/minio-server");
-        //}
-        //log.info("*********start download minio********");
-        //String downloadCmd = "curl -o /tmp/minio-server/minio https://dl.min.io/server/minio/release/linux-amd64/minio";
-        //if (!execCmd(downloadCmd)) {
-        //    log.error("download minio file failed.");
-        //    return;
-        //}
-        //log.info("start chmod /tmp/minio-server/minio......");
-        //String chmodCmd = "chmod +x  /tmp/minio-server/minio";
-        //if (!execCmd(chmodCmd)) {
-        //    log.error("chmod /tmp/minio-server/minio failed");
-        //    return;
-        //}
-        //log.info("start minio server.....");
-        //String startMinioCmd = "/tmp/minio-server/minio server /tmp/minio-db --address :9098 --console-address :9099";
-        //if (!execCmd(startMinioCmd)) {
-        //    log.error("start minio server failed");
-        //    return;
-        //}
+    private static void execCmd() {
+        try {
+            Runtime.getRuntime().exec(START_MINIO_CMD);
+        } catch (Exception e) {
+            log.error("occurs an error.", e);
+        }
+    }
+
+    private static void copyMinioFiles() {
+        try {
+            log.info("*****  start to copyMinioFile.  *****");
+            FileUtil.copyfileFromResourcePath("minio/minio", "/tmp/minio-server/minio");
+            log.info("*****  end to copyMinioFile.  *****");
+            FileUtil.copyfileFromResourcePath("minio/start-minio.sh", START_MINIO_SCRIPT);
+        } catch (Exception e) {
+            log.error("copyMinioFile occurs an error.");
+        }
     }
 }
