@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package com.alipay.autotuneservice.controller;
 
 import com.alipay.autotuneservice.configuration.Cached;
 import com.alipay.autotuneservice.configuration.NoLogin;
+import com.alipay.autotuneservice.controller.model.AppType;
 import com.alipay.autotuneservice.controller.model.AppVO;
 import com.alipay.autotuneservice.controller.model.ClusterVO;
 import com.alipay.autotuneservice.model.ServiceBaseResult;
@@ -40,9 +41,9 @@ import java.util.Map;
  * @version AppController.java, v 0.1 2022年04月19日 7:01 下午 huoyuqi
  */
 @Slf4j
-@NoLogin
 @RestController
 @RequestMapping("/api/app")
+@NoLogin
 public class AppController {
 
     @Autowired
@@ -60,7 +61,7 @@ public class AppController {
                 .makeResult(() -> {
                     log.info("appList enter");
                     String accessToken = UserUtil.getAccessToken();
-                    log.info("accesstokrn is:{}", accessToken);
+                    log.info("accesstokrn is:{}",accessToken);
                     return appInfoService.appList(accessToken, appName);
                 });
     }
@@ -87,7 +88,8 @@ public class AppController {
     @GetMapping("/v2/appListByCondition")
     public ServiceBaseResult<Map<String, List<AppVO>>> appListByConditionV2(
             @RequestParam(value = "appName", required = false) String appName,
-            @RequestParam(value = "clusterAndRegion", required = false) String clusterName) {
+            @RequestParam(value = "clusterAndRegion", required = false) String clusterName,
+            @RequestParam(value = "appType", required = false) AppType appType) {
         return ServiceBaseResult.invoker()
                 .makeResult(() -> {
                     String accessToken = UserUtil.getAccessToken();
@@ -95,7 +97,7 @@ public class AppController {
                     if (StringUtils.isNotEmpty(clusterName)) {
                         cluster = clusterName.substring(0, clusterName.indexOf(" "));
                     }
-                    return appInfoService.appListByClusterAndRegionAndApp(cluster, accessToken, appName);
+                    return appInfoService.appListByClusterAndRegionAndApp(cluster, accessToken, appName, appType);
                 });
     }
 

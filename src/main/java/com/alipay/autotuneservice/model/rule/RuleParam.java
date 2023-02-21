@@ -31,9 +31,9 @@ public class RuleParam {
      * 自动 - 定时
      */
     // cron表达式
-    private String     cron;
+    private String  cron;
     // 回溯时间 单位: hour
-    private Integer    lookBackTime;
+    private Integer lookBackTime;
 
     /**
      * 自动 - 阈值

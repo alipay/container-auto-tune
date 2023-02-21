@@ -25,7 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -89,7 +95,8 @@ public class BaseLineParam {
         private Map<String, String> configParam = Maps.newLinkedHashMap();
 
         public enum ProcessType {
-            ADD, DELETE;
+            ADD,
+            DELETE;
         }
     }
 
@@ -155,5 +162,36 @@ public class BaseLineParam {
             result.put(param.getConfigKey(), String.join(" ", data));
         });
         return result;
+    }
+
+    public static void main(String[] args) {
+        BaseLineParam baseLineParam = new BaseLineParam();
+        Param param = new Param();
+        param.setConfigKey("java_opts_base");
+        param.setConfigParam(new HashMap<String, String>() {
+            {
+                put("-Drpc_pool_queue_size_tr",
+                        "200");
+                put("-Dsun.rmi.dgc.server.gcInterval",
+                        "2592000001");
+                put("-Xms", "250m");
+                put("-Xmn", "150m");
+                put("-XX:CMSInitiatingOccupancyFraction", "75");
+            }
+        });
+        param.setOrigin(
+                "-server -XX:+UseStringCache -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSScavengeBeforeRemark "
+                        + "-XX:+CMSClassUnloadingEnabled -verbose:gc "
+                        + "-XX:+UseCMSInitiatingOccupancyOnly -XX:+ExplicitGCInvokesConcurrent -Xloggc:/home/admin/logs/gc.log "
+                        + "-XX:+PrintGCDetails -XX:+PrintGCDateStamps -Dsun.rmi.dgc.server.gcInterval=2592000000 -Dsun.rmi.dgc.client"
+                        + ".gcInterval=2592000000 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/home/admin/logs "
+                        + "-XX:ErrorFile=/home/admin/logs/hs_err_pid%p.log -Dfile.encoding=UTF-8 -Ddbmode=$DBMODE -Dcom.alipay.ldc"
+                        + ".zone=$ZONE -Dcom.alipay.confreg.url=$CONFREG_URL -Drpc_pool_queue_size_tr=10 -Xms500m -Xmx500m -Xmn200m");
+
+        param.setProcessType(Param.ProcessType.ADD);
+        List<Param> params = new ArrayList<>();
+        params.add(param);
+        baseLineParam.setParams(params);
+        System.out.println(baseLineParam.buildParam());
     }
 }

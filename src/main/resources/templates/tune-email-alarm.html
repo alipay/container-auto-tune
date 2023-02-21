@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+    <title>邮箱通知</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        p {
+            font-size: 16px;
+            color: #262626;
+        }
+
+        .main {
+            padding: 38px 64px;
+            border-top: 6px solid #1670ff;
+            /* margin: 20px 52px; */
+        }
+
+        .teamTitle {
+            font-weight: 500;
+            font-size: 28px;
+            color: #353535;
+            margin-bottom: 50px;
+        }
+
+        .teamMiddle {
+            font-size: 16px;
+        }
+
+        .middle {
+            /* margin: 90px 0 74px; */
+            margin-top: 15px;
+        }
+
+        .bottomBanner {
+            position: fixed;
+            bottom: 0;
+            /* width: -webkit-fill-available; */
+            width: 100%;
+            background-color: #0a1724;
+            /* margin: 0 52px; */
+            font-weight: 400;
+            font-size: 12px;
+            color: #ededed;
+            letter-spacing: 0;
+            text-align: center;
+            padding: 27px 0;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="main">
+        <div class="top"
+             style="margin-left: -30px;">
+        </div>
+        <div class="middle">
+            <div class="teamTitle">
+                [=title]
+            </div>
+            <div class="teamMiddle">
+                <div style="margin-bottom: 24px">您好，</div>
+                <p style="margin-bottom: 24px">您的应用[=appName] [=content]，特此提醒</p>
+            </div>
+
+            <div style="
+           margin-bottom: 80px;">
+
+                <a href="#"
+                   style="
+           padding: 11px 30px;
+           height: 44px;
+            color: #ededed;
+           font-weight: 400;
+          font-size: 20px;
+           font-family: PingFangSC;
+             text-decoration: none;
+           background-color: #1670ff;
+             border-radius: 8px;
+"
+                   href=[=tmaestroWebUrl]> [=buttonType]</a>
+                </a>
+            </div>
+        </div>
+        <div class="bottom">
+            <div>
+                如果您有任何问题或疑虑，请随时通过以下邮件联系 TMaestro 支持。<a href=""
+                                                       style="color:#1677FF;">support@tmaestro.com</a>
+            </div>
+            <div style="margin-bottom: 24px">--</div>
+            <div style="margin-bottom: 4px">Tmaestro团队</div>
+            <div style="margin-bottom: 80px;">[=date]</div>
+        </div>
+    </div>
+    <div class="bottomBanner">
+        <div style="margin-bottom: 8px;font-size: 12px;">
+            TMaestro｜<a href="https://www.opentrs.com/tmaestro"
+                        style="color: #ededed; font-size:12px;">https://www.opentrs.com/tmaestro</a>
+        </div>
+        <div style="font-size: 12px;">
+            用户服务协议｜隐私政策
+        </div>
+    </div>
+</div>
+</body>
+
+
+</html>

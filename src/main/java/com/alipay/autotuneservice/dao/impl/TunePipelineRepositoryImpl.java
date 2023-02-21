@@ -51,9 +51,9 @@ public class TunePipelineRepositoryImpl implements TunePipelineRepository {
     private static final TunePipelineConverter converter = new TunePipelineConverter();
 
     @Autowired
-    private TunePipelinePhaseRepository        tunePipelinePhaseRepository;
+    private   TunePipelinePhaseRepository tunePipelinePhaseRepository;
     @Autowired
-    protected DSLContext                       dslContext;
+    protected DSLContext                  dslContext;
 
     @Override
     public TunePipeline saveOneWithTransaction(TunePipeline tunePipeline) {
@@ -150,11 +150,25 @@ public class TunePipelineRepositoryImpl implements TunePipelineRepository {
     }
 
     @Override
+    public List<TunePipeline> findByPlanIds(List<Integer> planIds) {
+        List<TunePipelineRecord> pipelineRecords = dslContext.select()
+                .from(Tables.TUNE_PIPELINE)
+                .where(Tables.TUNE_PIPELINE.TUNE_PLAN_ID.in(planIds))
+                .and(Tables.TUNE_PIPELINE.ID.eq(Tables.TUNE_PIPELINE.PIPELINE_ID))
+                .fetchInto(TunePipelineRecord.class);
+        Map<Integer, TunePipelinePhase> phaseIdMapPhase = tunePipelinePhaseRepository.findToMap(pipelineRecords, dslContext);
+        return pipelineRecords.stream().map(e -> converter.deserializeWithPhase(e, phaseIdMapPhase)).collect(Collectors.toList());
+    }
+
+    @Override
     public TunePipeline findByMachineIdAndPipelineId(MachineId machineId, Integer pipelineId) {
-        Condition condition = Tables.TUNE_PIPELINE.PIPELINE_ID.eq(pipelineId).and(
-            Tables.TUNE_PIPELINE.MACHINE_ID.eq(machineId.name()));
-        TunePipelineRecord tunePipelineRecord = dslContext.select().from(Tables.TUNE_PIPELINE)
-            .where(condition).limit(1).fetchOneInto(TunePipelineRecord.class);
+        Condition condition = Tables.TUNE_PIPELINE.PIPELINE_ID.eq(pipelineId)
+                .and(Tables.TUNE_PIPELINE.MACHINE_ID.eq(machineId.name()));
+        TunePipelineRecord tunePipelineRecord = dslContext.select()
+                .from(Tables.TUNE_PIPELINE)
+                .where(condition)
+                .limit(1)
+                .fetchOneInto(TunePipelineRecord.class);
         if (tunePipelineRecord == null) {
             return null;
         }
@@ -164,13 +178,15 @@ public class TunePipelineRepositoryImpl implements TunePipelineRepository {
     }
 
     @Override
-    public TunePipeline findByMachineIdAndPipelineId(Integer pipelineId) {
-        List<MachineId> machineIds = Arrays.asList(MachineId.TUNE_PIPELINE,
-            MachineId.TUNE_JVM_PIPELINE);
-        Condition condition = Tables.TUNE_PIPELINE.PIPELINE_ID.eq(pipelineId).and(
-            Tables.TUNE_PIPELINE.MACHINE_ID.in(machineIds));
-        TunePipelineRecord tunePipelineRecord = dslContext.select().from(Tables.TUNE_PIPELINE)
-            .where(condition).limit(1).fetchOneInto(TunePipelineRecord.class);
+    public TunePipeline findByMachineIdAndPipelineId( Integer pipelineId) {
+        List<MachineId> machineIds = Arrays.asList(MachineId.TUNE_PIPELINE,MachineId.TUNE_JVM_PIPELINE);
+        Condition condition = Tables.TUNE_PIPELINE.PIPELINE_ID.eq(pipelineId)
+                .and(Tables.TUNE_PIPELINE.MACHINE_ID.in(machineIds));
+        TunePipelineRecord tunePipelineRecord = dslContext.select()
+                .from(Tables.TUNE_PIPELINE)
+                .where(condition)
+                .limit(1)
+                .fetchOneInto(TunePipelineRecord.class);
         if (tunePipelineRecord == null) {
             return null;
         }
@@ -221,24 +237,26 @@ public class TunePipelineRepositoryImpl implements TunePipelineRepository {
     @Override
     public TunePipelineRecord findById(Integer pipelineId) {
         Condition condition = Tables.TUNE_PIPELINE.ID.eq(pipelineId);
-        return dslContext.select().from(Tables.TUNE_PIPELINE).where(condition)
-            .fetchOneInto(TunePipelineRecord.class);
+        return dslContext.select()
+                .from(Tables.TUNE_PIPELINE)
+                .where(condition)
+                .fetchOneInto(TunePipelineRecord.class);
     }
 
-    private void attachTunePipelinePhase(TunePipeline tunePipeline, TunePipelineRecord record,
-                                         DSLContext innerDsl) {
-        TunePipelinePhase currentPhase = tunePipelinePhaseRepository.find(
-            record.getCurrentPhaseId(), innerDsl);
+    private void attachTunePipelinePhase(TunePipeline tunePipeline, TunePipelineRecord record, DSLContext innerDsl) {
+        TunePipelinePhase currentPhase = tunePipelinePhaseRepository.find(record.getCurrentPhaseId(), innerDsl);
         tunePipeline.setCurrentPhase(currentPhase);
-        TunePipelinePhase prePhase = tunePipelinePhaseRepository.find(record.getPrePhaseId(),
-            innerDsl);
+        TunePipelinePhase prePhase = tunePipelinePhaseRepository.find(record.getPrePhaseId(), innerDsl);
         tunePipeline.setPrePhase(prePhase);
     }
 
     private List<TunePipelineRecord> selectByPipelineId(Integer pipelineId) {
         Condition condition = Tables.TUNE_PIPELINE.PIPELINE_ID.eq(pipelineId);
-        return dslContext.select().from(Tables.TUNE_PIPELINE).where(condition)
-            .orderBy(Tables.TUNE_PIPELINE.ID.desc()).fetchInto(TunePipelineRecord.class);
+        return dslContext.select()
+                .from(Tables.TUNE_PIPELINE)
+                .where(condition)
+                .orderBy(Tables.TUNE_PIPELINE.ID.desc())
+                .fetchInto(TunePipelineRecord.class);
     }
 
     private TunePipeline save(TunePipeline tunePipeline, DSLContext innerDsl) {
@@ -252,15 +270,13 @@ public class TunePipelineRepositoryImpl implements TunePipelineRepository {
             TunePipelinePhase currentPhase = tunePipeline.getCurrentPhase();
             currentPhase.setPipelineId(createdRecord.getPipelineId());
             currentPhase.setPipelineBranchId(createdRecord.getId());
-            TunePipelinePhase createdPhase = tunePipelinePhaseRepository.save(currentPhase,
-                innerDsl);
+            TunePipelinePhase createdPhase = tunePipelinePhaseRepository.save(currentPhase, innerDsl);
             // update phase
             createdRecord.setCurrentPhaseId(createdPhase.getId());
             this.update(createdRecord, innerDsl);
         } else {
             id = tunePipeline.getId();
-            TunePipelinePhase phase = tunePipelinePhaseRepository.save(
-                tunePipeline.getCurrentPhase(), innerDsl);
+            TunePipelinePhase phase = tunePipelinePhaseRepository.save(tunePipeline.getCurrentPhase(), innerDsl);
             record.setCurrentPhaseId(phase.getId());
             this.update(record, innerDsl);
         }
@@ -288,8 +304,11 @@ public class TunePipelineRepositoryImpl implements TunePipelineRepository {
 
     private TunePipelineRecord selectById(Integer id, DSLContext innerDsl) {
         Condition condition = Tables.TUNE_PIPELINE.ID.eq(id);
-        return innerDsl.select().from(Tables.TUNE_PIPELINE).where(condition).limit(1)
-            .fetchOneInto(TunePipelineRecord.class);
+        return innerDsl.select()
+                .from(Tables.TUNE_PIPELINE)
+                .where(condition)
+                .limit(1)
+                .fetchOneInto(TunePipelineRecord.class);
     }
 
     private TunePipeline findById(Integer id, DSLContext innerDsl) {

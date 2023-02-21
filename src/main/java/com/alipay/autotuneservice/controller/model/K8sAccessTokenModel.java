@@ -16,6 +16,7 @@
  */
 package com.alipay.autotuneservice.controller.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -24,13 +25,21 @@ import lombok.Data;
  */
 
 @Data
+@Builder
 public class K8sAccessTokenModel {
     private String accessToken;
+    @Deprecated
     private String accessKeyId;
+    @Deprecated
     private String secretAccessKey;
+    @Deprecated
     private String clusterId;
     private String clusterName;
     private String region;
+    @Deprecated
     private String endpoint;
+    @Deprecated
     private String cer;
+    private String s3Key;
+    private String clusterStatus;
 }

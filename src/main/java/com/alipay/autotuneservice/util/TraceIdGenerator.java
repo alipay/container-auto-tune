@@ -30,10 +30,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class TraceIdGenerator {
 
-    public static final String         TRACE_ID   = "traceId";
-    private static String              IP_16      = "ffffffff";
+    public static final  String        TRACE_ID   = "traceId";
+    private static       String        IP_16      = "ffffffff";
     private static final AtomicInteger count      = new AtomicInteger(1000);
-    public static String               P_ID_CACHE = null;
+    public static        String        P_ID_CACHE = null;
 
     static {
         try {
@@ -122,7 +122,7 @@ public class TraceIdGenerator {
     }
 
     private static int getNextId() {
-        for (;;) {
+        for (; ; ) {
             int current = count.get();
             int next = (current > 9000) ? 1000 : current + 1;
             if (count.compareAndSet(current, next)) {

@@ -36,7 +36,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -89,12 +88,13 @@ public class HttpUtil {
 
     public static String callGetApi(URI url, int timeOut, Header... headers) throws IOException {
         log.info("callGetApi start. url={}", url);
-        return Request.Get(url).connectTimeout(timeOut).socketTimeout(timeOut).setHeaders(headers)
-            .execute().returnContent().asString(Consts.UTF_8);
+        return Request.Get(url)
+                .connectTimeout(timeOut)
+                .socketTimeout(timeOut).setHeaders(headers)
+                .execute().returnContent().asString(Consts.UTF_8);
     }
 
-    public static String callPostRequest(URI uri, int timeOut, Map<String, Object> map,
-                                         Header... headers) {
+    public static String callPostRequest(URI uri, int timeOut, Map<String, Object> map, Header... headers) {
         try {
             return callPostRequest(uri, timeOut, JSON.toJSONString(map), headers);
         } catch (Exception e) {

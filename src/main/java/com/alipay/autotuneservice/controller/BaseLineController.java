@@ -16,15 +16,16 @@
  */
 package com.alipay.autotuneservice.controller;
 
-import com.alipay.autotuneservice.configuration.NoLogin;
 import com.alipay.autotuneservice.controller.model.baseLine.BaseLineVO;
 import com.alipay.autotuneservice.controller.model.baseLine.HistoryBaseLineVO;
 import com.alipay.autotuneservice.controller.model.baseLine.JvmDateVO;
 import com.alipay.autotuneservice.controller.model.baseLine.PodLineVO;
 import com.alipay.autotuneservice.controller.model.tuneparam.AppTuneParamsVO;
-import com.alipay.autotuneservice.controller.model.tuneparam.TuneParamItem;
+import com.alipay.autotuneservice.dao.AppInfoRepository;
+import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
 import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.alipay.autotuneservice.service.BaseLineService;
+import com.alipay.autotuneservice.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,47 +47,75 @@ public class BaseLineController {
     @Autowired
     private BaseLineService baseLineService;
 
+    @Autowired
+    private AppInfoRepository appInfoRepository;
+
     @GetMapping("/LastJvm")
-    @NoLogin
     public ServiceBaseResult<BaseLineVO> LastJvm(@RequestParam(value = "appId") Integer appId) {
         return ServiceBaseResult
                 .invoker()
-                .makeResult(() -> baseLineService.getJvm(appId));
-
+                .makeResult(() -> {
+                    AppInfoRecord record =  appInfoRepository.findByIdAndToken(UserUtil.getAccessToken(), appId);
+                    if (record == null) {
+                        return null;
+                    }
+                    return baseLineService.getJvm(appId);
+                });
     }
 
     @GetMapping("/jvmDateList")
-    @NoLogin
     public ServiceBaseResult<List<JvmDateVO>> jvmDateList(@RequestParam(value = "appId") Integer appId) {
         return ServiceBaseResult
                 .invoker()
-                .makeResult(() -> baseLineService.getJvmDate(appId));
+                .makeResult(() -> {
+                    AppInfoRecord record =  appInfoRepository.findByIdAndToken(UserUtil.getAccessToken(), appId);
+                    if (record == null) {
+                        return null;
+                    }
+                    return baseLineService.getJvmDate(appId);
+                });
     }
 
     @GetMapping("/historyJvm")
-    @NoLogin
     public ServiceBaseResult<List<HistoryBaseLineVO>> historyJvm(@RequestParam(value = "appId") Integer appId) {
         return ServiceBaseResult
                 .invoker()
-                .makeResult(() -> baseLineService.getHistoryJvm(appId));
+                .makeResult(() -> {
+                    AppInfoRecord record =  appInfoRepository.findByIdAndToken(UserUtil.getAccessToken(), appId);
+                    if (record == null) {
+                        return null;
+                    }
+                    return baseLineService.getHistoryJvm(appId);
+                });
     }
 
     @GetMapping("/jvmCompare")
-    @NoLogin
     public ServiceBaseResult<AppTuneParamsVO> jvmComPare(@RequestParam(value = "appId") Integer appId,
                                                          @RequestParam(value = "currentMarketId") Integer currentMarketId,
                                                          @RequestParam(value = "historyJvmMarketId", required = false) Integer jvmMarketId,
                                                          @RequestParam(value = "version") String version) {
         return ServiceBaseResult
                 .invoker()
-                .makeResult(() -> baseLineService.getCompare(appId, currentMarketId, jvmMarketId, version));
+                .makeResult(() -> {
+                    AppInfoRecord record =  appInfoRepository.findByIdAndToken(UserUtil.getAccessToken(), appId);
+                    if (record == null) {
+                        return null;
+                    }
+                    return baseLineService.getCompare(appId, currentMarketId, jvmMarketId, version);
+                });
     }
 
     @GetMapping("/podLine")
-    @NoLogin
     public ServiceBaseResult<List<PodLineVO>> podLine(@RequestParam(value = "appId") Integer appId) {
         return ServiceBaseResult
                 .invoker()
-                .makeResult(() -> baseLineService.getPodLine(appId));
+                .makeResult(() -> {
+                    AppInfoRecord record =  appInfoRepository.findByIdAndToken(UserUtil.getAccessToken(), appId);
+                    if (record == null) {
+                        return null;
+                    }
+                    return baseLineService.getPodLine(appId);
+                });
     }
+
 }

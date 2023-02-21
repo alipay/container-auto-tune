@@ -21,7 +21,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 
-public enum WeekEnum {
+public enum
+
+
+
+WeekEnum {
 
     MON("Mon", "星期一"), TUE("Tue", "星期二"), WED("Wed", "星期三"), THU("Thu", "星期四"), FRI("Fri", "星期五"), SAT(
                                                                                                        "Sat",

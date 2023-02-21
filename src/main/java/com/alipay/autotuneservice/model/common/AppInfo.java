@@ -24,39 +24,41 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * @author dutianze
- * @version AppInfoRepository.java, v 0.1 2022年05月16日 17:16 dutianze
+ * @author huoyuqi
+ * @version AppInfo.java, v 0.1 2023年01月31日 7:44 下午 huoyuqi
  */
 @Data
 public class AppInfo implements Serializable {
 
-    private Integer       id;
+    private Integer id;
 
-    private Integer       userId;
+    private Integer userId;
 
-    private String        accessToken;
+    private String accessToken;
 
     private List<Integer> nodeIds;
 
-    private String        appName;
+    private String appName;
 
-    private String        appAsName;
+    private String appAsName;
 
-    private String        appDesc;
+    private String appDesc;
 
     private LocalDateTime createdTime;
 
     private LocalDateTime updatedTime;
 
-    private AppStatus     status;
+    private AppStatus status;
 
-    private String        appDefaultJvm;
+    private String appDefaultJvm;
 
-    private String        clusterName;
+    private String clusterName;
 
-    private AppTag        appTag;
+    private String appJvmTemplate;
 
-    private String        namespace;
+    private AppTag appTag;
+
+    private String namespace;
 
     public boolean isJava() {
         return appTag != null && Lang.JAVA.equals(appTag.getLang());

@@ -67,9 +67,7 @@ public enum Operator {
 
     public static Operator parseOperator(String operator) {
         for (Operator op : values()) {
-            if (op.operator.equals(operator)) {
-                return op;
-            }
+            if (op.operator.equals(operator)) {return op;}
         }
         throw new NoSuchElementException(String.format("Unknown operator [%s]", operator));
     }

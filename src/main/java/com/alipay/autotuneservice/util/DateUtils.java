@@ -36,9 +36,8 @@ import java.util.Date;
 public class DateUtils {
 
     private static final ZoneId            ZONE_ID                   = ZoneId.systemDefault();
-    public static final String             CUSTOM_FORMATTER          = "yyyy-MM-dd HH:mm:ss";
-    private static final DateTimeFormatter CUSTOM_DATETIME_FORMATTER = DateTimeFormatter
-                                                                         .ofPattern(CUSTOM_FORMATTER);
+    public static final  String            CUSTOM_FORMATTER          = "yyyy-MM-dd HH:mm:ss";
+    private static final DateTimeFormatter CUSTOM_DATETIME_FORMATTER = DateTimeFormatter.ofPattern(CUSTOM_FORMATTER);
 
     public static Date asDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZONE_ID).toInstant());
@@ -91,18 +90,19 @@ public class DateUtils {
     }
 
     public static long asLocalDataWithGMT(Long time) {
-        return LocalDateTime.ofEpochSecond(time / 1000, 0, ZoneOffset.ofHours(0))
-            .toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
+        return LocalDateTime.ofEpochSecond(time / 1000, 0, ZoneOffset.ofHours(0)).toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
     }
 
     public static long getDayHeadSecond() {
         LocalDateTime now = DateUtils.now();
-        ZonedDateTime dateHead = ZonedDateTime.of(now.getYear(), now.getMonthValue(),
-            now.getDayOfMonth(), 0, 0, 0, 0, ZONE_ID);
+        ZonedDateTime dateHead = ZonedDateTime.of(now.getYear(),
+                now.getMonthValue(), now.getDayOfMonth(), 0, 0,
+                0, 0, ZONE_ID);
         return dateHead.toInstant().getEpochSecond();
     }
 
     public static long getNowDt() {
         return Long.parseLong(DateUtils.formatTimestampToStr(System.currentTimeMillis(), DateTimeFormatter.ofPattern("yyyyMMdd")));
     }
+
 }

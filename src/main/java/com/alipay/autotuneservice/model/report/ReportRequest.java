@@ -31,8 +31,8 @@ public class ReportRequest {
     /**
      * common
      */
-    private Long          id;
-    private ReportStatus  reportStatus;
+    private Long         id;
+    private ReportStatus reportStatus;
 
     /**
      * {@link RuleType#MANUAL_UPLOAD_LOG}

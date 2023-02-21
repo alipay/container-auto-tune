@@ -32,6 +32,7 @@ public class ContainerStatistics {
     private String containerId;
     private String podName;
     private long   gmtCreated;
+    private long   appId;
 
     /**
      * cpu
@@ -61,7 +62,15 @@ public class ContainerStatistics {
     // memory_stats.stats.cache
     private long   memCache;
     private double memUsageRate;
-    private long   appId;
+    /**
+     * memory.failcnt
+     * 当物理内存不够时，就会触发 memory.failcnt 里面的数量加 1，但此时进程不一定会被杀死，内核会尽量将物理内存中的数据移动到 swap 空间中
+     */
+    private double failcnt;
+    /**
+     * Number of major faults per second the system required loading a memory page from disk.
+     */
+    private double pgmajfault;
 
     public String getContainerId() {
         return containerId;
@@ -79,6 +88,10 @@ public class ContainerStatistics {
         return calCpuUsageRate();
     }
 
+    public double getCpuRate() {
+        return cpuUsageRate / 100;
+    }
+
     public double getMemUsageRate() {
         return calMemUsageRate();
     }
@@ -86,7 +99,7 @@ public class ContainerStatistics {
     /**
      * Memory Setter
      **/
-    private static final long MEM_2_MB = 1024l * 1024l;
+    public static final long MEM_2_MB = 1024 * 1024L;
 
     public void setMemLimit(long memLimit) {
         this.memLimit = memLimit / MEM_2_MB;
@@ -118,8 +131,7 @@ public class ContainerStatistics {
         BigDecimal cpuDelta = new BigDecimal(this.cpuTotalUsage - this.precpuTotalUsage);
         BigDecimal systemCpuDelta = new BigDecimal(this.systemCpuUsage - this.precpuSystemCpuUsage);
         try {
-            return cpuDelta.divide(systemCpuDelta, 5, RoundingMode.HALF_DOWN).doubleValue()
-                   * this.onlineCpus * 100;
+            return cpuDelta.divide(systemCpuDelta, 5, RoundingMode.HALF_DOWN).doubleValue() * this.onlineCpus * 100;
         } catch (Exception e) {
             return 0.0;
         }
@@ -148,11 +160,12 @@ public class ContainerStatistics {
     }
 
     public String getResourceValue() {
-        return String.format("%s_CPUCORE_%s_MEMLIMIT_%s", this.podName, this.onlineCpus,
-            this.memLimit);
+        return String.format("%s_CPUCORE_%s_MEMLIMIT_%s", this.podName, this.onlineCpus, this.memLimit);
     }
 
-    /** 获取使用cpu的核数  **/
+    /**
+     * 获取使用cpu的核数
+     **/
     public double getUsedCpuCores() {
         return this.cpuUsageRate / 100;
     }

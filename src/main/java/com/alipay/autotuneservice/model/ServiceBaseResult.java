@@ -18,6 +18,7 @@ package com.alipay.autotuneservice.model;
 
 import com.alipay.autotuneservice.util.TraceIdGenerator;
 import lombok.Data;
+import org.jooq.exception.DataAccessException;
 import org.slf4j.MDC;
 
 import java.io.Serializable;
@@ -45,20 +46,19 @@ public class ServiceBaseResult<T> implements Serializable {
         HOST_NAME = hostName;
     }
 
-    private Boolean             success;
-    private String              status;
-    private Integer             resultCode;
-    private String              resultMessage;
-    private T                   data;
-    private String              server;
-    private String              traceId;
+    private Boolean success;
+    private String  status;
+    private Integer resultCode;
+    private String  resultMessage;
+    private T       data;
+    private String  server;
+    private String  traceId;
 
     public ServiceBaseResult() {
         this.server = HOST_NAME;
     }
 
-    private ServiceBaseResult(Boolean success, String status, Integer resultCode,
-                              String resultMessage, T data) {
+    private ServiceBaseResult(Boolean success, String status, Integer resultCode, String resultMessage, T data) {
         this.success = success;
         this.status = status;
         this.resultCode = resultCode;
@@ -68,8 +68,7 @@ public class ServiceBaseResult<T> implements Serializable {
         this.traceId = MDC.get(TraceIdGenerator.TRACE_ID);
     }
 
-    public static <T> ServiceBaseResult<T> build(Boolean success, String status,
-                                                 Integer resultCode, String resultMessage, T data) {
+    public static <T> ServiceBaseResult<T> build(Boolean success, String status, Integer resultCode, String resultMessage, T data) {
         return new ServiceBaseResult<>(success, status, resultCode, resultMessage, data);
     }
 
@@ -83,6 +82,18 @@ public class ServiceBaseResult<T> implements Serializable {
 
     public static <T> ServiceBaseResult<T> failureResult(int resultCode, String msg) {
         return build(false, "FAILED", resultCode, msg, null);
+    }
+
+    public static <T> ServiceBaseResult<T> failureResult(Integer resultCode, Exception e) {
+        int code = resultCode==null ? 400 : resultCode;
+        if(e instanceof DataAccessException){
+            return build(false, "FAILED", code, ResultCode.INTERNAL_SERVER_ERROR.getMessage(), null);
+        }
+        return build(false, "FAILED", code, e.getMessage(), null);
+    }
+
+    public static <T> ServiceBaseResult<T> failureResult(Exception e) {
+        return failureResult(null,e);
     }
 
     public static <T> ServiceBaseResult<T> failureResult(int resultCode, String msg, T data) {

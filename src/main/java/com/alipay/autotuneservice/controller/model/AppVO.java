@@ -29,12 +29,17 @@ public class AppVO {
     /**
      * 应用名称
      */
-    private String  appName;
+    private String appName;
 
     /**
      * 应用id
      */
     private Integer id;
+
+    /**
+     * 工作空间
+     */
+    private String namespace;
 
     /**
      * 单机数量
@@ -84,12 +89,16 @@ public class AppVO {
     /**
      * 应用类型是 java、go等
      */
-    private String  appType;
+    private String appType;
 
     /**
      * app的install类型 分为四种 非java类型 Java类型 安装agent 安装agent和dockerFile
      */
     private AppEnum appEnum;
 
-    private String  clusterName;
+    private String clusterName;
+    /**
+     * 与com.alipay.autotuneservice.controller.model.AppVO#appName不同的是，appNameV1仅包含appName
+     */
+    private String appNameV1;
 }

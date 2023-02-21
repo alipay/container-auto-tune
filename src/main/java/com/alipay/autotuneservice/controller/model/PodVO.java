@@ -22,7 +22,6 @@ import com.alipay.autotuneservice.model.common.PodAttachStatus;
 import com.alipay.autotuneservice.util.DateUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author huoyuqi
@@ -35,12 +34,12 @@ public class PodVO {
     /**
      * pod名称
      */
-    private String          podName;
+    private String podName;
 
     /**
      * podId
      */
-    private Integer         podId;
+    private Integer podId;
 
     /**
      * 是否安装agent
@@ -50,30 +49,42 @@ public class PodVO {
     /**
      * NodeName
      */
-    private String          nodeName;
+    private String nodeName;
 
     /**
      * Cluster
      */
-    private String          cluster;
+    private String cluster;
 
     /**
      * 时间
      */
-    private Long            time;
+    private Long time;
+
+    /**
+     * ip
+     */
+    private String ip;
+
+    /**
+     * unicode
+     */
+    private String unicode;
 
     public boolean hasAgent() {
         return PodAttachStatus.INSTALLED.equals(this.status);
     }
 
-    public PodVO(PodInfoRecord podInfoRecord, String nodeName, PodAttach podAttach) {
+    public PodVO(PodInfoRecord podInfoRecord, String nodeName, PodAttach podAttach, String ip) {
         this.podId = podInfoRecord.getId();
         this.podName = podInfoRecord.getPodName();
         this.status = podInfoRecord.getAgentInstall() == 1 ? PodAttachStatus.INSTALLED
-            : podAttach == null ? PodAttachStatus.NOT_INSTALLED : podAttach.getStatus();
+                : podAttach == null ? PodAttachStatus.NOT_INSTALLED : podAttach.getStatus();
         this.nodeName = nodeName;
         this.cluster = podInfoRecord.getClusterName();
         this.time = DateUtils.asTimestamp(podInfoRecord.getCreatedTime());
+        this.ip = ip;
+        this.unicode = podInfoRecord.getUnicode();
     }
 
 }

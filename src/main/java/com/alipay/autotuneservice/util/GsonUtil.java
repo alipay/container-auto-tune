@@ -46,17 +46,17 @@ public class GsonUtil {
 
     static {
         GSON = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializeAdapter())
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimesSerializeAdapter())
-            .setPrettyPrinting().create();
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializeAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimesSerializeAdapter())
+                .setPrettyPrinting()
+                .create();
     }
 
     public static <T> T fromJson(String json, Class<T> classOfT) {
         return GSON.fromJson(json, classOfT);
     }
 
-    public static <T> T fromJson(Reader json, Type typeOfT) throws JsonIOException,
-                                                           JsonSyntaxException {
+    public static <T> T fromJson(Reader json, Type typeOfT) throws JsonIOException, JsonSyntaxException {
         return GSON.fromJson(json, typeOfT);
     }
 
@@ -111,17 +111,15 @@ public class GsonUtil {
     private static class LocalDateTimesSerializeAdapter implements JsonSerializer<LocalDateTime> {
 
         @Override
-        public JsonElement serialize(LocalDateTime localDateTime, Type typeOfSrc,
-                                     JsonSerializationContext context) {
+        public JsonElement serialize(LocalDateTime localDateTime, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(DateUtils.of(localDateTime));
         }
     }
 
     private static class LocalDateTimeDeserializeAdapter implements JsonDeserializer<LocalDateTime> {
         @Override
-        public LocalDateTime deserialize(JsonElement jsonElement, Type type,
-                                         JsonDeserializationContext jsonDeserializationContext)
-                                                                                               throws JsonParseException {
+        public LocalDateTime deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
+                throws JsonParseException {
             return DateUtils.parse(jsonElement.getAsString());
         }
     }

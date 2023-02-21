@@ -33,14 +33,11 @@ public class InetUtils {
     public static ValidateMeterResult isReachable(String serverAddress) {
         try {
             if (StringUtils.isEmpty(serverAddress)) {
-                return ValidateMeterResult.builder().message("serverAddress is empty, pls check.")
-                    .build();
+                return ValidateMeterResult.builder().message("serverAddress is empty, pls check.").build();
             }
             InetAddress byName = InetAddress.getByName(serverAddress);
-            System.out.println(byName.isReachable(3000));
             return ValidateMeterResult.builder().success(true).build();
         } catch (IOException e) {
-            System.out.println("sss " + e.getMessage());
             log.error("serverAddress {} is unReachable, errMsg={}", serverAddress, e);
             return ValidateMeterResult.builder().message(e.getMessage()).build();
         }

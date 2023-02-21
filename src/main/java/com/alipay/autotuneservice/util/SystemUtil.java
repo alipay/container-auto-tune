@@ -17,10 +17,10 @@
 package com.alipay.autotuneservice.util;
 
 import com.alipay.autotuneservice.configuration.ConstantsProperties;
+import com.alipay.autotuneservice.configuration.EnvHandler;
 import com.alipay.autotuneservice.model.common.CloudType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.env.Environment;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -41,19 +41,12 @@ public class SystemUtil {
     /**
      * 获取当前环境所处的云环境
      */
-    public static CloudType getCloudTypeFromEnv(Environment env) {
-        String mockCloudType = env.getProperty("mockCloudType");
-        if (StringUtils.isEmpty(mockCloudType)) {
-            throw new UnsupportedOperationException("Can not find the cloud type");
-        }
-        if (StringUtils.contains(mockCloudType.toLowerCase(), CloudType.AWS.name().toLowerCase())) {
+    public static CloudType getCloudTypeFromEnv(EnvHandler env) {
+        if (env.isEnvContain(CloudType.AWS.name())) {
             return CloudType.AWS;
-        }
-        if (StringUtils
-            .contains(mockCloudType.toLowerCase(), CloudType.ALIYUN.name().toLowerCase())) {
+        } else if (env.isEnvContain(CloudType.ALIYUN.name())) {
             return CloudType.ALIYUN;
-        }
-        if (StringUtils.contains(mockCloudType.toLowerCase(), CloudType.K8S.name().toLowerCase())) {
+        } else if (env.isEnvContain(CloudType.K8S.name())) {
             return CloudType.K8S;
         }
         throw new UnsupportedOperationException("Can not find the cloud type");
@@ -61,12 +54,12 @@ public class SystemUtil {
 
     /**
      * get server domain url
+     *
      * @return
      */
     public static String getDomainUrl() {
         try {
-            ConstantsProperties constantsProperties = (ConstantsProperties) SpringFactoryUtils
-                .getBean("constantsProperties");
+            ConstantsProperties constantsProperties = (ConstantsProperties) SpringFactoryUtils.getBean("constantsProperties");
             return constantsProperties.getDomainUrl();
         } catch (Exception e) {
             log.error("getDomainUrl occurs an error.", e);
@@ -76,16 +69,24 @@ public class SystemUtil {
 
     /**
      * get server web url
+     *
      * @return
      */
     public static String getWebUrl() {
         try {
-            ConstantsProperties constantsProperties = (ConstantsProperties) SpringFactoryUtils
-                .getBean("constantsProperties");
+            ConstantsProperties constantsProperties = (ConstantsProperties) SpringFactoryUtils.getBean("constantsProperties");
             return constantsProperties.getWebHomeUrl();
         } catch (Exception e) {
             log.error("getWebUrl occurs an error.", e);
             return "";
         }
+    }
+
+    public static String getHostName() {
+        String hostname = System.getenv("HOSTNAME");
+        if (StringUtils.isBlank(hostname)) {
+            return null;
+        }
+        return hostname;
     }
 }

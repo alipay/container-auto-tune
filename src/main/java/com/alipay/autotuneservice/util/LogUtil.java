@@ -18,9 +18,9 @@ package com.alipay.autotuneservice.util;
 
 public class LogUtil {
 
-    private static final ThreadLocal<String> RESOURCES        = new ThreadLocal<>();
+    private static final ThreadLocal<String> RESOURCES = new ThreadLocal<>();
 
-    private static final String              SCURE_LOG_FORMAT = "{%s}%s";
+    private static final String SCURE_LOG_FORMAT = "{%s}%s";
 
     public static String scureLogFormat(String format, Object... args) {
         return scureLogFormatById(RESOURCES.get(), format, args);

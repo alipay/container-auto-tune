@@ -16,12 +16,12 @@
  */
 package com.alipay.autotuneservice.controller;
 
-import com.alipay.autotuneservice.configuration.NoLogin;
 import com.alipay.autotuneservice.controller.model.PodProcessInfo;
 import com.alipay.autotuneservice.controller.model.PodVO;
 import com.alipay.autotuneservice.dao.AppInfoRepository;
 import com.alipay.autotuneservice.dao.NodeInfo;
 import com.alipay.autotuneservice.dao.PodInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.NodeInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.model.PageResult;
@@ -32,6 +32,7 @@ import com.alipay.autotuneservice.model.common.PodAttachStatus;
 import com.alipay.autotuneservice.service.PodAttachService;
 import com.alipay.autotuneservice.service.PodService;
 import com.alipay.autotuneservice.util.ObjectUtil;
+import com.alipay.autotuneservice.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +55,6 @@ import java.util.stream.Collectors;
  * @version PodController.java, v 0.1 2022年04月21日 17:57 dutianze
  */
 @Slf4j
-@NoLogin
 @RestController
 @RequestMapping("/api/pod")
 public class PodController {
@@ -82,7 +82,6 @@ public class PodController {
                 });
     }
 
-    @NoLogin
     @GetMapping("/agent/attach-hook")
     public ServiceBaseResult<Boolean> attachJavaAgentHook(@RequestParam(value = "id") Integer id) {
         log.info("attachJavaAgentHook, id:{}", id);
@@ -100,16 +99,20 @@ public class PodController {
                                                            @RequestParam(value = "install", defaultValue = "false") Boolean isInstall) {
         return ServiceBaseResult.invoker()
                 .makeResult(() -> {
+                            AppInfoRecord record =  appInfoRepository.findByIdAndToken(UserUtil.getAccessToken(), appId);
+                            if (record == null) {
+                                return null;
+                            }
                             PageResult<PodVO> defaultResult = PageResult.of(0, 0, 0, 0, 0,
                                     0, 0, new ArrayList<>());
-                            //过滤出Java应用
+                            //1.过滤出Java应用
                             AppInfo appInfo = appInfoRepository.findById(appId);
                             if (appInfo == null || appInfo.getAppTag() == null || !appInfo.isJava()) {
                                 return defaultResult;
                             }
                             List<Integer> appIds = new ArrayList<>();
                             appIds.add(appId);
-                            //获取存活的pod & filter
+                            //2.获取存活的pod & filter
                             List<PodInfoRecord> records = podInfo.findByAppIds(appIds).stream()
                                     .filter(p -> {
                                         if (StringUtils.isNotBlank(podName)) {
@@ -120,7 +123,7 @@ public class PodController {
                             if (CollectionUtils.isEmpty(records)) {
                                 return defaultResult;
                             }
-                            // 过滤出pod对应的nodeId 并构建nodeMap<nodeId,NodeName>
+                            // 3.过滤出pod对应的nodeId 并构建nodeMap<nodeId,NodeName>
                             List<Integer> nodeIds = records.stream().map(PodInfoRecord::getNodeId).collect(Collectors.toList());
                             Map<Integer, String> nodeMap = nodeInfo.getByIds(nodeIds).stream()
                                     .collect(Collectors.toMap(NodeInfoRecord::getId, NodeInfoRecord::getNodeName));
@@ -131,7 +134,7 @@ public class PodController {
                                     .collect(Collectors.toMap(PodAttach::getPodId, Function.identity(), (e, n) -> e));
                             //构建List<PodVO>
                             List<PodVO> vos = records.stream()
-                                    .map(p -> new PodVO(p, nodeMap.get(p.getNodeId()), podIdMapAttach.get(p.getId())))
+                                    .map(p -> new PodVO(p, nodeMap.get(p.getNodeId()), podIdMapAttach.get(p.getId()), p.getIp()))
                                     .collect(Collectors.toList());
                             if (isInstall) {
                                 vos = vos.stream().filter(PodVO::hasAgent).collect(Collectors.toList());

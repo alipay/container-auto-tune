@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,6 @@
 package com.alipay.autotuneservice.controller.model.tuneparam;
 
 import com.alipay.autotuneservice.util.TuneParamUtil;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,25 +33,25 @@ public class TuneParamItem {
      *
      * 前端不使用
      */
-    private String                 paramName;
+    private String paramName;
 
     /**
      * app原始的调优参数
      * e.g : -Xmn300m
      */
-    private String                 originTuneParam;
+    private String originTuneParam;
 
     /**
      * app当前的调优参数
      * e.g : -Xmn400m
      */
-    private String                 currentTuneParam;
+    private String currentTuneParam;
 
     /**
      * 参数顺序
      * 未知设置为10000以便于参数排序
      */
-    private int                    paramOrder = 10000;
+    private int paramOrder = 10000;
 
     /**
      * app调优参数的属性

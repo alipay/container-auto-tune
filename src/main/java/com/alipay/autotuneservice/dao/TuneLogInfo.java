@@ -36,4 +36,6 @@ public interface TuneLogInfo {
     TuneLogInfoRecord findRecord(TuneLogInfoRecord record);
 
     List<TuneLogInfoRecord> findRecordByPipeline(Integer pipelineId, String action);
+
+    List<TuneLogInfoRecord> findRecordByPipelineIds(List<Integer> pipelineIds, String action);
 }

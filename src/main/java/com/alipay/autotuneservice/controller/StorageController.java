@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 package com.alipay.autotuneservice.controller;
 
 import com.alipay.autotuneservice.configuration.NoLogin;
+import com.alipay.autotuneservice.dao.K8sAccessTokenInfo;
 import com.alipay.autotuneservice.dao.StorageRepository;
 import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.alipay.autotuneservice.model.common.FileContent;
@@ -24,6 +25,7 @@ import com.alipay.autotuneservice.model.common.StorageInfo;
 import com.alipay.autotuneservice.service.StorageInfoService;
 import com.alipay.autotuneservice.util.FileUtil;
 import com.alipay.autotuneservice.util.UserUtil;
+import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +41,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
@@ -57,49 +57,61 @@ public class StorageController {
     private StorageRepository  storageRepository;
     @Autowired
     private StorageInfoService storageInfoService;
+    @Autowired
+    private K8sAccessTokenInfo k8sAccessTokenInfo;
 
     @NoLogin
     @PostMapping("/upload")
     public ServiceBaseResult<StorageInfo> uploadFile(@RequestParam(value = "file", required = false) MultipartFile file) {
         log.info("uploadLog, file:{}", file.getOriginalFilename());
         try {
-            String s3Key = storageInfoService.uploadFileToS3(file.getInputStream(),
-                    file.getOriginalFilename());
+            String s3Key = storageInfoService.uploadFileToS3(file.getInputStream(), file.getOriginalFilename());
             StorageInfo storageInfo = new StorageInfo(s3Key, file.getOriginalFilename());
+            storageInfo.setAccessToken(UserUtil.getAccessToken());
             StorageInfo savedStorage = storageRepository.save(storageInfo);
             return ServiceBaseResult.successResult(savedStorage);
         } catch (Exception e) {
             log.error("uploadFile error", e);
             return ServiceBaseResult.failureResult("upload file error");
+        }
+    }
 
+    /**
+     * upload file
+     * apiversion: v1
+     *
+     * @param file
+     * @param accessToken
+     * @return
+     */
+    @NoLogin
+    @PostMapping("/v1/upload")
+    public ServiceBaseResult<StorageInfo> uploadFileV1(@RequestParam(value = "file", required = false) MultipartFile file,
+                                                       @RequestParam(value = "accessToken") String accessToken) {
+        log.info("uploadFileV1, file:{}", file.getOriginalFilename());
+        try {
+            k8sAccessTokenInfo.validAndCacheAccessToken(accessToken);
+            String s3Key = storageInfoService.uploadFileToS3(file.getInputStream(), file.getOriginalFilename());
+            StorageInfo storageInfo = new StorageInfo(s3Key, file.getOriginalFilename());
+            storageInfo.setAccessToken(accessToken);
+            StorageInfo savedStorage = storageRepository.save(storageInfo);
+            return ServiceBaseResult.successResult(savedStorage);
+        } catch (Exception e) {
+            log.error("uploadFile error", e);
+            return ServiceBaseResult.failureResult("upload file error");
         }
     }
 
     @RequestMapping(path = "/download/{fileName}", method = RequestMethod.GET)
     public ResponseEntity<StreamingResponseBody> download(HttpServletResponse response,
                                                           @PathVariable(name = "fileName") String fileName) {
-        StorageInfo storageInfo = storageRepository.findByFileName(fileName);
-        InputStream inputStream = wrapDownloadFile(fileName);
-        return ResponseEntity.ok(this.createResponseStream(response, inputStream,
-                storageInfo.getFileName()));
-    }
-
-    private InputStream wrapDownloadFile(String fileName) {
-        throw new UnsupportedOperationException();
-    }
-
-    public InputStream downloadFileFromLocal(String fileName) {
-        try {
-            File file = new File(String.format("storage/%s", fileName));
-            if (!file.exists()) {
-                log.info("downloadFileFromLocal fileName={} not exits.", fileName);
-                return null;
-            }
-            return new FileInputStream(file);
-        } catch (Exception e) {
-            log.error("downloadFileFromLocal occurs an error.", e);
-            return null;
-        }
+        log.info("start to download filename={}", fileName);
+        Preconditions.checkArgument(StringUtils.isNotBlank(fileName), "fileName is Invalid, please check.");
+        String accessToken = UserUtil.getAccessToken();
+        Preconditions.checkArgument(StringUtils.isNotBlank(fileName), "User AccessToken is Invalid, please check.");
+        StorageInfo storageInfo = storageRepository.findByNameAndToken(fileName, accessToken);
+        InputStream inputStream = storageInfoService.downloadFileFromAliS3(storageInfo.getS3Key());
+        return ResponseEntity.ok(this.createResponseStream(response, inputStream, storageInfo.getFileName()));
     }
 
     /**
@@ -126,6 +138,13 @@ public class StorageController {
         return ResponseEntity.ok(this.createResponseStream(response,
                 FileUtil.readResourceFileAsInputStream("agent/autoTuneAgent.jar"),
                 "autoTuneAgent.jar"));
+    }
+
+    @RequestMapping(path = "/v1/download/arthas", method = RequestMethod.GET)
+    public ResponseEntity<StreamingResponseBody> downloadArthas(HttpServletResponse response) {
+        return ResponseEntity.ok(this.createResponseStream(response,
+                FileUtil.readResourceFileAsInputStream("agent/arthas-bin.tar.gz"),
+                "arthas-bin.tar.gz"));
     }
 
     /**
@@ -184,6 +203,12 @@ public class StorageController {
                 fileContent.getAsInputStream(), fileContent.getLength(), fileContent.getFileName()));
     }
 
+    @GetMapping("/downloadFile")
+    public ResponseEntity<StreamingResponseBody> downloadFile(HttpServletResponse response,
+                                                              @RequestParam(name = "fileName") String fileName) {
+        return ResponseEntity.ok(this.createResponseStream(response, storageInfoService.downloadFileFromAliS3(fileName), fileName));
+    }
+
     private StreamingResponseBody createResponseStream(HttpServletResponse response, InputStream inputStream, int fileLength,
                                                        String filename) {
         return outputStream -> {
@@ -205,8 +230,7 @@ public class StorageController {
         };
     }
 
-    private StreamingResponseBody createResponseStream(HttpServletResponse response, InputStream inputStream,
-                                                       String filename) {
+    private StreamingResponseBody createResponseStream(HttpServletResponse response, InputStream inputStream, String filename) {
         return outputStream -> {
             try {
                 response.setHeader("Content-Disposition", "attachment; filename=" + filename);

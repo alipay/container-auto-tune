@@ -18,11 +18,10 @@ package com.alipay.autotuneservice.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.autotuneservice.configuration.NoLogin;
-import com.alipay.autotuneservice.controller.model.meter.ValidateMeterResult;
 import com.alipay.autotuneservice.controller.model.meter.MeterMeta;
-import com.alipay.autotuneservice.dao.MeterMetaInfoRepository;
-import com.alipay.autotuneservice.model.ServiceBaseResult;
+import com.alipay.autotuneservice.controller.model.meter.ValidateMeterResult;
 import com.alipay.autotuneservice.meter.MeterService;
+import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -46,9 +45,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/meter")
 public class MeterController {
-
-    @Autowired
-    private MeterMetaInfoRepository metaInfoRepository;
 
     @Autowired
     private MeterService            meterService;

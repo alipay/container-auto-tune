@@ -17,9 +17,11 @@
 package com.alipay.autotuneservice.controller.model;
 
 import com.alipay.autotuneservice.model.common.HealthCheckStatus;
-import com.google.common.collect.Lists;
+import com.alipay.autotuneservice.service.algorithmlab.diagnosis.report.DiagnosisReport;
+import com.alipay.autotuneservice.service.algorithmlab.diagnosis.report.SingleReport;
 import lombok.Data;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -32,84 +34,64 @@ public class HealthCheckVO {
     /**
      * 健康项检查id
      */
-    private int                          id;
+    private int id;
 
     /**
      * 应用名称id
      */
-    private int                          appId;
+    private int appId;
 
     /**
      * 健康检查项分数
      */
-    private int                          score;
+    private int score;
 
     /**
      * 健康检查异常项数
      */
-    private int                          checkNum;
+    private int checkNum;
 
     /**
-     * 八项检查内容展示 主要是调优界面展示正常状态，
+     * 一级分类
      */
-    private List<HealthCheckStatusModel> checkStatusList = Lists.newArrayList();
+    private List<String> titles;
+
+    /**
+     * 二级分类
+     */
+    private LinkedHashMap<String,List<SingleReport>> contents;
+
+    /**
+     * 二级分类
+     */
+    private LinkedHashMap<String,List<SingleReport>> groupContents;
+
+    private DiagnosisReport report;
 
     /**
      * 检测完成数量
      */
-    private int                          checkedNum;
-
-    /**
-     * 参照检查开始时间
-     */
-    private long                         checkStartTime;
-
-    /**
-     * 参照检查结束时间
-     */
-    private Long                         checkEndTime;
+    private int checkedNum;
 
     /**
      * 检测时间
      */
-    private long                         checkTime;
+    private Long checkTime;
+
+    /**
+     * 参照检查开始时间
+     */
+    private Long checkStartTime;
+
+    /**
+     * 参照检查结束时间
+     */
+    private Long checkEndTime;
 
     /**
      * 状态
      */
-    private HealthCheckStatus            status;
-
-    /**
-     * 需要确认的流程id
-     */
-    private Integer                      confirmPipelineId;
-
-    @Data
-    public static class HealthCheckStatusModel {
-
-        /**
-         * 问题名称
-         */
-        private String     type;
-
-        /**
-         * 问题状态
-         */
-        private String     status;
-
-        /**
-         * 结论
-         */
-        private String     conclusion;
-
-        /**
-         * 问题详情
-         */
-        private String     problemDetail;
-
-        /**
-         * 问题时间点
-         */
-        private List<Long> problemTime;
-    }
+    private HealthCheckStatus status;
 }
+
+

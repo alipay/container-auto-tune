@@ -25,6 +25,7 @@ import com.alipay.autotuneservice.model.common.UserInfo;
  */
 public class UserInfoConverter implements EntityConverter<UserInfo, UserInfoRecord> {
 
+    @Override
     public UserInfoRecord serialize(UserInfo entity) {
         if (entity == null) {
             return null;
@@ -43,6 +44,7 @@ public class UserInfoConverter implements EntityConverter<UserInfo, UserInfoReco
         return record;
     }
 
+    @Override
     public UserInfo deserialize(UserInfoRecord record) {
         if (record == null) {
             return null;

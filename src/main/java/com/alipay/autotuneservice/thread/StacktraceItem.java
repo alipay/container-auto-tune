@@ -16,6 +16,7 @@
  */
 package com.alipay.autotuneservice.thread;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -23,7 +24,12 @@ import lombok.Data;
  * @version StacktraceItem.java, v 0.1 2022年01月06日 14:38 dutianze
  */
 @Data
+@AllArgsConstructor
 public class StacktraceItem {
     public String methodFqn;
     public String fileLine;
+
+    public StacktraceItem(){
+
+    }
 }

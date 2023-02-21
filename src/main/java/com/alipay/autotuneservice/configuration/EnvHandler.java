@@ -16,11 +16,13 @@
  */
 package com.alipay.autotuneservice.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author dutianze
@@ -29,11 +31,23 @@ import java.util.Arrays;
 @Component
 public class EnvHandler {
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
+
+    public EnvHandler(Environment environment) {
+        this.environment = environment;
+    }
 
     public boolean isDev() {
         String[] activeProfiles = environment.getActiveProfiles();
         return Arrays.stream(activeProfiles).anyMatch(e -> e.equalsIgnoreCase("dev"));
+    }
+
+    public boolean isEnvContain(String env) {
+        String[] activeProfiles = environment.getActiveProfiles();
+        return Arrays.stream(activeProfiles).anyMatch(r -> StringUtils.contains(r.toLowerCase(), env.toLowerCase()));
+    }
+
+    public List<String> getEnv() {
+        return Arrays.stream(environment.getActiveProfiles()).collect(Collectors.toList());
     }
 }

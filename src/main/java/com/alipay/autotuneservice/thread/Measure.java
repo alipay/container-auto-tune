@@ -30,10 +30,11 @@ import java.util.Map;
  */
 @Data
 public class Measure {
-    public Date                         date;
-    public String                       name;
+    public        Date                  date;
+    public        String                name;
+    public        String                jvmInfo;
 
-    public String                       dateOfLog;
+    public        String                dateOfLog;
     private final List<ThreadInfo>      threads   = new ArrayList<>();
     private final Map<Long, ThreadInfo> threadMap = new HashMap<>();
 

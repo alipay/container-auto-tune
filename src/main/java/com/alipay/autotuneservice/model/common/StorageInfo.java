@@ -16,6 +16,8 @@
  */
 package com.alipay.autotuneservice.model.common;
 
+import com.alipay.autotuneservice.controller.model.diagnosis.FileType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -28,7 +30,13 @@ import java.time.LocalDateTime;
 public class StorageInfo {
 
     public Long          id;
+    public FileType      type;
+    public String        operator;
+    @JsonIgnore
+    public String        accessToken;
+    @JsonIgnore
     public String        s3Key;
+    public String        resultKey;
     public String        fileName;
     public LocalDateTime createdTime;
     public LocalDateTime updatedTime;
@@ -40,4 +48,12 @@ public class StorageInfo {
         this.s3Key = s3Key;
         this.fileName = fileName;
     }
+
+    public StorageInfo(String s3Key, String resultKey, String fileName, FileType type) {
+        this.s3Key = s3Key;
+        this.resultKey = resultKey;
+        this.fileName = fileName;
+        this.type = type;
+    }
 }
+

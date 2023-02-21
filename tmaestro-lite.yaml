@@ -15,7 +15,7 @@ spec:
         app: tmaestro
     spec:
       containers:
-        - image: REPLACE_WITH_TMAESTRO_IMAGE
+        - image: tmaestro/202302062055
           imagePullPolicy: Never
           name: tmaestro-server
           ports:
@@ -25,7 +25,7 @@ spec:
             - name: TMAESTRO_SERVER_IP
               value: "localhost"
             - name: TMAESTRO_SERVER_DOMAIN
-              value: "tmaestro:9001"
+              value: "http://tmaestro:9001"
             - name: TMAESTRO_WEB_HOME
               value: "localhost:30083"
             ## <GRPC config>  ##
@@ -74,16 +74,6 @@ spec:
       name: alog-intelligent-url
       targetPort: 9091
       nodePort: 30085
-    - port: 9099       # Minio console port
-      name: minioconsole
-      targetPort: 9099
-      nodePort: 30086
-      protocol: TCP
-    - port: 9098      # Minio server api port
-      name: minioapi
-      targetPort: 9098
-      nodePort: 30087
-      protocol: TCP
   type: NodePort
   selector:
     app: tmaestro

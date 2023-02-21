@@ -50,6 +50,8 @@ public interface TunePipelineRepository {
 
     List<TunePipeline> findByPlanId(Integer planId);
 
+    List<TunePipeline> findByPlanIds(List<Integer> planIds);
+
     TunePipeline findByMachineIdAndPipelineId(MachineId machineId, Integer pipelineId);
 
     TunePipeline findByMachineIdAndPipelineId(Integer pipelineId);

@@ -51,7 +51,9 @@ public class TunePlanRepositoryImpl extends BaseDao implements TunePlanRepositor
     @Override
     public TunePlan findRunningTunePlanById(Integer id) {
         TunePlan tunePlan = converter.deserialize(mDSLContext.select().from(Tables.TUNE_PLAN)
-            .where(Tables.TUNE_PLAN.ID.eq(id)).limit(1).fetchOneInto(TunePlanRecord.class));
+                .where(Tables.TUNE_PLAN.ID.eq(id))
+                .limit(1)
+                .fetchOneInto(TunePlanRecord.class));
         if (tunePlan.getTunePlanStatus().isFinal()) {
             return null;
         }
@@ -88,9 +90,8 @@ public class TunePlanRepositoryImpl extends BaseDao implements TunePlanRepositor
 
     @Override
     public TunePlan findLastTunePlanByAppId(Integer appId) {
-        TunePlanRecord record = mDSLContext.select().from(Tables.TUNE_PLAN)
-            .where(Tables.TUNE_PLAN.APP_ID.eq(appId)).orderBy(Tables.TUNE_PLAN.CREATED_TIME.desc())
-            .limit(1).fetchOneInto(TunePlanRecord.class);
+        TunePlanRecord record = mDSLContext.select().from(Tables.TUNE_PLAN).where(Tables.TUNE_PLAN.APP_ID.eq(appId)).orderBy(
+                Tables.TUNE_PLAN.CREATED_TIME.desc()).limit(1).fetchOneInto(TunePlanRecord.class);
         return converter.deserialize(record);
     }
 
@@ -137,19 +138,33 @@ public class TunePlanRepositoryImpl extends BaseDao implements TunePlanRepositor
     }
 
     @Override
-    public TunePlan findByAppIdDescTime(Integer appId, Long start, Long end) {
-        LocalDateTime startTime = start == null ? DateUtils.now().plusMonths(-1) : DateUtils
-            .asLocalData(start);
+    public List<TunePlan> findByTime(Long start, Long end) {
+        LocalDateTime startTime = start == null ? DateUtils.now().plusWeeks(-1) : DateUtils.asLocalData(start);
         LocalDateTime endTime = end == null ? DateUtils.now() : DateUtils.asLocalData(end);
-        TunePlanRecord record = mDSLContext
-            .select()
-            .from(Tables.TUNE_PLAN)
-            .where(
-                Tables.TUNE_PLAN.CREATED_TIME.cast(LocalDateTime.class).between(startTime, endTime))
-            .and(Tables.TUNE_PLAN.APP_ID.eq(appId))
-            .and(Tables.TUNE_PLAN.PLAN_STATUS.eq(TunePlanStatus.END.name()))
-            .orderBy(Tables.TUNE_PLAN.CREATED_TIME.desc()).limit(1)
-            .fetchOneInto(TunePlanRecord.class);
+        List<TunePlanRecord> records = mDSLContext.select()
+                .from(Tables.TUNE_PLAN)
+                .where(Tables.TUNE_PLAN.CREATED_TIME.cast(LocalDateTime.class).between(startTime, endTime))
+                .and(Tables.TUNE_PLAN.PLAN_STATUS.eq(TunePlanStatus.END.name()))
+                .orderBy(Tables.TUNE_PLAN.CREATED_TIME.desc())
+                .fetchInto(TunePlanRecord.class);
+        if (CollectionUtils.isEmpty(records)) {
+            return null;
+        }
+        return records.stream().map(converter::deserialize).collect(Collectors.toList());
+    }
+
+    @Override
+    public TunePlan findByAppIdDescTime(Integer appId, Long start, Long end) {
+        LocalDateTime startTime = start == null ? DateUtils.now().plusMonths(-1) : DateUtils.asLocalData(start);
+        LocalDateTime endTime = end == null ? DateUtils.now() : DateUtils.asLocalData(end);
+        TunePlanRecord record = mDSLContext.select()
+                .from(Tables.TUNE_PLAN)
+                .where(Tables.TUNE_PLAN.CREATED_TIME.cast(LocalDateTime.class).between(startTime, endTime))
+                .and(Tables.TUNE_PLAN.APP_ID.eq(appId))
+                .and(Tables.TUNE_PLAN.PLAN_STATUS.eq(TunePlanStatus.END.name()))
+                .orderBy(Tables.TUNE_PLAN.CREATED_TIME.desc())
+                .limit(1)
+                .fetchOneInto(TunePlanRecord.class);
         return converter.deserialize(record);
     }
 
@@ -246,20 +261,16 @@ public class TunePlanRepositoryImpl extends BaseDao implements TunePlanRepositor
         if (record.getId() == null) {
             record.setCreatedTime(DateUtils.now());
             Map<Field<?>, Object> map = EnhanceBeanUtils.parseRecordNonNullValueIntoMap(record);
-            return converter.deserialize(mDSLContext.insertInto(Tables.TUNE_PLAN).set(map)
-                .returning().fetchOne());
+            return converter.deserialize(mDSLContext.insertInto(Tables.TUNE_PLAN).set(map).returning().fetchOne());
         }
         // update
-        Map<Field<?>, Object> map = EnhanceBeanUtils.parseRecordNonNullValueIntoMap(record,
-            Tables.TUNE_PLAN.ID);
-        mDSLContext.update(Tables.TUNE_PLAN).set(map).where(Tables.TUNE_PLAN.ID.eq(record.getId()))
-            .returning().execute();
+        Map<Field<?>, Object> map = EnhanceBeanUtils.parseRecordNonNullValueIntoMap(record, Tables.TUNE_PLAN.ID);
+        mDSLContext.update(Tables.TUNE_PLAN).set(map).where(Tables.TUNE_PLAN.ID.eq(record.getId())).returning().execute();
         return converter.deserialize(this.selectById(record.getId()));
     }
 
     private TunePlanRecord selectById(Integer id) {
-        return mDSLContext.select().from(Tables.TUNE_PLAN).where(Tables.TUNE_PLAN.ID.eq(id))
-            .limit(1).fetchOneInto(TunePlanRecord.class);
+        return mDSLContext.select().from(Tables.TUNE_PLAN).where(Tables.TUNE_PLAN.ID.eq(id)).limit(1).fetchOneInto(TunePlanRecord.class);
     }
 
 }

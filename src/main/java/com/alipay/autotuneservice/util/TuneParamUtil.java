@@ -20,6 +20,7 @@ import com.alipay.autotuneservice.controller.model.tuneparam.TuneParamAttributeE
 import com.alipay.autotuneservice.controller.model.tuneparam.TuneParamItem;
 import com.alipay.autotuneservice.model.tune.params.JVMParamEnum;
 import com.alipay.autotuneservice.model.tune.params.TuneParamParser;
+import com.alipay.autotuneservice.service.algorithmlab.TuneParamModel;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -47,6 +48,21 @@ public class TuneParamUtil {
             try {
                 JVMParamEnum match = JVMParamEnum.match(o);
                 return (TuneParamItem) TuneParamParser.getTuneParamItemParser(JVMParamEnum.match(o)).parse(match, o);
+            } catch (Exception e) {
+                log.error("convert2TuneParam - parser JVM occurs an error.", e);
+                return null;
+            }
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    public static List<TuneParamModel> convert2TuneParamModel(String appDefaultJvm) {
+        if (StringUtils.isEmpty(appDefaultJvm)) {
+            return Lists.newArrayList();
+        }
+        return Arrays.stream(appDefaultJvm.split("\\s+")).distinct().filter(StringUtils::isNotBlank).map(o -> {
+            try {
+                JVMParamEnum match = JVMParamEnum.match(o);
+                return (TuneParamModel) TuneParamParser.getParser(JVMParamEnum.match(o)).parse(match, o);
             } catch (Exception e) {
                 log.error("convert2TuneParam - parser JVM occurs an error.", e);
                 return null;
@@ -93,7 +109,8 @@ public class TuneParamUtil {
         return resultList.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    private static List<TuneParamItem> merge4NewParamItem(List<TuneParamItem> originTuneParamItems, List<TuneParamItem> updatedTuneParamItems) {
+    private static List<TuneParamItem> merge4NewParamItem(List<TuneParamItem> originTuneParamItems,
+                                                          List<TuneParamItem> updatedTuneParamItems) {
         return updatedTuneParamItems.stream().map(item -> {
             TuneParamItem originParamItem = findTuneParamItem(originTuneParamItems, item);
             if (originParamItem == null) {
@@ -105,25 +122,26 @@ public class TuneParamUtil {
     }
 
     private static List<TuneParamItem> merge4SameParamItem(List<TuneParamItem> originTuneParamItems,
-                                                              List<TuneParamItem> updatedTuneParamItems){
+                                                           List<TuneParamItem> updatedTuneParamItems) {
         return updatedTuneParamItems.stream().map(updateTuneParam -> {
-                    TuneParamItem sameTuneParamItem = findSameTuneParamItem(originTuneParamItems, updateTuneParam);
-                    if (sameTuneParamItem != null){
-                        updateTuneParam.setAttributeEnum(TuneParamAttributeEnum.SAME);
-                        return updateTuneParam;
-                    }
-                    return null;
-                })
+            TuneParamItem sameTuneParamItem = findSameTuneParamItem(originTuneParamItems, updateTuneParam);
+            if (sameTuneParamItem != null) {
+                updateTuneParam.setAttributeEnum(TuneParamAttributeEnum.SAME);
+                return updateTuneParam;
+            }
+            return null;
+        })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
     private static List<TuneParamItem> merge4ReplaceParamItem(List<TuneParamItem> originTuneParamItems,
-                                                              List<TuneParamItem> updatedTuneParamItems){
+                                                              List<TuneParamItem> updatedTuneParamItems) {
         return originTuneParamItems.stream().map(item -> {
             try {
                 TuneParamItem updatedTuneParamItem = findTuneParamItemByItemName(updatedTuneParamItems, item);
-                if (updatedTuneParamItem == null || StringUtils.equals(updatedTuneParamItem.getCurrentTuneParam(), item.getOriginTuneParam())) {
+                if (updatedTuneParamItem == null || StringUtils.equals(updatedTuneParamItem.getCurrentTuneParam(),
+                        item.getOriginTuneParam())) {
                     return null;
                 }
                 updatedTuneParamItem.setOriginTuneParam(item.getOriginTuneParam());
@@ -137,18 +155,18 @@ public class TuneParamUtil {
     }
 
     private static List<TuneParamItem> merge4DeletedTuneParamItem(List<TuneParamItem> originTuneParamItems,
-                                                                  List<TuneParamItem> updatedTuneParamItems){
+                                                                  List<TuneParamItem> updatedTuneParamItems) {
         // merge删除的： origin有，update无
         List<TuneParamItem> collect = originTuneParamItems.stream().filter(
                 item -> {
                     TuneParamItem deleteTuneParamItem = findTuneParamItemByItemName(updatedTuneParamItems, item);
-                    if (deleteTuneParamItem != null){
+                    if (deleteTuneParamItem != null) {
                         return false;
                     }
                     return true;
                 }).filter(Objects::nonNull).map(item -> {
-                    item.setAttributeEnum(TuneParamAttributeEnum.DELETE);
-                    return item;
+            item.setAttributeEnum(TuneParamAttributeEnum.DELETE);
+            return item;
         }).collect(Collectors.toList());
         return collect;
     }
@@ -160,8 +178,7 @@ public class TuneParamUtil {
         return sourceItems.stream().filter(item -> checkTuneParamItemEquals(item, targetItem)).findFirst().orElse(null);
     }
 
-    private static TuneParamItem findTuneParamItemByItemName(List<TuneParamItem> sourceItems,
-                                                             TuneParamItem targetItem) {
+    private static TuneParamItem findTuneParamItemByItemName(List<TuneParamItem> sourceItems, TuneParamItem targetItem) {
         if (CollectionUtils.isEmpty(sourceItems) || Objects.isNull(targetItem)) {
             return null;
         }
@@ -181,8 +198,7 @@ public class TuneParamUtil {
         return StringUtils.equals(item.getParamName(), targetItem.getParamName());
     }
 
-    private static TuneParamItem findSameTuneParamItem(List<TuneParamItem> defaultItems,
-                                                       TuneParamItem updateTuneParam) {
+    private static TuneParamItem findSameTuneParamItem(List<TuneParamItem> defaultItems, TuneParamItem updateTuneParam) {
         if (CollectionUtils.isEmpty(defaultItems) || Objects.isNull(updateTuneParam)) {
             return null;
         }
@@ -208,8 +224,7 @@ public class TuneParamUtil {
      * @param item2 originTuneParam
      * @return
      */
-    private static boolean checkDefaultAndUpdatedTuneParamItemSame(TuneParamItem item1,
-                                                                   TuneParamItem item2) {
+    private static boolean checkDefaultAndUpdatedTuneParamItemSame(TuneParamItem item1, TuneParamItem item2) {
         if (Objects.isNull(item1) || Objects.isNull(item2)) {
             return false;
         }
@@ -242,8 +257,8 @@ public class TuneParamUtil {
     private static String parse2paramName(String rawJvmOption) {
         try {
             JVMParamEnum match = JVMParamEnum.match(rawJvmOption);
-            TuneParamItem parse = (TuneParamItem) TuneParamParser.getTuneParamItemParser(
-                JVMParamEnum.match(rawJvmOption)).parse(match, rawJvmOption);
+            TuneParamItem parse = (TuneParamItem) TuneParamParser.getTuneParamItemParser(JVMParamEnum.match(rawJvmOption)).parse(match,
+                    rawJvmOption);
             return parse != null ? parse.getParamName() : null;
         } catch (Exception e) {
             log.error("parser occurs an error.", e);

@@ -29,6 +29,7 @@ import com.alipay.autotuneservice.util.GsonUtil;
 public class TunePipelinePhaseConverter implements
                                        EntityConverter<TunePipelinePhase, TunePipelinePhaseRecord> {
 
+    @Override
     public TunePipelinePhaseRecord serialize(TunePipelinePhase phase) {
         if (phase == null) {
             return null;
@@ -43,6 +44,7 @@ public class TunePipelinePhaseConverter implements
         return record;
     }
 
+    @Override
     public TunePipelinePhase deserialize(TunePipelinePhaseRecord record) {
         if (record == null) {
             return null;

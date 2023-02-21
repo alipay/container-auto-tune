@@ -1,0 +1,69 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.alipay.autotuneservice.service.alarmManger.ruleRepository;
+
+import com.alibaba.fastjson.JSON;
+import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
+import com.alipay.autotuneservice.service.alarmManger.model.AlarmContext;
+import com.alipay.autotuneservice.service.alarmManger.model.ResultModel;
+import com.alipay.autotuneservice.service.alarmManger.model.RuleModel;
+import com.googlecode.aviator.runtime.type.AviatorObject;
+import com.googlecode.aviator.runtime.type.AviatorString;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * @author huoyuqi
+ * @version CodeCacheFunction.java, v 0.1 2023年01月03日 10:16 上午 huoyuqi
+ */
+@Slf4j
+public class CodeCacheFunction extends BasicMetricCalcFunction {
+
+    @Override
+    public AviatorObject call(Map<String, Object> env) {
+        try {
+            AlarmContext alarmContext = (AlarmContext) env.get("alarmContext");
+            List<JvmMonitorMetricData> metricData = obtainMetrics(alarmContext);
+            if (CollectionUtils.isEmpty(metricData)) {
+                return new AviatorString(JSON.toJSONString(new ResultModel(false, "", false)));
+            }
+
+            double sum = metricData.stream().mapToDouble(JvmMonitorMetricData::getCodeCacheUsed).sum();
+            double lastData = metricData.get(metricData.size() - 1).getFgc();
+            RuleModel ruleModel = alarmContext.getRuleModel();
+            String expression = String.format("%s%s%s", sum, ruleModel.getOperatorSymbol(), ruleModel.getData());
+            ResultModel result = calcResult(ruleModel, lastData, expression);
+            Optional.ofNullable(result).ifPresent(e -> {
+                e.setResultMessage(e.getStatus() ? String.format("codeCache 在最近%sS超过设置的阈值", ruleModel.getTime() / 1000) : "");
+            });
+            return new AviatorString(JSON.toJSONString(result));
+        } catch (Exception e) {
+            log.error("CodeCacheFunction#call occurs an error", e);
+            return new AviatorString(JSON.toJSONString(new ResultModel(false, "", false)));
+        }
+
+    }
+
+    @Override
+    public String getName() {
+        return "CODECACHE_UTIL";
+    }
+}

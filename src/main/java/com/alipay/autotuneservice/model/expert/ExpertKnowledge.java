@@ -17,25 +17,16 @@
 package com.alipay.autotuneservice.model.expert;
 
 import com.alipay.autotuneservice.model.ResultCode;
-import com.alipay.autotuneservice.model.common.AppInfo;
-import com.alipay.autotuneservice.model.dto.ExpertEvalItem;
-import com.alipay.autotuneservice.model.dto.ExpertEvalType;
 import com.alipay.autotuneservice.model.exception.ServerException;
 import com.alipay.autotuneservice.util.DateUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 import lombok.Data;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author dutianze

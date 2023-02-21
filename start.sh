@@ -36,21 +36,6 @@ create_config_map(){
   fi
 }
 
-install_demonset(){
-    echo -ne "${Green}[ ========>                                                       (10%)]${end}\r"
-    kubectl apply -f twatch.yaml >/dev/null 2>&1
-    echo -ne "${Green}[ ================================>                               (53%)]${end}\r"
-    sleep 3
-    kubectl get pods | grep "twatch" | grep Running
-    if [ $? != 0 ]; then
-      echo "${Red}Install twatch demonSet failed, please contact tmaestro experts to handle it!${end}"
-      exit 119
-    fi
-    echo -ne "${Green}[ ================================================================(100%)]${end}\r"
-    print_success_icon
-    echo -e "${Blue}Congratulations!!! Twatch is now installed successfully.${end}"
-}
-
 print_success_icon(){
   echo "🍺 🍺 🍺 🍺 🍺 🍺"
 }
@@ -105,8 +90,6 @@ main(){
   create_config_map
   # deploy tmaestro-server
   install_tmaestro
-  # deploy twatch
-#  install_demonset
 }
 
 main

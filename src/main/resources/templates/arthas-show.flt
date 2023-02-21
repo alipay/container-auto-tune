@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/arthas/css/progressbar.css">
+    <link rel="stylesheet" href="/arthas/css/body.css">
+    <script src="/arthas/js/jquery-ui.min.js"></script>
+    <script src="/arthas/js/CFInstall.min.js"></script>
+    <script src="/arthas/js/ext-core.js"></script>
+    <script src="/arthas/js/mootools-yui-compressed.js"></script>
+    <script src="/arthas/js/dojo.xd.js"></script>
+    <script src="/arthas/js/jquery.min.js"></script>
+</head>
+<body>
+<br><br>
+<section class="container">
+    <div class="progress">
+        <span class="blue" style="width:0%;"><span>0%</span></span>
+    </div>
+</section>
+<script type='text/javascript'>
+	function loading(percent){
+		$('.progress span').animate({width:percent},8000,function(){
+			$(this).children().html(percent);
+            if(percent=='100%'){
+                $(this).children().html('Install Success, Jump to Terminal...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+                setTimeout(function(){
+                    $('.container').fadeOut();
+                    var appId = $("#appId").text().trim();
+                    var hostName = $("#hostName").text().trim();
+                    var url = "[=tmaestro_server_url]/api/arthas/".concat(appId).concat("/terminal?hostName=").concat(hostName);
+					location.href= url;
+                },1000);
+            }
+		})
+	}
+</script>
+<script type="text/javascript">loading('5%');</script>
+<script type="text/javascript">loading('20%');</script>
+<script type="text/javascript">loading('40%');</script>
+<script type="text/javascript">loading('70%');</script>
+<script type="text/javascript">loading('100%');</script>
+<div hidden="hidden" id="appId" th:text="${appId}"></div>
+<div hidden="hidden" id="hostName" th:text="${hostName}"></div>
+<div style="text-align:center;clear:both">
+    <p><font size="4">Install Arthas....</font></p><br>
+</div>
+</body>
+</html>

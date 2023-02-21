@@ -1,6 +1,18 @@
-/*
- * Ant Group
- * Copyright (c) 2004-2022 All Rights Reserved.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.alipay.autotuneservice.service.impl;
 
@@ -10,7 +22,6 @@ import com.alipay.autotuneservice.controller.model.TuneEffectVO;
 import com.alipay.autotuneservice.controller.model.TuneTestTimePipeVO;
 import com.alipay.autotuneservice.controller.model.tuneprediction.AppTunePredictVO;
 import com.alipay.autotuneservice.dao.AppInfoRepository;
-import com.alipay.autotuneservice.dao.HealthCheckInfo;
 import com.alipay.autotuneservice.dao.PodInfo;
 import com.alipay.autotuneservice.dao.TuneLogInfo;
 import com.alipay.autotuneservice.dao.TuneParamTrialDataRepository;
@@ -22,7 +33,6 @@ import com.alipay.autotuneservice.dao.jooq.tables.records.TuneLogInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TuningParamTaskDataRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.TuningParamTrialDataRecord;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
-import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
 import com.alipay.autotuneservice.dynamodb.repository.ContainerStatisticsService;
 import com.alipay.autotuneservice.model.common.AppInfo;
 import com.alipay.autotuneservice.model.common.AppTag;
@@ -35,12 +45,10 @@ import com.alipay.autotuneservice.model.pipeline.TunePipeline;
 import com.alipay.autotuneservice.model.tune.TunePlan;
 import com.alipay.autotuneservice.model.tune.TuneTaskStatus;
 import com.alipay.autotuneservice.model.tune.trail.TrailTuneContext;
-import com.alipay.autotuneservice.model.tune.trail.TrialTuneMetric;
 import com.alipay.autotuneservice.service.AppInfoService;
 import com.alipay.autotuneservice.service.TuneEffectService;
 import com.alipay.autotuneservice.util.DateUtils;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -71,17 +79,13 @@ import static com.alipay.autotuneservice.model.common.TuneStatus.WORSEN;
 @Service
 public class TuneEffectServiceImpl implements TuneEffectService {
 
-    private final static Double CHECK_RATE = 1.0 / 6;
-    private final static String EFFECT     = "effect";
-
-    @Autowired
-    private HealthCheckInfo healthCheckInfo;
+    private final static String EFFECT = "effect";
 
     @Autowired
     private TunePlanRepository tunePlanRepository;
 
     @Autowired
-    private PodInfo                     podInfo;
+    private PodInfo podInfo;
 
     @Autowired
     private ContainerStatisticsService repository;

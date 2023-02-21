@@ -1,10 +1,21 @@
-/*
- * Ant Group
- * Copyright (c) 2004-2022 All Rights Reserved.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.alipay.autotuneservice.dao.impl;
 
-import com.alipay.autotuneservice.controller.model.AppInfoVO;
 import com.alipay.autotuneservice.dao.AppInfoRepository;
 import com.alipay.autotuneservice.dao.BaseDao;
 import com.alipay.autotuneservice.dao.converter.AppInfoConverter;
@@ -13,19 +24,18 @@ import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
 import com.alipay.autotuneservice.model.common.AppInfo;
 import com.alipay.autotuneservice.model.common.AppStatus;
 import com.alipay.autotuneservice.model.common.AppTag;
-import com.alipay.autotuneservice.util.ConvertUtils;
 import com.alipay.autotuneservice.util.DateUtils;
 import com.alipay.autotuneservice.util.GsonUtil;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.UpdateQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.jooq.impl.DSL.concat;
 
@@ -40,17 +50,6 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
     private final AppInfoConverter converter = new AppInfoConverter();
 
     @Override
-    public List<AppInfoRecord> getByAccessToken(String accessToken, int pageNum, int pageSize) {
-        return mDSLContext.select()
-                .from(Tables.APP_INFO)
-                .offset((pageNum - 1) * pageSize)
-                .limit(pageSize)
-                .fetch()
-                .sortDesc(Tables.APP_INFO.CREATED_TIME)
-                .into(AppInfoRecord.class);
-    }
-
-    @Override
     public List<AppInfoRecord> getAppListByTokenAndStatus(String accessToken, AppStatus status) {
         return mDSLContext.select()
                 .from(Tables.APP_INFO)
@@ -58,38 +57,6 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
                 .and(Tables.APP_INFO.STATUS.eq(status.name()))
                 .orderBy(Tables.APP_INFO.APP_TAG.desc())
                 .fetchInto(AppInfoRecord.class);
-    }
-
-    @Override
-    public List<AppInfo> findByAccessTokenAndStatus(String accessToken, AppStatus status) {
-        List<AppInfoRecord> records = mDSLContext.select()
-                .from(Tables.APP_INFO)
-                .where(Tables.APP_INFO.ACCESS_TOKEN.eq(accessToken).and(Tables.APP_INFO.STATUS.eq(status.name())))
-                .orderBy(Tables.APP_INFO.APP_TAG.desc())
-                .fetchInto(AppInfoRecord.class);
-        return records.stream().map(converter::deserialize).collect(Collectors.toList());
-    }
-
-    @Override
-    public AppInfoVO getByClusterId(int clusterId) {
-        return ConvertUtils.convert2MeterMetaRecord(mDSLContext.select()
-                .from(Tables.APP_INFO)
-                .where(Tables.APP_INFO.ID.eq(clusterId))
-                .fetch()
-                .sortDesc(Tables.APP_INFO.CREATED_TIME)
-                .into(AppInfoRecord.class).get(0));
-    }
-
-    @Override
-    public List<AppInfoRecord> getByClusterName(String clusterName) {
-        List<AppInfoRecord> into = mDSLContext.select()
-                .from(Tables.APP_INFO)
-                .where(Tables.APP_INFO.APP_NAME.eq(clusterName))
-                .fetch()
-                .sortDesc(Tables.APP_INFO.CREATED_TIME)
-                .into(AppInfoRecord.class);
-        return into;
-
     }
 
     @Override
@@ -138,8 +105,13 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
     }
 
     @Override
-    public int findAppInstallAgentNums(String appId) {
-        return 0;
+    public AppInfoRecord findAliveAppModel(String accessToken, String k8sNamespace, String appName) {
+        return mDSLContext.select().from(Tables.APP_INFO)
+                .where(Tables.APP_INFO.ACCESS_TOKEN.eq(accessToken))
+                .and(Tables.APP_INFO.NAMESPACE.eq(k8sNamespace))
+                .and(Tables.APP_INFO.APP_NAME.eq(appName))
+                .and(Tables.APP_INFO.STATUS.eq(AppStatus.ALIVE.name()))
+                .fetchOneInto(AppInfoRecord.class);
     }
 
     @Override
@@ -148,16 +120,20 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
         insertRecord.setAppName(record.getAppName());
         insertRecord.setStatus(AppStatus.ALIVE.name());
         insertRecord.setCreatedTime(DateUtils.now());
+        insertRecord.setClusterName(record.getClusterName());
         insertRecord.setAccessToken(record.getAccessToken());
         insertRecord.setNamespace(record.getNamespace());
-        insertRecord.setServerType(record.getServerType());
+        insertRecord.setAppDefaultJvm(record.getAppDefaultJvm());
+        if (StringUtils.isNotEmpty(record.getAppTag())) {
+            insertRecord.setAppTag(record.getAppTag());
+        }
         insertRecord.store();
         return insertRecord.getId();
     }
 
     @Override
     public void insertAppInfoRecord(AppInfoRecord record) {
-        log.info("insertAppInfoRecord, record:{}", record);
+        log.info("insertAppInfoRecord, record appName:{}", record.getAppName());
         mDSLContext.insertInto(Tables.APP_INFO)
                 .set(Tables.APP_INFO.USER_ID, record.getUserId())
                 .set(Tables.APP_INFO.ACCESS_TOKEN, record.getAccessToken())
@@ -172,22 +148,10 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
                 .set(Tables.APP_INFO.NAMESPACE, record.getNamespace())
                 .onDuplicateKeyUpdate()
                 .set(Tables.APP_INFO.STATUS, record.getStatus())
-                .execute();
-    }
-
-    @Override
-    public AppInfoRecord getByAppAndAT(String appName, String accessToken) {
-        List<AppInfoRecord> appInfoRecords = mDSLContext.select()
-                .from(Tables.APP_INFO)
-                .where(Tables.APP_INFO.APP_NAME.eq(appName)
-                        .and(Tables.APP_INFO.STATUS.eq(AppStatus.ALIVE.name()))
-                        .and(Tables.APP_INFO.ACCESS_TOKEN.eq(accessToken))
-                )
-                .fetchInto(AppInfoRecord.class);
-        if (CollectionUtils.isEmpty(appInfoRecords)) {
-            return null;
-        }
-        return appInfoRecords.get(0);
+                .set(Tables.APP_INFO.NAMESPACE, record.getNamespace())
+                .set(Tables.APP_INFO.ACCESS_TOKEN, record.getAccessToken())
+                .returning()
+                .fetch();
     }
 
     @Override
@@ -206,18 +170,6 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
     }
 
     @Override
-    public AppInfo findByAppAndATAndNamespace(String appName, String accessToken, String namespace) {
-        return converter.deserialize(mDSLContext.select()
-                .from(Tables.APP_INFO)
-                .where(Tables.APP_INFO.APP_NAME.eq(appName)
-                        .and(Tables.APP_INFO.STATUS.eq(AppStatus.ALIVE.name()))
-                        .and(Tables.APP_INFO.ACCESS_TOKEN.eq(accessToken))
-                        .and(Tables.APP_INFO.NAMESPACE.eq(namespace)))
-                .limit(1)
-                .fetchOneInto(AppInfoRecord.class));
-    }
-
-    @Override
     public AppInfoRecord getByAppAndATAndNamespace(String appName, String namesapce) {
         List<AppInfoRecord> appInfoRecords = mDSLContext.select()
                 .from(Tables.APP_INFO)
@@ -228,6 +180,18 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
             return null;
         }
         return appInfoRecords.get(0);
+    }
+
+    @Override
+    public AppInfo findByAppAndATAndNamespace(String appName, String accessToken, String namespace) {
+        return converter.deserialize(mDSLContext.select()
+                .from(Tables.APP_INFO)
+                .where(Tables.APP_INFO.APP_NAME.eq(appName)
+                        .and(Tables.APP_INFO.STATUS.eq(AppStatus.ALIVE.name()))
+                        .and(Tables.APP_INFO.ACCESS_TOKEN.eq(accessToken))
+                        .and(Tables.APP_INFO.NAMESPACE.eq(namespace)))
+                .limit(1)
+                .fetchOneInto(AppInfoRecord.class));
     }
 
     @Override
@@ -256,6 +220,17 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
                 .and(Tables.APP_INFO.STATUS.eq(AppStatus.ALIVE.name()))
                 .orderBy(Tables.APP_INFO.APP_TAG.desc())
                 .fetchInto(Tables.APP_INFO);
+    }
+
+    @Override
+    public AppInfoRecord findByIdAndToken(String accessToken, Integer id) {
+        return mDSLContext.select()
+                .from(Tables.APP_INFO)
+                .where(Tables.APP_INFO.ID.eq(id))
+                .and(Tables.APP_INFO.ACCESS_TOKEN.eq(accessToken))
+                .and(Tables.APP_INFO.STATUS.eq(AppStatus.ALIVE.name()))
+                .orderBy(Tables.APP_INFO.APP_TAG.desc())
+                .fetchOneInto(Tables.APP_INFO);
     }
 
     @Override
@@ -312,19 +287,6 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
                 .fetchInto(AppInfoRecord.class);
     }
 
-    @Override
-    public List<AppInfo> findAppByAccessTokenAndStatusAndTag(String accessToken, AppStatus appStatus, AppTag appTag) {
-        List<AppInfoRecord> apps = mDSLContext.select()
-                .from(Tables.APP_INFO)
-                .where(Tables.APP_INFO.ACCESS_TOKEN.eq(accessToken)
-                        .and(Tables.APP_INFO.STATUS.eq(appStatus.name()))
-                )
-                .fetchInto(AppInfoRecord.class);
-        return apps.stream()
-                .map(converter::deserialize)
-                .filter(app -> app.getAppTag().matchAppTag(appTag))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public int updateAppDefaultJvm(AppInfoRecord record) {
@@ -334,19 +296,6 @@ public class AppInfoRepositoryImpl extends BaseDao implements AppInfoRepository 
 
         UpdateQuery<AppInfoRecord> updateQuery = mDSLContext.updateQuery(Tables.APP_INFO);
         updateQuery.addValue(Tables.APP_INFO.APP_DEFAULT_JVM, record.getAppDefaultJvm());
-        updateQuery.addConditions(Tables.APP_INFO.ID.eq(record.getId()));
-        return updateQuery.execute();
-    }
-
-    @Override
-    public int updateAppTag(AppInfoRecord record) {
-        Preconditions.checkNotNull(record);
-        Preconditions.checkNotNull(record.getId());
-        Preconditions.checkNotNull(record.getAppTag());
-
-        UpdateQuery<AppInfoRecord> updateQuery = mDSLContext.updateQuery(Tables.APP_INFO);
-        updateQuery.addValue(Tables.APP_INFO.APP_TAG, record.getAppTag());
-        updateQuery.addValue(Tables.APP_INFO.UPDATED_TIME, DateUtils.now());
         updateQuery.addConditions(Tables.APP_INFO.ID.eq(record.getId()));
         return updateQuery.execute();
     }

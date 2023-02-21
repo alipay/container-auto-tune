@@ -31,3 +31,5 @@ tmaster:
     grpcHost: ${GRPC_SERVER_IP}
     grpcPort: ${GRPC_SERVER_PORT}
     algorithmUrl: ${ALGO_PARAM_TUNING_URL}
+    fromEmail: ""
+    emailSecret: ""

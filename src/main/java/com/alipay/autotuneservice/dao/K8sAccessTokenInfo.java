@@ -17,6 +17,7 @@
 package com.alipay.autotuneservice.dao;
 
 import com.alipay.autotuneservice.dao.jooq.tables.records.K8sAccessTokenInfoRecord;
+import lombok.NonNull;
 
 import java.util.List;
 
@@ -27,6 +28,8 @@ import java.util.List;
 public interface K8sAccessTokenInfo {
 
     boolean checkToken(String accessToken);
+
+    void validAndCacheAccessToken(String accessToken);
 
     List<String> getClustersByToken(String accessToken);
 
@@ -41,4 +44,7 @@ public interface K8sAccessTokenInfo {
     List<K8sAccessTokenInfoRecord> getK8sAccessTokenInfoRecord();
 
     List<K8sAccessTokenInfoRecord> selectByToken(String accessToken);
+    K8sAccessTokenInfoRecord getK8sRecord(String clusterName, String namespace, String appName);
+
+    void update(@NonNull K8sAccessTokenInfoRecord record);
 }

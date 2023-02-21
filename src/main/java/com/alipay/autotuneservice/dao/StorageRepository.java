@@ -16,7 +16,10 @@
  */
 package com.alipay.autotuneservice.dao;
 
+import com.alipay.autotuneservice.controller.model.diagnosis.FileType;
 import com.alipay.autotuneservice.model.common.StorageInfo;
+
+import java.util.List;
 
 /**
  * @author dutianze
@@ -27,4 +30,37 @@ public interface StorageRepository {
     StorageInfo findByFileName(String fileName);
 
     StorageInfo save(StorageInfo record);
+
+    /**
+     * 根据id 获取storageInfo 相关信息
+     * @param id
+     * @return
+     */
+    StorageInfo findById(Long id);
+
+    /**
+     * 根据fileName 和 token 进行查询
+     *
+     * @param fileName
+     * @param token
+     * @return
+     */
+    StorageInfo findByNameAndToken(String fileName, String token);
+
+    /**
+     * 根据文件类型和token进行查询
+     *
+     * @param fileType
+     * @param token
+     * @return
+     */
+    List<StorageInfo> findByFileTypeAndToken(FileType fileType, String token);
+
+    /**
+     * 根据文件名称 和 recordId 删除内容
+     * @param fileName
+     * @param id
+     * @return
+     */
+    boolean deleteByNameAndToken(String fileName, Long id);
 }

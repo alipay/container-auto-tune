@@ -16,10 +16,7 @@
  */
 package com.alipay.autotuneservice.service;
 
-import com.alipay.autotuneservice.model.dto.ExpertAnalyzeCommand;
-import com.alipay.autotuneservice.model.dto.ExpertEvalResult;
-import com.alipay.autotuneservice.model.dto.ExpertKnowledgeCommand;
-import com.alipay.autotuneservice.model.expert.ExpertKnowledge;
+import com.alipay.autotuneservice.service.algorithmlab.tune.tunetrend.ExpertEvalResult;
 
 /**
  * @author dutianze
@@ -30,10 +27,5 @@ public interface ExpertService {
     /**
      * 评估问题
      */
-    ExpertEvalResult eval(ExpertAnalyzeCommand cmd);
-
-    /**
-     * 记录经验
-     */
-    ExpertKnowledge record(ExpertKnowledgeCommand cmd);
+    ExpertEvalResult eval(Integer appId);
 }

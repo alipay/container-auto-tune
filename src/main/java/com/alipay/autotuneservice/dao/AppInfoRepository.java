@@ -1,6 +1,18 @@
-/*
- * Ant Group
- * Copyright (c) 2004-2022 All Rights Reserved.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.alipay.autotuneservice.dao;
 
@@ -19,12 +31,6 @@ import java.util.List;
  */
 public interface AppInfoRepository {
 
-    List<AppInfoRecord> getByAccessToken(String accessToken, int pageNum, int pageSize);
-
-    AppInfoVO getByClusterId(int clusterId);
-
-    List<AppInfoRecord> getByClusterName(String clusterName);
-
     List<AppInfoRecord> getByIds(Collection<Integer> ids);
 
     List<AppInfoRecord> getByNodeId(Integer id);
@@ -33,15 +39,11 @@ public interface AppInfoRepository {
 
     List<AppInfoRecord> getReportedApp();
 
-    List<AppInfo> findAppByAccessTokenAndStatusAndTag(String accessToken, AppStatus appStatus, AppTag appTag);
-
     List<AppInfoRecord> getAppListByTokenAndStatus(String accessToken, AppStatus status);
-
-    List<AppInfo> findByAccessTokenAndStatus(String accessToken, AppStatus status);
 
     AppInfoRecord findAppModel(String accessToken, String k8sNamespace, String appName);
 
-    int findAppInstallAgentNums(String appId);
+    AppInfoRecord findAliveAppModel(String accessToken, String k8sNamespace, String appName);
 
     String getAppName(Integer id);
 
@@ -51,21 +53,19 @@ public interface AppInfoRepository {
 
     void insertAppInfoRecord(AppInfoRecord record);
 
-    AppInfoRecord getByAppAndAT(String appName, String accessToken);
-
     AppInfoRecord getByAppAndATAndNamespace(String appName, String accessToken, String namesapce);
 
-    AppInfo findByAppAndATAndNamespace(String appName, String accessToken, String namespace);
-
     AppInfoRecord getByAppAndATAndNamespace(String appName, String namesapce);
+
+    AppInfo findByAppAndATAndNamespace(String appName, String accessToken, String namespace);
 
     int updateNodeIds(AppInfoRecord record);
 
     int updateAppDefaultJvm(AppInfoRecord record);
 
-    int updateAppTag(AppInfoRecord record);
-
     List<AppInfoRecord> appList(String accessToken, String appName);
+
+    AppInfoRecord findByIdAndToken(String accessToken, Integer id);
 
     List<AppInfoRecord> getAppByTokenAndCluster(String accessToken, String cluster);
 

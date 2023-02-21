@@ -16,26 +16,30 @@
  */
 package com.alipay.autotuneservice.controller.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author huoyuqi
  * @version ClusterVO.java, v 0.1 2022年05月13日 3:28 下午 huoyuqi
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClusterVO {
 
     /**
      * 集群名称 根据集群名+region
      */
-    private String  clusterName;
+    private String clusterName;
 
     /**
      * 集群id
      */
     private Integer id;
 
-    private String  cluster;
+    private String cluster;
 
-    private String  region;
+    private String region;
 }

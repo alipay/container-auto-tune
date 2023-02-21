@@ -17,23 +17,31 @@
 package com.alipay.autotuneservice.service.impl;
 
 import com.alipay.autotuneservice.dao.AppInfoRepository;
-import com.alipay.autotuneservice.dao.ExpertKnowledgeRepository;
+import com.alipay.autotuneservice.dao.HealthCheckResultRepository;
+import com.alipay.autotuneservice.dao.PodInfo;
+import com.alipay.autotuneservice.dao.jooq.tables.records.HealthCheckResultRecord;
+import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.model.ResultCode;
 import com.alipay.autotuneservice.model.common.AppInfo;
-import com.alipay.autotuneservice.model.dto.ExpertAnalyzeCommand;
-import com.alipay.autotuneservice.model.dto.ExpertEvalResult;
-import com.alipay.autotuneservice.model.dto.ExpertKnowledgeCommand;
-import com.alipay.autotuneservice.model.dto.assembler.ExpertKnowledgeFactory;
 import com.alipay.autotuneservice.model.exception.ResourceNotFoundException;
 import com.alipay.autotuneservice.model.exception.ServerException;
-import com.alipay.autotuneservice.model.expert.ExpertKnowledge;
-import com.alipay.autotuneservice.model.expert.ExpertStrategy;
-import com.alipay.autotuneservice.model.expert.GarbageCollector;
 import com.alipay.autotuneservice.service.ExpertService;
+import com.alipay.autotuneservice.service.algorithmlab.ProblemMetricEnum;
+import com.alipay.autotuneservice.service.algorithmlab.diagnosis.report.SingleReport;
+import com.alipay.autotuneservice.service.algorithmlab.tune.tunetrend.ExpertEvalItem;
+import com.alipay.autotuneservice.service.algorithmlab.tune.tunetrend.ExpertEvalResult;
+import com.alipay.autotuneservice.service.algorithmlab.tune.tunetrend.ExpertEvalResultType;
+import com.alipay.autotuneservice.service.algorithmlab.tune.tunetrend.Trend;
+import com.alipay.autotuneservice.util.GsonUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.alipay.autotuneservice.util.UserUtil.TUNE_JVM_APPEND;
 
 /**
  * @author dutianze
@@ -43,30 +51,52 @@ import java.util.List;
 public class ExpertServiceImpl implements ExpertService {
 
     @Autowired
-    private ExpertKnowledgeRepository expertKnowledgeRepository;
+    private AppInfoRepository appInfoRepository;
+
     @Autowired
-    private AppInfoRepository         appInfoRepository;
+    private HealthCheckResultRepository healthCheckResultRepository;
+
+    @Autowired
+    private PodInfo podInfo;
 
     @Override
-    public ExpertEvalResult eval(ExpertAnalyzeCommand cmd) {
-        AppInfo appInfo = appInfoRepository.findById(cmd.getAppId());
+    public ExpertEvalResult eval(Integer appId) {
+        AppInfo appInfo = appInfoRepository.findById(appId);
         if (appInfo == null) {
             throw new ResourceNotFoundException(ResultCode.APP_NOT_FOUND);
         }
-        GarbageCollector garbageCollector = cmd.findGarbageCollector(appInfo);
-        ExpertStrategy expertStrategy = ExpertKnowledge.matchStrategy(cmd.getProblemTypeList());
-        List<ExpertKnowledge> expertKnowledgeLists = expertKnowledgeRepository.loadData();
-        ExpertEvalResult expertEvalResult = expertStrategy.match(appInfo, garbageCollector,
-            cmd.getProblemTypeList(), expertKnowledgeLists);
-        if (expertEvalResult == null) {
-            throw new ServerException(ResultCode.EXPERT_KNOWLEDGE_NOT_FOUND);
+        String jvmConfig = appInfo.getAppDefaultJvm();
+        // 查询最近一次的健康检查风险项
+        HealthCheckResultRecord checkResultRecord = healthCheckResultRepository.findFirstByAppId(appInfo.getId());
+        if (StringUtils.isNotEmpty(checkResultRecord.getProbleam())) {
+            List<SingleReport> reports = GsonUtil.fromJsonList(checkResultRecord.getProbleam(), SingleReport.class);
+            List<ProblemMetricEnum> problems = reports.stream().map(r -> ProblemMetricEnum.valueOf(r.getName())).collect(
+                    Collectors.toList());
+            if (CollectionUtils.isNotEmpty(problems)) {
+                // 获取内存规格
+                PodInfoRecord podInfoRecord = podInfo.findOneRunningPodByAppId(appInfo.getId());
+                // 精度损失，但向下取整不影响调参
+                int spec = podInfoRecord.getMemLimit() / 1024;
+                List<ExpertEvalItem> items = Trend.relatedParamSuggest(problems, jvmConfig, !jvmConfig.contains(TUNE_JVM_APPEND), spec);
+                if (CollectionUtils.isNotEmpty(items)) {
+                    List<ExpertEvalItem> itemTmp = items.stream()
+                            .filter(s -> StringUtils.isNotEmpty(s.getTarget()) && StringUtils.isNotEmpty(s.getValue()))
+                            .collect(Collectors.toList());
+                    if (CollectionUtils.isNotEmpty(itemTmp)) {
+                        return packExpertEvalResult(itemTmp);
+                    }
+                }
+                throw new ServerException(ResultCode.EXPERT_KNOWLEDGE_NOT_FOUND);
+            }
         }
-        return expertEvalResult;
+        return null;
     }
 
-    @Override
-    public ExpertKnowledge record(ExpertKnowledgeCommand cmd) {
-        ExpertKnowledge expertKnowledge = ExpertKnowledgeFactory.newExpertKnowledge(cmd);
-        return expertKnowledgeRepository.save(expertKnowledge);
+    private ExpertEvalResult packExpertEvalResult(List<ExpertEvalItem> items) {
+        ExpertEvalResult.ExpertEvalResultBuilder expertEvalResult = ExpertEvalResult.builder().evalList(items);
+        if (items.stream().anyMatch(r -> r.getParam().contains("-Xms") || r.getParam().contains("-Xmx"))) {
+            return expertEvalResult.type(ExpertEvalResultType.COST.getValue()).build();
+        }
+        return expertEvalResult.type(ExpertEvalResultType.PERF.getValue()).build();
     }
 }

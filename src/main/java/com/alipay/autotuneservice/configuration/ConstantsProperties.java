@@ -78,4 +78,14 @@ public class ConstantsProperties {
      */
     private String secret;
 
+    /**
+     * 发送邮箱
+     */
+    private String fromEmail;
+
+    /**
+     * EmailSecret
+     */
+    private String emailSecret;
+
 }

@@ -1,6 +1,18 @@
-/*
- * Ant Group
- * Copyright (c) 2004-2022 All Rights Reserved.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.alipay.autotuneservice.service.impl;
 
@@ -17,7 +29,6 @@ import com.alipay.autotuneservice.dao.AppInfoRepository;
 import com.alipay.autotuneservice.dao.BaseLineInfo;
 import com.alipay.autotuneservice.dao.JvmMarketInfo;
 import com.alipay.autotuneservice.dao.PodInfo;
-import com.alipay.autotuneservice.dao.TuneParamInfoRepository;
 import com.alipay.autotuneservice.dao.TunePipelineRepository;
 import com.alipay.autotuneservice.dao.TunePlanRepository;
 import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
@@ -31,16 +42,16 @@ import com.alipay.autotuneservice.model.pipeline.Status;
 import com.alipay.autotuneservice.model.pipeline.TunePipeline;
 import com.alipay.autotuneservice.model.tune.TunePlan;
 import com.alipay.autotuneservice.service.BaseLineService;
-import com.alipay.autotuneservice.service.TuneParamService;
 import com.alipay.autotuneservice.util.DateUtils;
 import com.alipay.autotuneservice.util.TuneParamUtil;
 import com.alipay.autotuneservice.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,21 +67,17 @@ import java.util.stream.Collectors;
 public class BaseLineServiceImpl implements BaseLineService {
 
     @Autowired
-    private AppInfoRepository       appInfoRepository;
+    private AppInfoRepository      appInfoRepository;
     @Autowired
-    private TuneParamService        tuneParamService;
+    private TunePipelineRepository tunePipelineRepository;
     @Autowired
-    private TunePipelineRepository  tunePipelineRepository;
+    private JvmMarketInfo          jvmMarketInfo;
     @Autowired
-    private TuneParamInfoRepository tuneParamInfoRepository;
+    private PodInfo                podInfo;
     @Autowired
-    private JvmMarketInfo           jvmMarketInfo;
+    private BaseLineInfo           baseLineInfo;
     @Autowired
-    private PodInfo                 podInfo;
-    @Autowired
-    private BaseLineInfo            baseLineInfo;
-    @Autowired
-    private TunePlanRepository      tunePlanRepository;
+    private TunePlanRepository     tunePlanRepository;
 
     @Override
     public List<JvmDateVO> getJvmDate(Integer appId) {
@@ -94,7 +101,8 @@ public class BaseLineServiceImpl implements BaseLineService {
         List<TuneParamItem> defaultTuneParamItem = TuneParamUtil.convert2TuneParamItem(appInfoRecord.getAppDefaultJvm());
         long jvmMarketId = getJvmMarketId(appInfoRecord.getAppDefaultJvm());
         Integer defaultVersion = 0;
-        Long defaultTime = DateUtils.asTimestamp(appInfoRecord.getUpdatedTime());
+        LocalDateTime time = appInfoRecord.getUpdatedTime() == null ? appInfoRecord.getCreatedTime() : appInfoRecord.getUpdatedTime();
+        Long defaultTime = DateUtils.asTimestamp(time);
         if (jvmMarketId != 0) {
             BaseLineRecord record = baseLineInfo.getByJvmMarketId((int) jvmMarketId);
             if (record != null) {
@@ -272,7 +280,7 @@ public class BaseLineServiceImpl implements BaseLineService {
                 r -> {
                     try {
                         return new PodLineVO(appId, r.getId(), r.getPodName(), r.getIp(),
-                                null == finalAppTag && finalAppTag.getJavaVersion() !=null ? null : finalAppTag.getJavaVersion(),
+                                null == finalAppTag && finalAppTag.getJavaVersion() != null ? null : finalAppTag.getJavaVersion(),
                                 getSpec(r.getCpuCoreLimit(), r.getMemLimit()),
                                 getJvmDetail(idJvmIdMap, jvmMap, r.getId(), defaultJvmDetail, r.getPodJvm(), defaultJvm),
                                 getVersion(idJvmIdMap, versionMap, r.getId(), defaultVersion, r.getPodJvm(), defaultJvm),

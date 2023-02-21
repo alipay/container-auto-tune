@@ -1,6 +1,18 @@
-/*
- * Ant Group
- * Copyright (c) 2004-2022 All Rights Reserved.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.alipay.autotuneservice.dynamodb.bean;
 
@@ -13,13 +25,16 @@ import lombok.Data;
 @Data
 public class JvmMonitorMetricData {
 
-    private long    id;
     //cpu核数
     private long    cpuCount;
     //系统cpu利用率
     private double  systemCpuLoad;
     //用户cpu利用率
     private double  processCpuLoad;
+    //cpu空闲率
+    private double  waitCpuLoad;
+    //cpu当前使用率
+    private double  cpuLoad;
     //集群名
     private String  cluster;
     private long    period;
@@ -128,6 +143,26 @@ public class JvmMonitorMetricData {
     private long    codeCacheMax;
     //代码缓冲区使用率
     private double  codeCacheUtil;
+    //safepoint 次数
+    private long    safePointCount;
+    //safepoint 时间
+    private long    safePointTime;
+    //活动线程数
+    private long    threadCount;
+    //活动峰值线程数
+    private long    peakThreadCount;
+    //守护线程数
+    private long    daemonThreadCount;
+    //死锁线程数
+    private long    deadLockedCount;
+    //已加载类总数
+    private long    totalLoadedClassCount;
+    //已加载当前类数量
+    private long    loadedClassCount;
+    //已卸载类总数
+    private long    unloadedClassCount;
+    // start Time
+    private long    jvmJitTime;
 
     public long getDt() {
         return dt;

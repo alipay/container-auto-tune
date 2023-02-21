@@ -18,11 +18,14 @@ package com.alipay.autotuneservice.dao.impl;
 
 import com.alipay.autotuneservice.dao.PodInfo;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
+import com.alipay.autotuneservice.model.common.PodStatus;
+import com.alipay.autotuneservice.model.pipeline.Status;
 import com.alipay.autotuneservice.service.AppInfoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +35,7 @@ import java.util.Map;
 public class PodInfoImplTest {
 
     @Autowired
-    private PodInfo        podInfo;
+    private PodInfo podInfo;
 
     @Autowired
     private AppInfoService appInfoService;
@@ -63,15 +66,15 @@ public class PodInfoImplTest {
     }
 
     @Test
-    public void batchGetPodInstallTuneAgentNumsByAppIdTest(){
-        List<Integer> appIds = Arrays.asList(11399,11403);
+    public void batchGetPodInstallTuneAgentNumsByAppIdTest() {
+        List<Integer> appIds = Arrays.asList(11399, 11403);
         List<PodInfoRecord> records = podInfo.batchGetPodInstallTuneAgentNumsByAppId(appIds);
         for (PodInfoRecord record : records) {
             System.out.println(record);
         }
-        Map<Integer,Long> hashMap = new HashMap<>();
-        appIds.forEach(appId-> hashMap.put(appId,records.stream().filter(record -> record.getAppId().equals(appId)).count()));
-        hashMap.forEach((k,v)-> System.out.println("key is:"+k+" value is: "+v));
+        Map<Integer, Long> hashMap = new HashMap<>();
+        appIds.forEach(appId -> hashMap.put(appId, records.stream().filter(record -> record.getAppId().equals(appId)).count()));
+        hashMap.forEach((k, v) -> System.out.println("key is:" + k + " value is: " + v));
     }
 
     @Test
@@ -82,4 +85,23 @@ public class PodInfoImplTest {
         }
     }
 
+    @Test
+    public void insertPod() {
+        PodInfoRecord record = new PodInfoRecord();
+        record.setAppId(1);
+        record.setPodName("jvm-lab-lite-5f6d868784-sdzw8");
+        record.setIp("10.1.3.43");
+        record.setStatus(Status.RUNNING.name());
+        record.setAccessToken("CONTAINER_AUTO_TUNE_TOKEN");
+        record.setK8sNamespace("default");
+        record.setCreatedTime(LocalDateTime.now());
+        record.setPodStatus(PodStatus.ALIVE.name());
+        record.setServerType("VM");
+        record.setUnicode("93ebe8daa049def3");
+        record.setAgentInstall(1);
+        record.setPodJvm(
+                "ava -jar -Dtmasteraccess_token=CONTAINER_AUTO_TUNE_TOKEN -javaagent:autoTuneAgent.jar -XX:+PrintGCDetails "
+                        + "-XX:+PrintGCDateStamps -XX:+UseConcMarkSweepGC -Xms526m -Xmx526m -XX:MaxMetaspaceSize=512m -XX:MetaspaceSize=512m");
+        podInfo.insertPodInfo(record);
+    }
 }

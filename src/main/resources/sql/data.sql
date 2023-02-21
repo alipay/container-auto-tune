@@ -172,6 +172,7 @@ create table if not exists `tmaestro-lite`.health_check_result
 create index if not exists health_check_result_ID_index
     on `tmaestro-lite`.health_check_result (ID);
 
+
 create table if not exists `tmaestro-lite`.help_info
 (
     ID                int auto_increment comment '主键ID'
@@ -455,6 +456,19 @@ create table if not exists `tmaestro-lite`.rule_info
     CREATE_BY     varchar(128) null
     );
 -- comment '规则元素表';
+
+INSERT INTO "TMAESTRO-LITE".RULE_INFO
+VALUES (1, 'JUDGEMENT_RULE', 'fullgc次数(分钟)', 'FGC_COUNT', '>=', 2, 60000, '2022-12-28 22:28:24', '2022-12-28 22:28:28', NULL),
+       (2, 'JUDGEMENT_RULE', 'fullgc次数(小时)', 'FGC_COUNT', '>=', 10, 3600000, '2022-12-28 22:28:24', '2022-12-28 22:28:28', NULL),
+       (3, 'JUDGEMENT_RULE', 'younggc次数(分钟)', 'YGC_COUNT', '>=', 2, 60000, '2022-12-28 22:28:24', '2022-12-28 22:28:28', NULL),
+       (4, 'JUDGEMENT_RULE', 'younggc次数(小时)', 'YGC_COUNT', '>=', 10, 60000, '2022-12-28 22:28:24', '2022-12-28 22:28:28', NULL),
+       (5, 'JUDGEMENT_RULE', '内存利用率', 'JVM_UTIL', '>=', 50, 60000, '2022-12-28 22:28:24', '2022-12-28 22:28:28', NULL),
+       (6, 'JUDGEMENT_RULE', 'codecache利用率', 'CODECACHE_UTIL', '>=', 50, 60000, '2022-12-28 22:28:24', '2022-12-28 22:28:28', NULL),
+       (7, 'ACTION_RULE', '自动上传GC日志', 'GC_DUMP', NULL, NULL, NULL, '2022-12-28 22:33:05', '2022-12-28 22:33:07', NULL),
+       (8, 'ACTION_RULE', '自动dump线程top', 'THREAD_DUMP', NULL, NULL, NULL, '2022-12-28 22:33:05', '2022-12-28 22:33:07', NULL),
+       (9, 'ACTION_RULE', '自动上传内存日志', 'HEAP_DUMP', NULL, NULL, NULL, '2022-12-28 22:33:05', '2022-12-28 22:33:07', NULL),
+       (10, 'ACTION_RULE', '自动留存火焰图', 'JVM_PROFILE', NULL, NULL, NULL, '2022-12-28 22:33:05', '2022-12-28 22:33:07', NULL),
+       (11, 'ACTION_RULE', '通知订阅', 'NOTICE', NULL, NULL, NULL, '2023-01-11 14:36:24', '2023-01-11 14:36:27', NULL);
 
 create table if not exists `tmaestro-lite`.storage_info
 (
@@ -846,6 +860,8 @@ create table if not exists `tmaestro-lite`.jvm_monitor_metric (
                                                                   cpuCount bigint,
                                                                   systemCpuLoad double,
                                                                   processCpuLoad double,
+                                                                  waitCpuLoad double,
+                                                                  cpuLoad double,
                                                                   cluster VARCHAR(255),
     period bigint,
     pod VARCHAR(255),
@@ -905,6 +921,16 @@ create table if not exists `tmaestro-lite`.jvm_monitor_metric (
     ccsmx double,
     codeCacheUsed bigint,
     codeCacheMax bigint,
-    codeCacheUtil double
+    codeCacheUtil double,
+    safePointCount bigint,
+    safePointTime bigint,
+    threadCount bigint,
+    peakThreadCount bigint,
+    daemonThreadCount bigint,
+    deadLockedCount bigint,
+    totalLoadedClassCount bigint,
+    loadedClassCount bigint,
+    unloadedClassCount bigint,
+    jvmJitTime bigint
     );
 

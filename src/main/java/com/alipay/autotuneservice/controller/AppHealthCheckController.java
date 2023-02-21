@@ -1,8 +1,23 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alipay.autotuneservice.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.alipay.autotuneservice.configuration.NoLogin;
 import com.alipay.autotuneservice.controller.model.AppVO;
 import com.alipay.autotuneservice.controller.model.HealthCheckVO;
 import com.alipay.autotuneservice.dao.AppInfoRepository;
@@ -13,6 +28,7 @@ import com.alipay.autotuneservice.model.ServiceBaseResult;
 import com.alipay.autotuneservice.model.common.AppStatus;
 import com.alipay.autotuneservice.model.common.AppTag;
 import com.alipay.autotuneservice.model.common.AppTag.Lang;
+import com.alipay.autotuneservice.service.AppHealthCheckService;
 import com.alipay.autotuneservice.service.riskcheck.RiskCheckService;
 import com.alipay.autotuneservice.service.riskcheck.entity.CheckResponse;
 import com.alipay.autotuneservice.util.UserUtil;
@@ -21,22 +37,31 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.alipay.autotuneservice.service.impl.AppHealthCheckServiceImpl.HEALTH_CHECK_COUNT;
+
 /**
  * @author huoyuqi
  * @version AppHealthCheckController.java, v 0.1 2022年04月19日 7:01 下午 huoyuqi
  */
 @Slf4j
-@NoLogin
 @RestController
 @RequestMapping("/api/healthCheck")
 public class AppHealthCheckController {
+
+    @Autowired
+    private AppHealthCheckService appHealthCheckService;
 
     @Autowired
     private AppInfoRepository appInfoRepository;
@@ -64,7 +89,7 @@ public class AppHealthCheckController {
                                 return new ArrayList<>();
                             }
                             Map<Integer, List<PodInfoRecord>> appIdMapPods = podInfo.batchGetPodInstallTuneAgentNumsByAppId(
-                                            records.stream().map(AppInfoRecord::getId).collect(Collectors.toList()))
+                                    records.stream().map(AppInfoRecord::getId).collect(Collectors.toList()))
                                     .stream()
                                     .filter(p -> p.getAgentInstall() >= 1)
                                     .collect(Collectors.groupingBy(PodInfoRecord::getAppId));
@@ -103,7 +128,7 @@ public class AppHealthCheckController {
     public ServiceBaseResult<String> getAppName(@RequestParam(value = "appid") Integer appid) {
         return ServiceBaseResult.invoker()
                 .makeResult(() -> {
-                            AppInfoRecord record = appInfoRepository.getById(appid);
+                            AppInfoRecord record =  appInfoRepository.findByIdAndToken(UserUtil.getAccessToken(), appid);
                             if (record == null) {
                                 return "";
                             }
@@ -121,6 +146,10 @@ public class AppHealthCheckController {
     public ServiceBaseResult<AppVO> getAppAgentNum(@RequestParam(value = "appId") Integer appId) {
         return ServiceBaseResult.invoker()
                 .makeResult(() -> {
+                            AppInfoRecord record =  appInfoRepository.findByIdAndToken(UserUtil.getAccessToken(), appId);
+                            if (record == null) {
+                                return null;
+                            }
                             log.info("getAppAgentNum enter. appId={}", appId);
                             AppVO appVO = new AppVO();
                             List<PodInfoRecord> records = podInfo.getPodInstallTuneAgentNumsByAppId(appId);
@@ -144,7 +173,10 @@ public class AppHealthCheckController {
     public ServiceBaseResult<Integer> submitCheck(@PathVariable(value = "appId") Integer appId) {
         return ServiceBaseResult.invoker()
                 .paramCheck(() -> Preconditions.checkArgument(appId > 0, "appid can not be less than 0"))
-                .makeResult(() -> -1);
+                .makeResult(() -> {
+                    log.info("submitCheck enter. appId={}", appId);
+                    return appHealthCheckService.submitHealthCheck(appId);
+                });
     }
 
     /**
@@ -155,10 +187,17 @@ public class AppHealthCheckController {
      */
     @GetMapping("/{healthCheckId}")
     public ServiceBaseResult<HealthCheckVO> refreshCheck(@PathVariable(value = "healthCheckId") Integer healthCheckId,
-                                                         @RequestParam(value = "count", required = false) Integer count) {
+                                                         @RequestParam(value = "count",required = false) Integer count) {
         return ServiceBaseResult.invoker()
                 .paramCheck(() -> Preconditions.checkArgument(healthCheckId > 0, "healthId can not be less than 0"))
-                .makeResult(() -> new HealthCheckVO());
+                .makeResult(() -> {
+                    log.info("refreshCheck enter. healthCheckId={}", healthCheckId);
+                    Integer countTmp = count;
+                    if(countTmp==null || countTmp>HEALTH_CHECK_COUNT){
+                        countTmp = HEALTH_CHECK_COUNT;
+                    }
+                    return appHealthCheckService.refreshCheck(healthCheckId,countTmp);
+                });
     }
 
     /**
@@ -170,7 +209,7 @@ public class AppHealthCheckController {
     public ServiceBaseResult<HealthCheckVO> getLastDate(@PathVariable(value = "appid") Integer appId) {
         return ServiceBaseResult.invoker()
                 .paramCheck(() -> Preconditions.checkArgument(appId > 0, "appId can not be less than 0"))
-                .makeResult(() -> new HealthCheckVO());
+                .makeResult(() -> appHealthCheckService.getLastData(appId));
     }
 
     /**
@@ -181,11 +220,11 @@ public class AppHealthCheckController {
         try {
             log.info("refreshCheck healthCheckId = {}", healthCheckId);
             Preconditions.checkArgument(healthCheckId != null, "healthCheckId 不能为空.");
-            return ServiceBaseResult.successResult(new HealthCheckVO());
+            return ServiceBaseResult.successResult(appHealthCheckService.refreshCheck(healthCheckId,HEALTH_CHECK_COUNT));
         } catch (Exception e) {
-            log.error("evaluate occurs an error.", e);
-            return ServiceBaseResult.failureResult(HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                    String.format("healthCheckId=[%s]--->refreshCheck执行异常, errMsg=%s", healthCheckId, e.getMessage()));
+            log.error("evaluate occurs an error.msg:{},err:{}",
+                    String.format("healthCheckId=[%s]--->refreshCheck执行异常, errMsg=%s", healthCheckId, e.getMessage()),e);
+            return ServiceBaseResult.failureResult(HttpStatus.SC_INTERNAL_SERVER_ERROR,e);
         }
     }
 
@@ -197,7 +236,7 @@ public class AppHealthCheckController {
             return ServiceBaseResult.successResult(riskCheckService.getRiskCheckResult(trace));
         } catch (Exception e) {
             log.error("evaluate occurs an error.", e);
-            return ServiceBaseResult.failureResult(HttpStatus.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            return ServiceBaseResult.failureResult(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
         }
     }
 }

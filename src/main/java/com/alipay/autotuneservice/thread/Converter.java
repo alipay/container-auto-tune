@@ -36,42 +36,60 @@ import java.util.regex.Pattern;
 public class Converter {
 
     // yyyy-MM-dd HH:mm:ss
-    private static final Pattern DATE_TIME_REGEX           = Pattern
-                                                               .compile("^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$");
+    private static final Pattern DATE_TIME_REGEX = Pattern.compile("^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$");
 
     // jvm info
-    private static final Pattern JVM_INFO_REGEX            = Pattern
-                                                               .compile("Full thread dump (?<jvm>\\w+) (25.312-b07 mixed mode):");
+    private static final Pattern JVM_INFO_REGEX1 = Pattern.compile("Full thread dump (?<jvm>\\w+) (25.312-b07 mixed mode):");
+    private static final Pattern JVM_INFO_REGEX  = Pattern.compile("Full thread dump (?<jvm>.*):");
 
     // "T1" #11 prio=5 os_prio=31 tid=0x00007fc1d0897000 nid=0x9b23 waiting on condition [0x0000000306e06000]
-    private static final Pattern THREAD_HEADER_REGEX       = Pattern
-                                                               .compile("\"(?<name>.*)\"\\s+(#(?<number>\\d+)\\s+)?(?<daemon>daemon\\s+)?prio=(?<priority>\\d+)(\\s+os_prio=(?<osPriority>\\d+))"
-                                                                        + "?\\s+tid=0x(?<threadId>\\w+)\\s+nid=0x(?<nativeId>\\w+)\\s+(?<state0>.*)"
-                                                                        + "\\s+\\[0x(?<conditionPointer>\\w+)]");
+    private static final Pattern THREAD_HEADER_REGEX = Pattern.compile(
+            "\"(?<name>.*)\"\\s+(#(?<number>\\d+)\\s+)?(?<daemon>daemon\\s+)?prio=(?<priority>\\d+)(\\s+os_prio=(?<osPriority>\\d+))"
+                    + "?\\s+tid=0x(?<threadId>\\w+)\\s+nid=0x(?<nativeId>\\w+)\\s+(?<state0>.*)"
+                    + "\\s+\\[0x(?<conditionPointer>\\w+)]");
+
+    private static final Pattern THREAD_HEADER_REGEX1 = Pattern.compile(
+            "\"(?<name>.*)\".*(\\s+os_prio=(?<osPriority>\\d+))"
+                    + "?\\s+tid=0x(?<threadId>\\w+)\\s+nid=0x(?<nativeId>\\w+)\\s+(?<state0>.*)");
 
     //    java.lang.Thread.State: WAITING (parking)
-    private static final Pattern THEAD_STATE_REGEX         = Pattern
-                                                               .compile("\\s+java\\.lang\\.Thread\\.State:\\s+(?<state>\\w+).*");
+    private static final Pattern THEAD_STATE_REGEX = Pattern.compile("\\s+java\\.lang\\.Thread\\.State:\\s+(?<state>\\w+).*");
 
     // 	- parking to wait for  <0x000000076eb384f8> (a java.util.concurrent.locks.ReentrantLock$FairSync)
-    private static final Pattern WAIT_FOR_REGEX            = Pattern
-                                                               .compile("\\t-\\s+.*wait for\\s+<0x(?<waitFor>.*)>\\s+\\(a\\s+(?<waitForDetails>.*)\\)");
+    private static final Pattern WAIT_FOR_REGEX = Pattern.compile(
+            "\\t-\\s+.*wait for\\s+<0x(?<waitFor>.*)>\\s+\\(a\\s+(?<waitForDetails>.*)\\)");
+
+    //  - locked <0x000000076ec1f1a8> (a io.netty.channel.nio.SelectedSelectionKeySet)
+    private static final Pattern LOCKED_REGEX = Pattern.compile(
+            "\\s+- locked\\s+<0x(?<locked>.*)>\\s+\\(a\\s+(?<lockDetails>.*)\\)"
+    );
+
+    // - waiting to lock <0x000000070f5defb8> (a java.lang.Object)
+    private static final Pattern WAIT_TO_LOCK_REGX = Pattern.compile(
+            "\\s+- waiting to lock\\s+<0x(?<waitToLocked>.*)>\\s+\\(a\\s+(?<lockDetails>.*)\\)"
+    );
+
+    // -waiting to lock <0x000000070f5defc8> (a java.lang.Object)
+    private static final Pattern TRACES_REGEX = Pattern.compile(
+            "\\t-.*"
+    );
+
+    private static final Pattern LOCKED_REGEX_test = Pattern.compile(
+            "\\t-.locked"
+    );
 
     //    Locked ownable synchronizers:
-    private static final Pattern LOCKED_OBJECTS_REGEX      = Pattern
-                                                               .compile("\\s+Locked ownable synchronizers:");
+    private static final Pattern LOCKED_OBJECTS_REGEX = Pattern.compile("\\s+Locked ownable synchronizers:");
 
     // 	- None
-    private static final Pattern NO_LOCKED_OBJECTS_REGEX   = Pattern
-                                                               .compile("\\t-\\s+(?<none>None)");
+    private static final Pattern NO_LOCKED_OBJECTS_REGEX = Pattern.compile("\\t-\\s+(?<none>None)");
 
     // 	- <0x000000076eb38450> (a java.util.concurrent.locks.ReentrantLock$FairSync)
-    private static final Pattern HAVE_LOCKED_OBJECTS_REGEX = Pattern
-                                                               .compile("\\t+-\\s+<0x(?<ownLock>.*)>\\s+\\(a (?<onwLockDetails>.*)\\)");
+    private static final Pattern HAVE_LOCKED_OBJECTS_REGEX = Pattern.compile(
+            "\\t+-\\s+<0x(?<ownLock>.*)>\\s+\\(a (?<onwLockDetails>.*)\\)");
 
     //	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
-    private static final Pattern STACK_TRACE_REGEX         = Pattern
-                                                               .compile("\\t+at\\s+(?<methodFqn>.*)\\s?\\((?<fileLine>.*)\\)");
+    private static final Pattern STACK_TRACE_REGEX = Pattern.compile("\\t+at\\s+(?<methodFqn>.*)\\s?\\((?<fileLine>.*)\\)");
 
     /**
      * read all thread info from reader
@@ -88,13 +106,38 @@ public class Converter {
         if (dateTimeMatcher.matches()) {
             result.setDateOfLog(dateTimeMatcher.group());
         }
+        result.setJvmInfo(parseJvmInfo(br));
         // second line is jvm info
         ThreadInfo thread = parseThread(br);
+        int i = 0;
         while (thread != null) {
             result.addThread(thread);
             thread = this.parseThread(br);
         }
         return result;
+    }
+
+    /**
+     * 解析jvmInfo信息
+     *
+     * @param br
+     */
+    private String parseJvmInfo(PushBackBufferedReader br) {
+        try {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (StringUtils.isBlank(line)) {
+                    continue;
+                }
+                Matcher jvmInfoMatcher = JVM_INFO_REGEX.matcher(line);
+                if (jvmInfoMatcher.matches()) {
+                    return jvmInfoMatcher.group("jvm");
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
     }
 
     /**
@@ -113,7 +156,7 @@ public class Converter {
             if (StringUtils.isBlank(line)) {
                 continue;
             }
-            threadHead = THREAD_HEADER_REGEX.matcher(line);
+            threadHead = THREAD_HEADER_REGEX1.matcher(line);
             if (threadHead.matches()) {
                 break;
             }
@@ -121,36 +164,59 @@ public class Converter {
         if (line == null || !threadHead.matches()) {
             return null;
         }
-        this.parseThreadHead(thread, threadHead);
-        // next line is state
-        line = br.readLine();
-        Matcher stateMatcher = THEAD_STATE_REGEX.matcher(line);
-        if (!stateMatcher.matches()) {
-            log.warn("After thread info no thread state.");
-            throw new RuntimeException("After thread info no thread state");
+
+        //判断是否是 daemon
+        Matcher threadDaemon = THREAD_HEADER_REGEX.matcher(line);
+        if (threadDaemon.matches()) {
+            this.parseDaemonThreadHead(thread, threadDaemon);
+        } else {
+            this.parseThreadHead(thread, threadHead);
         }
-        this.parseThreadStatus(thread, stateMatcher);
+
         // left is trace tack or others or nothing
         while ((line = br.readLine()) != null) {
             if (StringUtils.isBlank(line)) {
                 continue;
             }
+            Matcher stateMatcher = THEAD_STATE_REGEX.matcher(line);
+            if (stateMatcher.matches()) {
+                this.parseThreadStatus(thread, stateMatcher);
+            }
             // next line is next thread, push back
-            if (THREAD_HEADER_REGEX.matcher(line).matches()) {
+            if (THREAD_HEADER_REGEX1.matcher(line).matches()) {
                 br.pushBack();
                 return thread;
             }
             Matcher stackMatcher = STACK_TRACE_REGEX.matcher(line);
             if (stackMatcher.matches()) {
+                thread.getStackTraces().add(line.replace("\t", ""));
                 this.parseStacktraceItem(thread, stackMatcher);
                 continue;
             }
             Matcher waitForMatcher = WAIT_FOR_REGEX.matcher(line);
             if (waitForMatcher.matches()) {
+                thread.getStackTraces().add(line.replace("\t", ""));
                 this.parseWaitFor(thread, waitForMatcher);
                 continue;
             }
-            if (LOCKED_OBJECTS_REGEX.matcher(line).matches()) {
+
+            Matcher lockMatcher = LOCKED_REGEX.matcher(line);
+            if (lockMatcher.matches()) {
+                thread.getStackTraces().add(line.replace("\t", ""));
+                this.parseLock(thread, lockMatcher);
+                continue;
+            }
+
+            Matcher waitToLockMatcher = WAIT_TO_LOCK_REGX.matcher(line);
+            if (waitToLockMatcher.matches()) {
+                thread.getStackTraces().add(line.replace("\t", ""));
+                this.parseWaitToLock(thread, waitToLockMatcher);
+                continue;
+            }
+
+            thread.getStackTraces().add(line.replace("\t", ""));
+
+            if (NO_LOCKED_OBJECTS_REGEX.matcher(line).matches()) {
                 break;
             }
         }
@@ -158,7 +224,7 @@ public class Converter {
         line = br.readLine();
         if (line != null) {
             // next line is next thread, push back
-            if (THREAD_HEADER_REGEX.matcher(line).matches()) {
+            if (THREAD_HEADER_REGEX1.matcher(line).matches()) {
                 br.pushBack();
                 return thread;
             }
@@ -175,11 +241,37 @@ public class Converter {
     }
 
     /**
+     * @param info
+     * @param m
+     * @see #
+     */
+    private void parseWaitToLock(ThreadInfo info, Matcher m) {
+        info.setWaitToLock(m.group("waitToLocked"));
+    }
+
+    /**
+     * @param info
+     * @param m
+     * @see # LOCKED_REGEX
+     */
+    private void parseLock(ThreadInfo info, Matcher m) {
+        info.setLock(m.group("locked"));
+    }
+
+    /**
      * @param info ThreadInfo
      * @param m    Matcher
      * @see #THREAD_HEADER_REGEX
      */
     private void parseThreadHead(ThreadInfo info, Matcher m) {
+        info.setName(m.group("name"));
+        info.setOsPriority(Integer.parseInt(StringUtils.defaultIfEmpty(m.group("osPriority"), "-1")));
+        info.setThreadId(Long.parseLong(m.group("threadId"), 16));
+        info.setNativeId(Long.parseLong(m.group("nativeId"), 16));
+        info.setState0(m.group("state0"));
+    }
+
+    private void parseDaemonThreadHead(ThreadInfo info, Matcher m) {
         info.setName(m.group("name"));
         info.setNumber(Integer.parseInt(StringUtils.defaultIfEmpty(m.group("number"), "-1")));
         info.setOsPriority(Integer.parseInt(StringUtils.defaultIfEmpty(m.group("osPriority"), "-1")));
@@ -269,4 +361,5 @@ public class Converter {
             pushedBack = true;
         }
     }
+
 }

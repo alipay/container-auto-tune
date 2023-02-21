@@ -28,6 +28,7 @@ import java.util.List;
 @Data
 public class ThreadInfo {
     public String               name;
+    public String               groupName;
     public boolean              daemon;
     public int                  number;
     public int                  osPriority;
@@ -41,10 +42,18 @@ public class ThreadInfo {
     public long                 waitFor;
     public String               waitForDetails;
     public String               state0;
-    public List<StacktraceItem> stacktrace = new ArrayList<>();
 
-    public long                 filteredTo = -1;
-    public static final String  RUNNABLE   = "RUNNABLE";
+    public String               lock;
+    public String               waitToLock;
+    public ThreadInfo           relateThread;
+    public Integer              index;
+
+
+    public List<StacktraceItem> stacktrace = new ArrayList<>();
+    public List<String>         stackTraces = new ArrayList<>();
+
+    public              long   filteredTo = -1;
+    public static final String RUNNABLE   = "RUNNABLE";
 
     public long getIdentity() {
         return nativeId;
@@ -54,7 +63,7 @@ public class ThreadInfo {
         this.stacktrace.add(stacktraceItem);
     }
 
-    public boolean isRunnable() {
-        return state.equalsIgnoreCase(RUNNABLE);
-    }
+    //public boolean isRunnable() {
+    //    return state.equalsIgnoreCase(RUNNABLE);
+    //}
 }

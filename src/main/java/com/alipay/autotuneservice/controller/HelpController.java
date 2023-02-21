@@ -56,9 +56,9 @@ public class HelpController {
     private ConstantsProperties constantProperties;
 
     @Autowired
-    private HelpInfoRepository  helpInfoRepository;
+    private HelpInfoRepository helpInfoRepository;
     @Autowired
-    private StorageInfoService  storageInfoService;
+    private StorageInfoService storageInfoService;
 
     @GetMapping("/install-steps")
     @Cached

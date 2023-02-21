@@ -41,5 +41,6 @@ public enum RuleType {
     /**
      * auto trigger by threshold
      */
-    AUTO_THRESHOLD, ;
+    AUTO_THRESHOLD,
+    ;
 }

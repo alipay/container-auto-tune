@@ -17,7 +17,7 @@
 package com.alipay.autotuneservice.model.common;
 
 import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
-import com.alipay.autotuneservice.model.expert.GarbageCollector;
+import com.alipay.autotuneservice.service.algorithmlab.GarbageCollector;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

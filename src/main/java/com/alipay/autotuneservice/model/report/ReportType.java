@@ -38,6 +38,11 @@ public enum ReportType {
     HEAP,
 
     /**
+     * java shared object memory maps
+     */
+    SYSTEM,
+
+    /**
      * 未知
      */
     UNKNOWN;

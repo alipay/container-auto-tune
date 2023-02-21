@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="/arthas/js/jquery-3.3.1.min.js"></script>
+    <script src="/arthas/js/jquery.terminal.min.js"></script>
+    <link rel="stylesheet" href="/arthas/css/jquery.terminal.min.css"/>
+</head>
+<body>
+<style type="text/css">
+.terminal, span {
+    --size: 1.5;
+}
+</style>
+
+<script>
+$('body').terminal(function(command) {
+        var appId = $("#appId").text().trim();
+        var hostName = $("#hostName").text().trim();
+        var result = '';
+        var url = "[=tmaestro_server_url]/api/workloadMarket/".concat(appId).concat("/arthas/command?hostName=").concat(hostName).concat("&command=").concat(command);
+        $.ajax({url:url,success:function(resp){
+　　　　         result = resp.data;
+        },async:false});
+        var pResult = result.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+        this.echo(String(pResult));
+    }, {
+        greetings: '-- Welcome TMaestro Arthas Web Terminal --',
+        name: 'js_demo',
+        prompt: '[arthas]>',
+        'font-size':'25px'
+    });
+</script>
+<div hidden="hidden" id="appId" th:text="${appId}"></div>
+<div hidden="hidden" id="hostName" th:text="${hostName}"></div>
+</body>
+</html>

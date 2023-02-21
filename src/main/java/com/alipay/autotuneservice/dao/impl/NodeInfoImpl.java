@@ -26,10 +26,8 @@ import com.alipay.autotuneservice.util.ConvertUtils;
 import com.alipay.autotuneservice.util.DateUtils;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.Field;
 import org.jooq.InsertQuery;
 import org.jooq.UpdateQuery;
-import org.jooq.impl.DSL;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

@@ -1,6 +1,18 @@
-/*
- * Ant Group
- * Copyright (c) 2004-2022 All Rights Reserved.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.alipay.autotuneservice.util;
 
@@ -15,28 +27,43 @@ import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.K8sAccessTokenInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.MeterMetaInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.NodeInfoRecord;
+import com.alipay.autotuneservice.dao.jooq.tables.records.ThreadpoolMonitorMetricDataRecord;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerProcessInfo;
 import com.alipay.autotuneservice.dynamodb.bean.ContainerStatistics;
 import com.alipay.autotuneservice.dynamodb.bean.JvmMonitorMetricData;
+import com.alipay.autotuneservice.dynamodb.bean.ThreadPoolMonitorMetricData;
+import com.alipay.autotuneservice.meter.model.MeterMetric;
+import com.alipay.autotuneservice.model.PsResponse;
 import com.alipay.autotuneservice.model.agent.ContainerMetric;
 import com.alipay.autotuneservice.model.common.AppModel;
 import com.alipay.autotuneservice.model.common.AppStatus;
 import com.alipay.autotuneservice.model.common.NodeModel;
 import com.alipay.autotuneservice.model.common.NodeStatus;
+import com.alipay.autotuneservice.model.statistics.CpuStatsConfig;
+import com.alipay.autotuneservice.model.statistics.MemoryStatsConfig;
 import com.alipay.autotuneservice.model.statistics.StatisticsResponse;
-import com.alipay.autotuneservice.meter.model.MeterMetric;
+import com.alipay.autotuneservice.model.statistics.StatsConfig;
 import com.alipay.autotuneservice.service.AppInfoService;
-import com.auto.tune.client.*;
+import com.amazonaws.regions.Regions;
+import com.auto.tune.client.GcMetricsGrpc;
+import com.auto.tune.client.JStateMetricsGrpc;
+import com.auto.tune.client.MemoryMetricsGrpc;
+import com.auto.tune.client.MetricsGrpcRequest;
+import com.auto.tune.client.SystemCommonGrpc;
+import com.auto.tune.client.SystemMetricsGrpc;
+import com.auto.tune.client.ThreadPoolReq;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -145,19 +172,39 @@ public class ConvertUtils {
         return appModel;
     }
 
+    public static K8sAccessTokenInfoRecord convert2K8sAccessTokenInfoRecord(K8sAccessTokenModel k8sAccessTokenModel) {
+        if (Objects.isNull(k8sAccessTokenModel)) {
+            return null;
+        }
+        K8sAccessTokenInfoRecord record = new K8sAccessTokenInfoRecord();
+        LocalDateTime now = LocalDateTime.now();
+        record.setCreateTime(now);
+        record.setUpdatedTime(now);
+        record.setAccessToken(k8sAccessTokenModel.getAccessToken());
+        record.setClusterId(k8sAccessTokenModel.getClusterId());
+        record.setClusterName(k8sAccessTokenModel.getClusterName());
+        record.setS3Key(k8sAccessTokenModel.getS3Key());
+        try {
+            record.setRegion(Regions.fromName(k8sAccessTokenModel.getRegion()).name());
+        } catch (Exception e) {
+            record.setRegion(k8sAccessTokenModel.getRegion());
+        }
+        return record;
+    }
+
     public static K8sAccessTokenModel convert2K8sAccessTokenModel(K8sAccessTokenInfoRecord record) {
         if (Objects.isNull(record)) {
             return null;
         }
-        K8sAccessTokenModel k8sAccessTokenModel = new K8sAccessTokenModel();
-        k8sAccessTokenModel.setAccessKeyId(record.getAccessKeyId());
-        k8sAccessTokenModel.setAccessToken(record.getAccessToken());
-        k8sAccessTokenModel.setSecretAccessKey(record.getSecretAccessKey());
-        k8sAccessTokenModel.setCer(record.getCer());
-        k8sAccessTokenModel.setEndpoint(record.getEndpoint());
-        k8sAccessTokenModel.setClusterName(record.getClusterName());
-        k8sAccessTokenModel.setRegion(record.getRegion());
-        return k8sAccessTokenModel;
+        return K8sAccessTokenModel.builder()
+                .accessKeyId(record.getAccessKeyId())
+                .accessToken(record.getAccessToken())
+                .secretAccessKey(record.getSecretAccessKey())
+                .cer(record.getCer())
+                .endpoint(record.getEndpoint())
+                .region(record.getRegion())
+                .clusterName(record.getClusterName())
+                .build();
     }
 
     public static NodeInfoRecord convert2NodeInfoRecord(NodeModel nodeModel) {
@@ -174,6 +221,65 @@ public class ConvertUtils {
         return record;
     }
 
+    public static List<ThreadpoolMonitorMetricDataRecord> convert2ThreadPoolMonitorMetricData(List<ThreadPoolReq> reqs, String appName,
+                                                                                              String hostName, long time) {
+        return reqs.parallelStream().map(req -> {
+            ThreadpoolMonitorMetricDataRecord metricData = new ThreadpoolMonitorMetricDataRecord();
+            //private String threadPoolName;
+            metricData.setThreadPoolName(req.getThreadPoolName());
+            //private String appName;
+            metricData.setAppName(appName);
+            //private String hostName;
+            metricData.setHostName(hostName);
+            metricData.setActiveCount(req.getActiveCount());
+            metricData.setPoolSize(req.getPoolSize());
+            metricData.setCorePoolSize(req.getCorePoolSize());
+            metricData.setKeepAliveTime(req.getKeepAliveTime());
+            metricData.setCompletedTaskCount(req.getCompletedTaskCount());
+            metricData.setLargestPoolSize(req.getLargestPoolSize());
+            metricData.setMaxiMumPoolSize(req.getMaximumPoolSize());
+            metricData.setTaskCount(req.getTaskCount());
+            metricData.setBlockQueue(req.getBlockQueue());
+            metricData.setIdlePoolSize(req.getIdlePoolSize());
+            metricData.setRejectCount(req.getRejectCount());
+            metricData.setPeriod(time);
+            try {
+                long dt = Long.parseLong(
+                        DateUtils.formatTimestampToStr(System.currentTimeMillis(), DateTimeFormatter.ofPattern("yyyyMMdd")));
+                metricData.setDt(dt);
+            } catch (Exception e) {
+                log.error("convert2JvmMonitorMetricData - convert2dt occurs an error.", e);
+            }
+            return metricData;
+        }).collect(Collectors.toList());
+    }
+
+    public static List<ThreadPoolMonitorMetricData> convert2ThreadPoolMonitorMetricData(List<ThreadpoolMonitorMetricDataRecord> record) {
+        return record.parallelStream().map(r -> {
+            ThreadPoolMonitorMetricData metricData = new ThreadPoolMonitorMetricData();
+            //private String threadPoolName;
+            metricData.setThreadPoolName(r.getThreadPoolName());
+            //private String appName;
+            metricData.setAppName(r.getAppName());
+            //private String hostName;
+            metricData.setHostName(r.getHostName());
+            metricData.setActiveCount(r.getActiveCount());
+            metricData.setPoolSize(r.getPoolSize());
+            metricData.setCorePoolSize(r.getCorePoolSize());
+            metricData.setKeepAliveTime(r.getKeepAliveTime());
+            metricData.setCompletedTaskCount(r.getCompletedTaskCount());
+            metricData.setLargestPoolSize(r.getLargestPoolSize());
+            metricData.setMaximumPoolSize(r.getMaxiMumPoolSize());
+            metricData.setTaskCount(r.getTaskCount());
+            metricData.setBlockQueue(r.getBlockQueue());
+            metricData.setIdlePoolSize(r.getIdlePoolSize());
+            metricData.setRejectCount(r.getRejectCount());
+            metricData.setPeriod(r.getPeriod());
+            metricData.setDt(r.getDt());
+            return metricData;
+        }).collect(Collectors.toList());
+    }
+
     public static JvmMonitorMetricData convert2JvmMonitorMetricData(MetricsGrpcRequest request, AppInfoService appInfoService) {
         Preconditions.checkArgument(request != null, "MetricsGrpcRequest can not be null.");
         Preconditions.checkArgument(StringUtils.isNotBlank(request.getSystemCommon().getAccessToken()), "AccessToken can not be empty.");
@@ -181,7 +287,7 @@ public class ConvertUtils {
         // system common
         SystemCommonGrpc systemCommon = request.getSystemCommon();
         gcMetaData.setPeriod(systemCommon.getTimestamp());
-        log.info("convert2JvmMonitorMetricData hostName={}, serverType={}", systemCommon.getHostname() ,systemCommon.getServerType());
+        log.info("convert2JvmMonitorMetricData hostName={}, serverType={}", systemCommon.getHostname(), systemCommon.getServerType());
         try {
             String appName = StringUtils.equals(systemCommon.getServerType(), "VM") ? systemCommon.getAppName()
                     : systemCommon.getHostname().substring(0, StringUtils.lastOrdinalIndexOf(systemCommon.getHostname(), "-", 2));
@@ -208,6 +314,7 @@ public class ConvertUtils {
         if (StringUtils.equals("VM", systemCommon.getServerType())) {
             gcMetaData.setApp(systemCommon.getAppName());
         }
+        gcMetaData.setJvmJitTime(systemCommon.getJvmJitTime());
         // ygc
         GcMetricsGrpc ygcMetric = request.getYoungGcMetric();
         gcMetaData.setYgc_count(ygcMetric.getGcCount());
@@ -285,7 +392,39 @@ public class ConvertUtils {
         gcMetaData.setCpuCount(systemMetricsGrpc.getSystemCpuCount());
         gcMetaData.setProcessCpuLoad(systemMetricsGrpc.getProcessCpuLoad());
         gcMetaData.setSystemCpuLoad(systemMetricsGrpc.getSystemCpuLoad());
+        gcMetaData.setCpuLoad(systemMetricsGrpc.getCpuLoad());
+        gcMetaData.setWaitCpuLoad(systemMetricsGrpc.getWaitCpuLoad());
+        //safe point
+        gcMetaData.setSafePointCount(jStateMetricsGrpc.getSafepointCount());
+        gcMetaData.setSafePointTime(jStateMetricsGrpc.getSafepointTime());
+        //thread
+        gcMetaData.setThreadCount(jStateMetricsGrpc.getThreadCount());
+        gcMetaData.setPeakThreadCount(jStateMetricsGrpc.getPeakThreadCount());
+        gcMetaData.setDaemonThreadCount(jStateMetricsGrpc.getDaemonThreadCount());
+        gcMetaData.setDeadLockedCount(jStateMetricsGrpc.getDeadLockedCount());
+        //class load
+        gcMetaData.setTotalLoadedClassCount(jStateMetricsGrpc.getTotalLoadedClassCount());
+        gcMetaData.setLoadedClassCount(jStateMetricsGrpc.getLoadedClassCount());
+        gcMetaData.setUnloadedClassCount(jStateMetricsGrpc.getUnloadedClassCount());
+        //save time
+        gcMetaData.setDt(System.currentTimeMillis());
         return gcMetaData;
+    }
+
+    public static List<ContainerProcessInfo> convert2ContainerProcessInfos(Integer appId, ContainerMetric processMetric) {
+        if (processMetric == null || StringUtils.isBlank(processMetric.getProcessInfo())) {
+            return null;
+        }
+        PsResponse processInfo = JSON.parseObject(processMetric.getProcessInfo(), new TypeReference<PsResponse>() {});
+        String[][] processes = processInfo.getProcesses();
+        List<ContainerProcessInfo> list = new ArrayList<>();
+        Stream.of(processes).forEach(item -> {
+            if (!ArrayUtils.isEmpty(item)) {
+                list.add(buildContainerProcessInfo(processMetric.getMonitorTime(), appId, processMetric.getPodName(),
+                        processMetric.getContainerId(), item));
+            }
+        });
+        return list;
     }
 
     private static ContainerProcessInfo buildContainerProcessInfo(final Long monitorTime, Integer appId, String podName, String containerId,
@@ -314,42 +453,6 @@ public class ConvertUtils {
         }
     }
 
-    @Deprecated
-    public static ContainerStatistics convert2ContainerStat(Integer appId, String podName, String containerId, String statsResponse) {
-        if (StringUtils.isBlank(statsResponse)) {
-            log.info("convert2ContainerStat - statsResponse is empty, so will skip.");
-            return null;
-        }
-        try {
-            String s = statsResponse.replaceAll("\\\\", "");
-            StatisticsResponse statistics = JSONObject.parseObject(s.substring(1, s.length() - 1),
-                    new TypeReference<StatisticsResponse>() {});
-            ContainerStatistics containerStat = new ContainerStatistics();
-            containerStat.setPodName(podName);
-            containerStat.setContainerId(containerId);
-            containerStat.setGmtCreated(System.currentTimeMillis());
-            // set cpu info
-            containerStat.setCpuTotalUsage(statistics.getCpuStats().getCpuUsage().getTotalUsage());
-            containerStat.setSystemCpuUsage(statistics.getCpuStats().getSystemCpuUsage());
-            containerStat.setPrecpuTotalUsage(statistics.getPreCpuStats().getCpuUsage().getTotalUsage());
-            containerStat.setPrecpuSystemCpuUsage(statistics.getPreCpuStats().getSystemCpuUsage());
-            containerStat.setOnlineCpus(statistics.getCpuStats().getOnlineCpus());
-            containerStat.setCpuUsageRate(containerStat.getCpuUsageRate());
-            // set mem info
-            containerStat.setMemLimit(statistics.getMemoryStats().getLimit());
-            containerStat.setMemUsage(statistics.getMemoryStats().getUsage());
-            containerStat.setMemMaxUsage(statistics.getMemoryStats().getMaxUsage());
-            containerStat.setMemCache(statistics.getMemoryStats().getStats().getCache());
-            containerStat.setMemUsageRate(containerStat.getMemUsageRate());
-            containerStat.setAppId(appId);
-            //containerStat.setRawValue(jsonStr);
-            return containerStat;
-        } catch (Exception e) {
-            log.error("convert2ContainerStat for containerId={} occurs an error.", containerId, e);
-            return null;
-        }
-    }
-
     public static ContainerStatistics convert2ContainerStats(Integer appId, ContainerMetric statsMetric) {
         if (statsMetric == null) {
             log.info("convert2ContainerStats - statsResponse is empty, so will skip.");
@@ -357,31 +460,54 @@ public class ConvertUtils {
         }
         try {
             String res = statsMetric.getStatistics();
-            String s = res.replaceAll("\\\\", "");
-            StatisticsResponse statistics = JSONObject.parseObject(s, new TypeReference<StatisticsResponse>() {});
+            String statStr = res.replaceAll("\\\\", "");
+            StatisticsResponse statistics = JSONObject.parseObject(statStr, new TypeReference<StatisticsResponse>() {});
             ContainerStatistics containerStat = new ContainerStatistics();
+            containerStat.setAppId(appId);
             containerStat.setPodName(statsMetric.getPodName());
-            containerStat.setContainerId(statsMetric.getContainerId());
+            String containerId = statsMetric.getContainerId();
+            containerStat.setContainerId(containerId);
             containerStat.setGmtCreated(DateUtils.truncate2Minute(statsMetric.getMonitorTime()));
             // set cpu info
-            containerStat.setCpuTotalUsage(statistics.getCpuStats().getCpuUsage().getTotalUsage());
-            containerStat.setSystemCpuUsage(statistics.getCpuStats().getSystemCpuUsage());
-            containerStat.setPrecpuTotalUsage(statistics.getPreCpuStats().getCpuUsage().getTotalUsage());
-            containerStat.setPrecpuSystemCpuUsage(statistics.getPreCpuStats().getSystemCpuUsage());
-            containerStat.setOnlineCpus(statistics.getCpuStats().getOnlineCpus());
+            CpuStatsConfig cpuStats = statistics.getCpuStats();
+            if (cpuStats != null) {
+                containerStat.setCpuTotalUsage(cpuStats.getCpuUsage().getTotalUsage());
+                containerStat.setSystemCpuUsage(cpuStats.getSystemCpuUsage());
+                containerStat.setOnlineCpus(cpuStats.getOnlineCpus());
+            }
+            CpuStatsConfig preCpuStats = statistics.getPreCpuStats();
+            if (preCpuStats != null) {
+                containerStat.setPrecpuTotalUsage(preCpuStats.getCpuUsage().getTotalUsage());
+                containerStat.setPrecpuSystemCpuUsage(preCpuStats.getSystemCpuUsage());
+            }
             containerStat.setCpuUsageRate(containerStat.getCpuUsageRate());
+            //log.info("insert containerStat containerId={}, res={}", containerId, statStr);
             // set mem info
-            containerStat.setMemLimit(statistics.getMemoryStats().getLimit());
-            containerStat.setMemUsage(statistics.getMemoryStats().getUsage());
-            containerStat.setMemMaxUsage(statistics.getMemoryStats().getMaxUsage());
-            containerStat.setMemCache(statistics.getMemoryStats().getStats().getCache());
-            containerStat.setMemUsageRate(containerStat.getMemUsageRate());
-            containerStat.setAppId(appId);
+            MemoryStatsConfig memoryStats = statistics.getMemoryStats();
+            if (memoryStats != null) {
+                containerStat.setMemLimit(memoryStats.getLimit());
+                containerStat.setMemUsage(memoryStats.getUsage());
+                containerStat.setMemMaxUsage(memoryStats.getMaxUsage());
+                containerStat.setMemUsageRate(containerStat.getMemUsageRate());
+                containerStat.setFailcnt(convertLong2Double(memoryStats.getFailcnt()));
+                StatsConfig stats = memoryStats.getStats();
+                if (stats != null) {
+                    containerStat.setMemCache(stats.getCache());
+                    containerStat.setPgmajfault(convertLong2Double(stats.getPgmajfault()));
+                }
+            }
             return containerStat;
         } catch (Exception e) {
             log.error("convert2ContainerStat for containerId={} occurs an error.", statsMetric.getContainerId(), e);
             return null;
         }
+    }
+
+    public static double convertLong2Double(Long source) {
+        if (source == null) {
+            return 0;
+        }
+        return Double.valueOf(source);
     }
 
     public static List<PodProcessInfo> convert2PodProcessInfoList(List<ContainerProcessInfo> cpInfo) {
@@ -397,6 +523,31 @@ public class ConvertUtils {
             }
         });
         return resList;
+    }
+
+    public static List<PodProcessInfo> convert2PodProcessInfoListV2(String processInfo) {
+        try {
+            if (StringUtils.isEmpty(processInfo)) {
+                return null;
+            }
+            PsResponse psProcessInfo = JSON.parseObject(processInfo, new TypeReference<PsResponse>() {});
+            String[][] processes = psProcessInfo.getProcesses();
+            return Stream.of(processes)
+                    .map(item -> {
+                        if (!ArrayUtils.isEmpty(item)) {
+                            try {
+                                return PodProcessInfo.builder().pid(Long.parseLong(item[1])).command(item[10]).build();
+                            } catch (Exception e) {
+                            }
+                        }
+                        return null;
+                    })
+                    .filter(item -> item != null && item.getCommand().startsWith("java -jar"))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("convert2PodProcessInfoListV2 processInfo={} occurs an error", processInfo, e);
+            return Lists.newArrayList();
+        }
     }
 
     public static List<PodProcessInfo> convert2PodProcessInfo(String processInfo) {
@@ -456,7 +607,7 @@ public class ConvertUtils {
             return Lists.newArrayList();
         }
         try {
-            return JSONObject.parseObject(metricList, new TypeReference<List<MeterMetric>>() {});
+            return JSON.parseObject(metricList, new TypeReference<List<MeterMetric>>() {});
         } catch (Exception e) {
             return Lists.newArrayList();
         }

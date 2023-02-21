@@ -1,6 +1,18 @@
-/*
- * Ant Group
- * Copyright (c) 2004-2021 All Rights Reserved.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.alipay.autotuneservice.grpc;
 
@@ -8,16 +20,33 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.autotuneservice.base.cache.LocalCache;
 import com.alipay.autotuneservice.dao.JvmMonitorMetricRepository;
+import com.alipay.autotuneservice.dao.jooq.tables.records.ThreadpoolMonitorMetricDataRecord;
+import com.alipay.autotuneservice.dynamodb.bean.ThreadPoolMonitorMetricData;
 import com.alipay.autotuneservice.grpc.handler.ActionParam;
 import com.alipay.autotuneservice.grpc.handler.RuleHandlerComponent;
 import com.alipay.autotuneservice.model.common.AppTag;
-import com.alipay.autotuneservice.model.expert.GarbageCollector;
+import com.alipay.autotuneservice.model.report.ReportActionType;
 import com.alipay.autotuneservice.service.AppInfoService;
 import com.alipay.autotuneservice.service.StorageInfoService;
+import com.alipay.autotuneservice.service.alarmManger.AviatorAlarm;
+import com.alipay.autotuneservice.service.algorithmlab.GarbageCollector;
+import com.alipay.autotuneservice.service.chronicmap.ChronicleMapService;
 import com.alipay.autotuneservice.util.AgentConstant;
 import com.alipay.autotuneservice.util.ConvertUtils;
-import com.auto.tune.client.*;
+import com.auto.tune.client.ActionReportReq;
+import com.auto.tune.client.CallBackRequest;
+import com.auto.tune.client.CommandResponse;
 import com.auto.tune.client.CommandResponse.Builder;
+import com.auto.tune.client.CommonResponse;
+import com.auto.tune.client.ExecuteStep;
+import com.auto.tune.client.FileRequest;
+import com.auto.tune.client.FileResponse;
+import com.auto.tune.client.MetricsGrpcRequest;
+import com.auto.tune.client.ReportServiceGrpc;
+import com.auto.tune.client.ReportType;
+import com.auto.tune.client.RequestMessage;
+import com.auto.tune.client.ResponseMessage;
+import com.auto.tune.client.SystemCommonGrpc;
 import com.google.protobuf.ByteString;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +54,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.AsyncTaskExecutor;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -45,11 +75,17 @@ public class ReportService extends ReportServiceGrpc.ReportServiceImplBase {
     @Autowired
     private RuleHandlerComponent       ruleHandlerComponent;
     @Autowired
-    private JvmMonitorMetricRepository jvmMonitorMetricRepository;
+    private JvmMonitorMetricRepository jvmMetriRepository;
     @Autowired
     private StorageInfoService         storageInfoService;
     @Autowired
     private AppInfoService             appInfoService;
+    @Autowired
+    private ChronicleMapService        redisClient;
+    @Autowired
+    private AsyncTaskExecutor          podEventExecutor;
+    @Autowired
+    private AviatorAlarm               aviatorAlarm;
     @Autowired
     private LocalCache<Object, Object> localCache;
 
@@ -60,12 +96,23 @@ public class ReportService extends ReportServiceGrpc.ReportServiceImplBase {
         GrpcCommon grpcCommon = GrpcCommon.build(request.getSystemCommon());
         //判断应用是否在列表中,不在者进行添加
         Integer appId = appInfoService.checkAppName(grpcCommon.getAppName(), grpcCommon.getNamespace(), grpcCommon.getAccessToken(),
-                grpcCommon.getServerType());
+                grpcCommon.getJavaVersion(), grpcCommon.getJvmConfig());
         grpcCommon.setAppId(appId);
+
         //判断单机是否存在
+        log.info("checkVm grpcCommon:{}", grpcCommon);
         appInfoService.checkVm(grpcCommon);
+        //判断单机是否存在
+        appInfoService.checkJavaInfo(grpcCommon);
+
+        try {
+            aviatorAlarm.invoke(appId);
+        } catch (Exception e) {
+            log.error("report occurs an error, appId: {}", appId, e);
+        }
         // metrics
-        jvmMonitorMetricRepository.insertGCData(ConvertUtils.convert2JvmMonitorMetricData(request, appInfoService));
+        log.info("insert gcData");
+        jvmMetriRepository.insertGCData(ConvertUtils.convert2JvmMonitorMetricData(request, appInfoService));
         // app tag
         AppTag appTag = AppTag.builder()
                 .withJavaVersion(grpcCommon.getJavaVersion())
@@ -85,6 +132,23 @@ public class ReportService extends ReportServiceGrpc.ReportServiceImplBase {
     public void heartBeat(SystemCommonGrpc request, StreamObserver<CommandResponse> responseObserver) {
         log.info("heartBeat unionCode:{}", request.getUnionCode());
         GrpcCommon grpcCommon = GrpcCommon.build(request);
+        if (CollectionUtils.isNotEmpty(request.getThreadPoolReqList())) {
+            podEventExecutor.execute(() -> {
+                try {
+                    List<ThreadpoolMonitorMetricDataRecord> metricData = ConvertUtils.convert2ThreadPoolMonitorMetricData(
+                            request.getThreadPoolReqList(),
+                            grpcCommon.getAppName(),
+                            grpcCommon.getHostname(), grpcCommon.getTimestamp());
+                    //缓存
+                    List<ThreadPoolMonitorMetricData> threadPoolMetricData = ConvertUtils.convert2ThreadPoolMonitorMetricData(metricData);
+                    jvmMetriRepository.initThreadPoolCache(threadPoolMetricData);
+                    //doThreadPool Monitor
+                    jvmMetriRepository.insertThreadPoolData(metricData);
+                } catch (Exception e) {
+                    log.error("heartBeat is error", e);
+                }
+            });
+        }
         List<ActionParam> actionParams = ruleHandlerComponent.checkRuleFlag(grpcCommon);
         Builder builder = CommandResponse.newBuilder()
                 .setSuccess(true)
@@ -94,7 +158,6 @@ public class ReportService extends ReportServiceGrpc.ReportServiceImplBase {
         log.info("actionParams is: {}", JSON.toJSONString(actionParams));
         //更新缓存
         refreshCache(request.getHostname());
-        //处理事件
         if (CollectionUtils.isNotEmpty(actionParams)) {
             builder.setType(ReportType.REPORT_TYPE_EXEC_COMMAND);
             for (ActionParam actionParam : actionParams) {
@@ -194,6 +257,61 @@ public class ReportService extends ReportServiceGrpc.ReportServiceImplBase {
         }
         responseObserver.onNext(CommonResponse.getDefaultInstance());
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void actionReport(ActionReportReq request, StreamObserver<CommonResponse> responseObserver) {
+        try {
+            log.info("actionReport request:{}", request);
+            String actionKey = request.getActionKey();
+            if (StringUtils.isEmpty(actionKey)) {
+                return;
+            }
+            //根据actionKey处理任务
+            ReportActionType.valueOf(actionKey).doFunc(request.getJsonParams());
+        } catch (Exception ex) {
+            log.error("actionReport is error:{}", ex.getMessage(), ex);
+        } finally {
+            responseObserver.onNext(CommonResponse.getDefaultInstance());
+            responseObserver.onCompleted();
+        }
+    }
+
+    @Override
+    public StreamObserver<RequestMessage> arthasStreamFunc(StreamObserver<ResponseMessage> responseObserver) {
+        return new StreamObserver<RequestMessage>() {
+            @Override
+            public void onNext(RequestMessage requestMessage) {
+                String resultMsg = requestMessage.getReqMsg();
+                log.info("[收到客户端消息]: " + resultMsg);
+                if (StringUtils.equals(resultMsg, "bound")) {
+                    log.info("Arthas初始化绑定: " + requestMessage.getHostname());
+                    AgentConstant.ARTHAS_STREAM_POOL.put(requestMessage.getHostname(), responseObserver);
+                    return;
+                }
+                if (StringUtils.equals(resultMsg, "broken pipe")) {
+                    log.info("Arthas重新建立连接: " + requestMessage.getHostname());
+                    AgentConstant.ARTHAS_STREAM_POOL.remove(requestMessage.getHostname());
+                    redisClient.set(AgentConstant.generateArthasCallBackKey(requestMessage.getSessionId()),
+                            "broken pipe,retry connection!");
+                    return;
+                }
+                if (StringUtils.isEmpty(resultMsg)) {
+                    return;
+                }
+                redisClient.set(AgentConstant.generateArthasCallBackKey(requestMessage.getSessionId()), resultMsg);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.fillInStackTrace();
+            }
+
+            @Override
+            public void onCompleted() {
+                responseObserver.onCompleted();
+            }
+        };
     }
 
     private void writeFile(OutputStream writer, ByteString content) throws IOException {

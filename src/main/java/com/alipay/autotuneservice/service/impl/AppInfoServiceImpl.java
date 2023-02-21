@@ -1,26 +1,56 @@
-/*
- * Ant Group
- * Copyright (c) 2004-2022 All Rights Reserved.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.alipay.autotuneservice.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.alipay.autotuneservice.controller.model.AppType;
 import com.alipay.autotuneservice.controller.model.AppVO;
 import com.alipay.autotuneservice.controller.model.ClusterVO;
 import com.alipay.autotuneservice.dao.AppInfoRepository;
+import com.alipay.autotuneservice.dao.CommandInfoRepository;
+import com.alipay.autotuneservice.dao.JavaInfoRepository;
 import com.alipay.autotuneservice.dao.K8sAccessTokenInfo;
 import com.alipay.autotuneservice.dao.PodInfo;
 import com.alipay.autotuneservice.dao.TunePlanRepository;
 import com.alipay.autotuneservice.dao.jooq.tables.records.AppInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.ConfigInfoRecord;
+import com.alipay.autotuneservice.dao.jooq.tables.records.JavaInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.K8sAccessTokenInfoRecord;
 import com.alipay.autotuneservice.dao.jooq.tables.records.PodInfoRecord;
 import com.alipay.autotuneservice.grpc.GrpcCommon;
-import com.alipay.autotuneservice.model.common.*;
+import com.alipay.autotuneservice.model.common.AppEnum;
+import com.alipay.autotuneservice.model.common.AppInfo;
+import com.alipay.autotuneservice.model.common.AppInstallInfo;
+import com.alipay.autotuneservice.model.common.AppModel;
+import com.alipay.autotuneservice.model.common.AppStatus;
+import com.alipay.autotuneservice.model.common.AppTag;
+import com.alipay.autotuneservice.model.common.PodAttach;
+import com.alipay.autotuneservice.model.common.PodAttachStatus;
+import com.alipay.autotuneservice.model.common.PodStatus;
+import com.alipay.autotuneservice.model.common.ServerType;
 import com.alipay.autotuneservice.model.pipeline.Status;
+import com.alipay.autotuneservice.model.rule.RuleAction;
 import com.alipay.autotuneservice.model.tune.TunePlan;
-import com.alipay.autotuneservice.service.*;
+import com.alipay.autotuneservice.service.AgentInvokeService;
+import com.alipay.autotuneservice.service.AppInfoService;
+import com.alipay.autotuneservice.service.ConfigInfoService;
+import com.alipay.autotuneservice.service.PodAttachService;
 import com.alipay.autotuneservice.util.ConvertUtils;
 import com.alipay.autotuneservice.util.DateUtils;
 import com.alipay.autotuneservice.util.ObjectUtil;
@@ -37,7 +67,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +75,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
@@ -59,34 +90,25 @@ import java.util.stream.Collectors;
 public class AppInfoServiceImpl implements AppInfoService {
 
     @Autowired
-    private AppInfoRepository appInfoRepository;
-
+    private AppInfoRepository     appInfoRepository;
     @Autowired
-    private PodInfo podInfo;
-
+    private PodInfo               podInfo;
     @Autowired
-    private PodService podService;
-
+    private TunePlanRepository    tunePlanRepository;
     @Autowired
-    private TunePlanRepository tunePlanRepository;
-
+    private K8sAccessTokenInfo    k8sAccessTokenInfo;
     @Autowired
-    private K8sAccessTokenInfo k8sAccessTokenInfo;
-
+    private ConfigInfoService     configInfoService;
     @Autowired
-    private ConfigInfoService  configInfoService;
+    private Executor              eventExecutor;
     @Autowired
-    private Executor           eventExecutor;
+    private AgentInvokeService    agentInvokeService;
     @Autowired
-    private AgentInvokeService agentInvokeService;
+    private PodAttachService      podAttachService;
     @Autowired
-    private PodAttachService   podAttachService;
-
-    @Override
-    public List<AppModel> getByIds(Collection<Integer> ids) {
-        List<AppInfoRecord> clusterInfoRecords = appInfoRepository.getByIds(ids);
-        return ConvertUtils.convert2ClusterModels(clusterInfoRecords);
-    }
+    private JavaInfoRepository    javaInfoRepository;
+    @Autowired
+    private CommandInfoRepository commandInfoRepository;
 
     @Override
     public List<AppInfoRecord> getByNodeId(Integer id) {
@@ -142,15 +164,6 @@ public class AppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public void updateNodeIds(Integer id, String nodeIds) {
-        log.info("updateNodeStatue, id:{}, nodeIds:{}", id, nodeIds);
-        AppInfoRecord record = new AppInfoRecord();
-        record.setId(id);
-        record.setNodeIds(nodeIds);
-        appInfoRepository.updateNodeIds(record);
-    }
-
-    @Override
     public void updateAppJvm(Integer id, String defaultJvm) {
         log.info("updateAppJvm, id:{}, defaultJvm:{}", id, defaultJvm);
         AppInfoRecord record = new AppInfoRecord();
@@ -175,19 +188,37 @@ public class AppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
+    public AppVO findByIdAndToken(String accessToken, Integer id) {
+        if (id != null && StringUtils.isNotEmpty(accessToken)) {
+            AppInfoRecord record = appInfoRepository.findByIdAndToken(accessToken, id);
+            if (record != null) {
+                return buildAppList(Collections.singletonList(record)).get(0);
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<ClusterVO> clusterList(String accessToken) {
+        List<ClusterVO> clusterVOS = new ArrayList<>();
+        List<AppInfoRecord> appInfoRecords = appInfoRepository.getAppByTokenAndCluster(accessToken, "agent-default");
+        if (appInfoRecords != null) {
+            clusterVOS.add(new ClusterVO("agent-default ", 0, "agent-default", ""));
+        }
         List<K8sAccessTokenInfoRecord> records = k8sAccessTokenInfo.selectByToken(accessToken);
         if (CollectionUtils.isEmpty(records)) {
-            return new ArrayList<>();
+            return clusterVOS;
         }
-        return records.stream().map(item -> {
+        clusterVOS.addAll(records.stream().map(item -> {
             ClusterVO clusterVO = new ClusterVO();
             clusterVO.setClusterName(item.getClusterName() + " (" + item.getRegion() + ")");
             clusterVO.setCluster(item.getClusterName());
             clusterVO.setRegion(item.getRegion());
             clusterVO.setId(item.getId());
             return clusterVO;
-        }).collect(Collectors.toList());
+        }).collect(Collectors.toList()));
+
+        return clusterVOS;
     }
 
     @Override
@@ -201,10 +232,13 @@ public class AppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public Map<String, List<AppVO>> appListByClusterAndRegionAndApp(String clusterName, String accessToken, String appName) {
+    public Map<String, List<AppVO>> appListByClusterAndRegionAndApp(String clusterName, String accessToken, String appName,
+                                                                    AppType appType) {
+        log.info("appListByClusterAndRegionAndApp enter");
         // find by accessToken And clusterName
         List<AppInfoRecord> records = appInfoRepository.getAppByTokenAndCluster(accessToken, clusterName);
         if (CollectionUtils.isEmpty(records)) {
+            log.info("getAppByTokenAndCluster return null, accessToken: {}, clusterName: {}", accessToken, clusterName);
             return Maps.newHashMap();
         }
 
@@ -214,11 +248,16 @@ public class AppInfoServiceImpl implements AppInfoService {
         }
 
         // convert records to appVos
+        log.info("buildAppList start");
         List<AppVO> appVOS = this.buildAppList(records);
 
-        appVOS = appVOS.stream().sorted(Comparator.comparing(AppVO::getAgentNum).reversed()).collect(Collectors.toList());
+        //judge appType
+        appVOS = appVOS.stream().filter(appVO -> judgeAppType(appVO.getAppType(), appType)).sorted(
+                Comparator.comparing(AppVO::getAgentNum).reversed()).collect(Collectors.toList());
+
         // convert appVOS to appMap
-        Map<String, List<AppVO>> appMap = appVOS.stream().collect(Collectors.groupingBy(AppVO::getClusterName));
+        Map<String, List<AppVO>> appMap = appVOS.stream().collect(
+                Collectors.groupingBy(item -> StringUtils.isEmpty(item.getClusterName()) ? "agent-Default" : item.getClusterName()));
 
         // get all cluster
         List<ClusterVO> clusterVOS = this.clusterList(accessToken);
@@ -226,8 +265,9 @@ public class AppInfoServiceImpl implements AppInfoService {
         // match cluster to cluster + region
         Map<String, String> clusterMapClusterName = clusterVOS.stream().collect(
                 Collectors.toMap(ClusterVO::getCluster, ClusterVO::getClusterName, (e, n) -> e));
+        log.info("appMap is: {}", JSON.toJSONString(appMap));
         return appMap.entrySet().stream()
-                .collect(Collectors.toMap(e -> clusterMapClusterName.getOrDefault(e.getKey(), "unknown"),
+                .collect(Collectors.toMap(e -> clusterMapClusterName.getOrDefault(e.getKey(), "agent-default"),
                         Entry::getValue, (e, n) -> e));
     }
 
@@ -269,10 +309,12 @@ public class AppInfoServiceImpl implements AppInfoService {
                         AppVO appVO = new AppVO();
                         String appAsName = String.format("%s (%s)", record.getAppName(), record.getNamespace());
                         appVO.setAppName(appAsName);
+                        appVO.setAppNameV1(record.getAppName());
                         appVO.setAgentNum(podMap.get(record.getId()).intValue());
                         appVO.setId(record.getId());
                         appVO.setClusterName(record.getClusterName());
                         appVO.setTuneStatus(configMap.get(record.getId()));
+                        appVO.setNamespace(record.getNamespace());
                         buildMetricVO(record.getId(), appVO, planMap);
                         AppTag tag = record.getAppTag() != null ? JSON.parseObject(record.getAppTag(), new TypeReference<AppTag>() {})
                                 : null;
@@ -334,6 +376,7 @@ public class AppInfoServiceImpl implements AppInfoService {
         appInfoRecordList.forEach(record -> {
             AppVO appVO = new AppVO();
             appVO.setAppName(record.getAppName());
+            appVO.setNamespace(record.getNamespace());
             appVO.setId(record.getId());
             appListVO.add(appVO);
         });
@@ -415,7 +458,11 @@ public class AppInfoServiceImpl implements AppInfoService {
         try {
             AppInfoRecord appInfoRecord = getByAppAndATAndNamespace(grpcCommon.getAppName(), grpcCommon.getAccessToken(),
                     grpcCommon.getNamespace());
-            Preconditions.checkNotNull(appInfoRecord, "appInfoRecord is null");
+            if (appInfoRecord == null) {
+                log.warn("appInfoRecord is null,appName={},accessToken={},namespace={}", grpcCommon.getAppName(),
+                        grpcCommon.getAccessToken(), grpcCommon.getNamespace());
+                return;
+            }
             appTag.resetJvmCollector(appInfoRecord);
             this.patchAppTag(appInfoRecord.getId(), appTag);
         } catch (Exception e) {
@@ -504,18 +551,48 @@ public class AppInfoServiceImpl implements AppInfoService {
         }
     }
 
+    /**
+     * 三种类型  1.空展示  2.appVO传入JAVA 前端传入JAVA 3.appVO传入null 前端传入OTHER
+     *
+     * @param type    appVO 传入类型 JAVA、null
+     * @param appType 前端传入类型 JAVA、OTHER
+     * @return
+     */
+    private Boolean judgeAppType(String type, AppType appType) {
+        //
+        if (null == appType) {
+            return Boolean.TRUE;
+        }
+        if (appType.equals(AppType.JAVA) && StringUtils.equals(appType.name(), type)) {
+            return Boolean.TRUE;
+        }
+        if (appType.equals(AppType.OTHER) && StringUtils.isEmpty(type)) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+
     @Override
-    public Integer checkAppName(String appName, String namespace, String accessToken, ServerType serverType) {
-        AppInfoRecord appInfoRecord = appInfoRepository.findAppModel(accessToken, namespace, appName);
-        if (appInfoRecord == null || appInfoRecord.getId() == null) {
+    public Integer checkAppName(String appName, String namespace, String accessToken, String javaVersion, String jvm) {
+        AppInfoRecord appInfoRecord = appInfoRepository.findAliveAppModel(accessToken, namespace, appName);
+        if (appInfoRecord == null) {
+            AppTag appTag = new AppTag();
+            appTag.setInstallAgent(Boolean.TRUE);
+            appTag.setLang(AppTag.Lang.JAVA);
+            appTag.setInstallDockFile(Boolean.FALSE);
+            appTag.setLastModifyTime(System.currentTimeMillis());
+            appTag.setJavaVersion(javaVersion);
             //进行insert
             AppInfoRecord record = new AppInfoRecord();
             record.setAccessToken(accessToken);
             record.setAppName(appName);
             record.setNamespace(namespace);
+            record.setClusterName("agent-default");
             record.setStatus(AppStatus.ALIVE.name());
             record.setCreatedTime(DateUtils.now());
-            record.setServerType(serverType.name());
+            record.setAppDefaultJvm(
+                    jvm.replace("java -jar -Dtmasteraccess_token=CONTAINER_AUTO_TUNE_TOKEN -javaagent:autoTuneAgent.jar ", ""));
+            record.setAppTag(JSONObject.toJSONString(appTag));
             return appInfoRepository.insetAppInfo(record);
         }
         return appInfoRecord.getId();
@@ -523,13 +600,19 @@ public class AppInfoServiceImpl implements AppInfoService {
 
     @Override
     public void checkVm(GrpcCommon grpcCommon) {
-        PodInfoRecord podInfoRecord = podInfo.getByPodAndAT(grpcCommon.getHostname(), grpcCommon.getAccessToken());
+        PodInfoRecord podInfoRecord = podInfo.getByPodAndAN(grpcCommon.getHostname(), grpcCommon.getNamespace());
         if (podInfoRecord != null) {
-            if (!StringUtils.equals(podInfoRecord.getPodStatus(), PodStatus.ALIVE.name())) {
-                podService.updatePodStatue(podInfoRecord.getId(), PodStatus.ALIVE);
+            if (StringUtils.isEmpty(podInfoRecord.getServerType()) || StringUtils.isEmpty(podInfoRecord.getUnicode())
+                    || podInfoRecord.getAgentInstall() == null || podInfoRecord.getAgentInstall() <= 0) {
+                podInfoRecord.setAgentInstall(1);
+                podInfoRecord.setServerType(grpcCommon.getServerType().name());
+                podInfoRecord.setUnicode(grpcCommon.getUnionCode());
+                podInfo.updateServerTypeUnicode(podInfoRecord);
+                return;
             }
             return;
         }
+        log.info("serverType:{}", grpcCommon.getServerType());
         if (ServerType.VM == grpcCommon.getServerType()) {
             PodInfoRecord record = new PodInfoRecord();
             record.setAppId(grpcCommon.getAppId());
@@ -541,8 +624,24 @@ public class AppInfoServiceImpl implements AppInfoService {
             record.setCreatedTime(LocalDateTime.now());
             record.setPodStatus(PodStatus.ALIVE.name());
             record.setServerType(grpcCommon.getServerType().name());
+            record.setUnicode(grpcCommon.getUnionCode());
             record.setAgentInstall(1);
+            record.setPodJvm(grpcCommon.getJvmConfig());
+            //todo unicode
             podInfo.insertPodInfo(record);
         }
+    }
+
+    @Override
+    public void checkJavaInfo(GrpcCommon grpcCommon) {
+        String appName = grpcCommon.getAppName();
+        String hostName = grpcCommon.getHostname();
+        //判断javaInfo是否存在
+        JavaInfoRecord javaInfoRecord = javaInfoRepository.findInfo(appName, hostName);
+        if (javaInfoRecord != null) {
+            return;
+        }
+        //下发指令
+        commandInfoRepository.sendCommand(grpcCommon.getUnionCode(), RuleAction.JAVA_INFO_RETRY, UUID.randomUUID().toString());
     }
 }

@@ -33,12 +33,13 @@ public interface TunePlanRepository {
 
     List<TunePlan> findTunePlanByAppId(Integer appId);
 
-    List<TunePlan> findByAppIdAndStatus(Integer appId, TunePlanStatus status, Long startTime,
-                                        Long endTime);
+    List<TunePlan> findByAppIdAndStatus(Integer appId, TunePlanStatus status, Long startTime, Long endTime);
 
     TunePlan save(TunePlan tunePlan);
 
     List<TunePlan> findByAppIdAndTime(Integer appId, Long start, Long end);
+
+    List<TunePlan> findByTime(Long start, Long end);
 
     TunePlan findByAppIdDescTime(Integer appId, Long start, Long end);
 
