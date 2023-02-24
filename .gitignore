@@ -3,7 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-!**/src/main/resources/lib/mat-1.3.jar
+
 
 ### STS ###
 .apt_generated
@@ -46,5 +46,6 @@ demo*/
 
 ### jar ###
 *.jar
+!**/src/main/resources/lib/mat-1.3.jar
 
 ### git ###
